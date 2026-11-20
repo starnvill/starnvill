@@ -573,7 +573,7 @@ a.btn.buy{text-decoration:none;display:inline-block}
 .invite-link{margin:14px 0 6px;padding:12px;border:1px solid var(--line);font-size:12.5px;word-break:break-all;color:var(--champagne);-webkit-user-select:all;user-select:all}
 
 /* ---------- cocoa ball, tree, lucky things ---------- */
-.mug-btn{position:absolute;left:39.2%;top:64%;width:9.4%;height:9.4%;background:none;border:0;padding:0;border-radius:50%}
+.mug-btn{position:absolute;left:36.1%;top:64%;width:9.4%;height:9.4%;background:none;border:0;padding:0;border-radius:50%}
 .tree-btn{position:absolute;left:64.2%;top:36.6%;width:17%;height:28.4%;background:none;border:0;padding:0}
 .mug-btn:focus-visible,.tree-btn:focus-visible{outline:1px solid var(--champagne)}
 .mug-btn.ready::after{content:'';position:absolute;inset:-30%;border-radius:50%;background:radial-gradient(circle,rgba(255,217,143,.32),rgba(255,217,143,0) 62%);animation:mugHint 2.6s ease-in-out infinite;will-change:opacity;pointer-events:none}
@@ -961,16 +961,16 @@ function treeSVG(h){
     ${orn}${star}</g>`;
 }
 function sideTableSVG(){
-  return `<g class="side-table"><ellipse cx="156" cy="312" rx="12" ry="2.6" fill="#000" opacity=".3"/>
-    <path d="M147 311Q156 306 165 311Q156 313.4 147 311Z" fill="#3a2516" stroke="#c8b07a" stroke-width=".5"/>
-    <rect x="154.6" y="276" width="2.8" height="33" fill="#4a2f1b"/><path d="M155.2 277V308" stroke="#c8b07a" stroke-opacity=".35" stroke-width=".4"/>
-    <path d="M142 274.2V276.6Q156 281.4 170 276.6V274.2" fill="#3a2516" stroke="#c8b07a" stroke-width=".5"/>
-    <ellipse cx="156" cy="274.2" rx="14" ry="3.6" fill="#5a3a20" stroke="#c8b07a" stroke-width=".7"/>
-    <path d="M145.5 273.4Q152 271.6 160 271.9" stroke="#fff" stroke-opacity=".1" stroke-width=".8" fill="none" stroke-linecap="round"/></g>`;
+  return `<g class="side-table"><ellipse cx="145" cy="312" rx="12" ry="2.6" fill="#000" opacity=".3"/>
+    <path d="M136 311Q145 306 154 311Q145 313.4 136 311Z" fill="#3a2516" stroke="#c8b07a" stroke-width=".5"/>
+    <rect x="143.6" y="276" width="2.8" height="33" fill="#4a2f1b"/><path d="M144.2 277V308" stroke="#c8b07a" stroke-opacity=".35" stroke-width=".4"/>
+    <path d="M131 274.2V276.6Q145 281.4 159 276.6V274.2" fill="#3a2516" stroke="#c8b07a" stroke-width=".5"/>
+    <ellipse cx="145" cy="274.2" rx="14" ry="3.6" fill="#5a3a20" stroke="#c8b07a" stroke-width=".7"/>
+    <path d="M134.5 273.4Q141 271.6 149 271.9" stroke="#fff" stroke-opacity=".1" stroke-width=".8" fill="none" stroke-linecap="round"/></g>`;
 }
 function mugSVG(h){
   const d=rDay(),ready=d>=1&&d<=24,o=ready?cocoaOpened(h,d):{me:false};const ball=ready&&!o.me;
-  return `${sideTableSVG()}<g class="room-mug${ball?' has-ball':''}" transform="translate(156 274) scale(.72) translate(-180 -322.6)">
+  return `${sideTableSVG()}<g class="room-mug${ball?' has-ball':''}" transform="translate(145 274) scale(.72) translate(-180 -322.6)">
     <ellipse cx="180" cy="322" rx="13" ry="3.4" fill="#efe6d4" stroke="#c8b07a" stroke-width=".7"/>
     <path d="M171 305H189L188 320Q180 323 172 320Z" fill="#efe6d4"/><path d="M171 305H189" stroke="#c8b07a" stroke-width=".6"/>
     <path d="M171.5 309H188.5" stroke="#8c2f3a" stroke-width="1.6" opacity=".85"/>
@@ -1192,6 +1192,8 @@ function hereWatch(h){
     hereCh=sb.channel('here:'+h.id,{config:{presence:{key:ME.id}}});
     hereCh.on('presence',{event:'sync'},()=>{const st=hereCh.presenceState(),was=!!HERE[h.id];HERE[h.id]=Object.keys(st).some(k=>k!==ME.id);
       if(was!==HERE[h.id]&&S.screen==='house'&&H()&&H().id===h.id){hereSofa(h);if(HERE[h.id])toast(`${ga(h.name)} 지금 이 집에 들어왔어요`);}})
+      .on('broadcast',{event:'deco'},m=>{const p=m&&m.payload;if(!p||!['theme','paper','floor','sofa'].includes(p.k))return;
+        if(p.k==='theme')h.theme=p.v;else decoOf(h)[p.k]=p.v;save();if(S.screen==='house'&&H()&&H().id===h.id)renderHouseKeepModal();})
       .subscribe(s=>{if(s==='SUBSCRIBED')hereCh.track({at:Date.now()});});
   }catch(e){hereCh=null;}
 }
@@ -1316,7 +1318,7 @@ function cloudPull(){if(!sb||!ME)return Promise.resolve(false);if(pulling)return
     const oldImg={};(S.houses||[]).forEach(h=>[...h.sent,...h.recv].forEach(m=>{if(m.img&&m.img.startsWith('data:'))oldImg[m.id]=m.img;}));
     const houseOfPerson={};
     const houses=hs.data.sort((a,b)=>a.created_at<b.created_at?-1:1).map(r=>{
-      const mine=r.owner===ME.id,other=mine?r.guest:r.owner,op=other?prof[other]:null,rel=REL_APP[r.rel]||'friend',o=old[r.id]||{};
+      const dz=r.deco&&typeof r.deco==='object'?r.deco:null,mine=r.owner===ME.id,other=mine?r.guest:r.owner,op=other?prof[other]:null,rel=REL_APP[r.rel]||'friend',o=old[r.id]||{};
       if(other)houseOfPerson[other]=r.id;
       const toM=m=>({id:m.id,day:dayOfDate(m.day),date:m.day,img:url[m.id]||oldImg[m.id]||'',mos:m.mosaic||'',msg:cap[m.id]||'',hint:m.hint||'비밀',special:SPECIAL.has(dayOfDate(m.day)),mat:m.mat||'ivory'});
       const sent=ms.data.filter(m=>m.house_id===r.id&&m.author===ME.id).map(m=>({...toM(m),opened:m.opened}));
@@ -1325,7 +1327,7 @@ function cloudPull(){if(!sb||!ME)return Promise.resolve(false);if(pulling)return
       const name=op?op.name:r.guest_name;
       const wishTheirs=other?ws.data.filter(w=>w.owner===other).map(w=>{const cl=cs.data.find(c=>c.wish_id===w.id);const ow=(o.wishTheirs||[]).find(x=>x.id===w.id)||{};
         return {id:w.id,n:w.title,l:w.link||'',c:!!cl,mineClaim:!!(cl&&cl.santa===ME.id),by:cl?(cl.santa===ME.id?r.id:'_'):null,v:ow.v||false};}):[];
-      return {id:r.id,name,rel,tex:r.texture||'brick',roof:r.roof||'slate',crown:r.crown||'wreath',deco:o.deco||{},theme:o.theme||THEME_OF[rel],owner:mine,pending:!other,invite:mine?r.invite_code:null,
+      return {id:r.id,name,rel,tex:r.texture||'brick',roof:r.roof||'slate',crown:r.crown||'wreath',deco:dz?{paper:dz.paper,floor:dz.floor,sofa:dz.sofa}:(o.deco||{}),theme:(dz&&THEMES[dz.theme]?dz.theme:null)||(dz?THEME_OF[rel]:o.theme||THEME_OF[rel]),owner:mine,pending:!other,invite:mine?r.invite_code:null,
         sent,recv,wishTheirs,wishMine:[],letter:myL?myL.body:(o.letter||''),
         theirLetter:thL?thL.body:(unlocked?`${name}의 편지는 비어 있어요.`:`${name}의 편지는 25일에 열려요.`),
         theirBirthday:op?bdOf(op.birthday):null,star:op&&op.star!=null?op.star:null,playlist:o.playlist||defaultPlaylist(name),now:o.now||0};});
@@ -1376,6 +1378,9 @@ async function cloudAct(a,t,h,e){
       try{await navigator.share({title:'별과 마을 · Star n Vill\'',text:`${S.myName||''}${S.myName?'이(가) ':''}별과 마을에 우리 집을 지었어요 ✦`,url:inviteURL(hh)});}catch(err){}return true;}
     case 'inv-copy':{const hh=S.houses.find(x=>x.id===$('#modal').dataset.inv);if(!hh)return true;
       try{await navigator.clipboard.writeText(inviteURL(hh));toast('초대 링크를 복사했어요');}catch(err){const r=document.createRange();r.selectNodeContents($('#invLink'));const s=getSelection();s.removeAllRanges();s.addRange(r);$('#invErr').textContent='링크를 길게 눌러 복사해 주세요.';}return true;}
+    case 'theme':case 'paper':case 'floor':case 'sofa':{const v=t.dataset.v;const {error}=await sb.rpc('set_deco',{hid:h.id,k:a,v});
+      if(error&&!/set_deco|function/i.test(error.message||'')){toast(errKo(error));return true;}
+      if(!error&&hereCh&&hereCh.send)try{hereCh.send({type:'broadcast',event:'deco',payload:{k:a,v}});}catch(e){}return false;}
     case 'roof':case 'crown':if(!h.owner){toast('지붕은 집을 지은 사람이 바꿀 수 있어요');return true;}
       {const v=t.dataset.v;const {error}=await sb.from('houses').update({[a]:v}).eq('id',h.id);if(error){toast(errKo(error));return true;}}return false;
     case 'tex':if(!h.owner){toast('외벽은 집을 지은 사람이 바꿀 수 있어요');return true;}
@@ -2070,7 +2075,7 @@ function renderHouse(){
       ${sent.length||canAdd?`<div class="grid3">${addCard}${sent.map(m=>matCard(m,'sent')).join('')}</div>`:''}${sent.length?'':`<p class="empty">아직 보낸 추억이 없어요. 첫 추억을 양말에 넣어 보세요.</p>`}</section>
     <section class="sect" id="recv-list"><div class="sect-head"><p class="caps">Received</p><h3>나에게 온 추억</h3><p>${un?'모든 추억이 열렸어요':'12월 25일 0시에 열려요. 그 전엔 힌트만 보여요'}</p></div>
       ${unhung?`<p class="hint-text" style="margin:-6px 0 14px">양말 속에 새 추억 ${unhung}개가 기다리고 있어요</p>`:''}${hungOf(h).length?`<div class="grid3">${hungOf(h).map(m=>un?matCard(m,'recv'):envelope(m)).join('')}</div>`:`<p class="empty">아직 도착한 추억이 없어요.</p>`}</section>
-    <section class="sect"><div class="sect-head"><p class="caps">Interior</p><h3>집 안 꾸미기</h3><p>집 안은 나만 보는 모습이에요. ${esc(h.name)}도 자기 집 안을 따로 꾸며요</p></div>
+    <section class="sect"><div class="sect-head"><p class="caps">Interior</p><h3>집 안 꾸미기</h3><p>${wa(h.name)} 같은 집 안을 봐요. 둘 중 누구나 바꿀 수 있어요</p></div>
       ${optRow('벽 색','theme',THEMES,h.theme,v=>v[0],v=>v[1])}
       ${optRow('벽지','paper',PAPER,decoOf(h).paper||'damask')}
       ${optRow('바닥','floor',FLOOR,decoOf(h).floor||'plank')}
@@ -2878,7 +2883,7 @@ function audioKick(){audioUnlock();if(S.sound===false)return;
   const go=()=>{if(S.screen!=='house')sceneMusic();if(AUD.ctx&&AUD.ctx.state==='running'&&AUD.playing){AUDIO_EVENTS.forEach(ev=>document.removeEventListener(ev,audioKick,true));}};
   if(AUD.ctx&&AUD.ctx.state!=='running'&&AUD.ctx.resume)AUD.ctx.resume().then(go).catch(()=>{});else setTimeout(go,30);}
 AUDIO_EVENTS.forEach(ev=>document.addEventListener(ev,audioKick,true));
-const CLOUD_ACTS=new Set(['roof','crown','ob-mail','ob-mail-back','ob-mail-send','ob-mail-verify','account','logout','del-acct','del-acct-ok','ob-login','ob-name','ob-done','ob-install','ob-home','build','invite','inv-share','inv-copy','tex','claim','wdel','wadd','save-bday','save-letter','reset','demo-claim','swap-view']);
+const CLOUD_ACTS=new Set(['theme','paper','floor','sofa','roof','crown','ob-mail','ob-mail-back','ob-mail-send','ob-mail-verify','account','logout','del-acct','del-acct-ok','ob-login','ob-name','ob-done','ob-install','ob-home','build','invite','inv-share','inv-copy','tex','claim','wdel','wadd','save-bday','save-letter','reset','demo-claim','swap-view']);
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-act]');if(!t)return;const a=t.dataset.act;const h=H();
   if(CLOUD&&CLOUD_ACTS.has(a)){(a==='ob-home'&&!CFG.kakao?cloudAct('ob-done',t,h,e):cloudAct(a,t,h,e)).then(done=>{if(!done)act(a,t,h,e);}).catch(err=>toast(errKo(err)));return;}
