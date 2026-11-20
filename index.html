@@ -573,7 +573,7 @@ a.btn.buy{text-decoration:none;display:inline-block}
 .invite-link{margin:14px 0 6px;padding:12px;border:1px solid var(--line);font-size:12.5px;word-break:break-all;color:var(--champagne);-webkit-user-select:all;user-select:all}
 
 /* ---------- cocoa ball, tree, lucky things ---------- */
-.mug-btn{position:absolute;left:44.2%;top:76.6%;width:11.6%;height:9%;background:none;border:0;padding:0;border-radius:50%}
+.mug-btn{position:absolute;left:39.2%;top:64%;width:9.4%;height:9.4%;background:none;border:0;padding:0;border-radius:50%}
 .tree-btn{position:absolute;left:64.2%;top:36.6%;width:17%;height:28.4%;background:none;border:0;padding:0}
 .mug-btn:focus-visible,.tree-btn:focus-visible{outline:1px solid var(--champagne)}
 .mug-btn.ready::after{content:'';position:absolute;inset:-30%;border-radius:50%;background:radial-gradient(circle,rgba(255,217,143,.32),rgba(255,217,143,0) 62%);animation:mugHint 2.6s ease-in-out infinite;will-change:opacity;pointer-events:none}
@@ -656,6 +656,15 @@ a.btn.buy{text-decoration:none;display:inline-block}
 .opt-row{margin:0 0 14px}.opt-l{display:block;text-align:center;font-size:11.5px;color:var(--muted);margin:0 0 8px;letter-spacing:.08em}
 .prep-note{text-align:center;font-family:var(--font-serif-ko);font-size:13px;color:var(--muted);margin:18px 0 0;line-height:1.8}
 @media (prefers-reduced-motion:reduce){.cocoa-scene{transition:none}.meteor,.santa-fly{animation:none}}
+.seat-tag{position:absolute;top:81.6%;transform:translate(-50%,-50%) rotate(-2deg);display:inline-flex;align-items:center;gap:2.5px;background:#efe8da;color:var(--ink);font-family:var(--font-scene);font-weight:500;font-size:7.5px;line-height:1.45;padding:1px 4px;border:1px solid rgba(200,176,122,.7);box-shadow:0 2px 3px rgba(0,0,0,.35);white-space:nowrap;pointer-events:none;z-index:2}
+.seat-tag::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--c);box-shadow:0 0 0 .5px rgba(0,0,0,.25)}
+.seat-tag.me{left:11.8%;background:#8c2f3a;color:#efe8da;transform:translate(-50%,-50%) rotate(2deg)}
+.seat-tag.them{left:25.8%}
+.ob-stars{display:grid;grid-template-columns:repeat(6,36px);gap:4px;justify-content:center;margin:8px auto 2px}
+.ob-stars button{width:36px;height:36px;padding:0;border:0;background:none;border-radius:50%;display:grid;place-items:center;transition:background .2s}
+.ob-stars button.on{background:rgba(233,210,154,.16);box-shadow:inset 0 0 0 1px var(--champagne)}
+.ob-stars .star-badge{display:block}
+.ob-starname{font-family:var(--font-scene);font-size:13px;color:var(--champagne);margin:6px 0 14px;min-height:18px}
 </style>
 </head>
 <body>
@@ -951,11 +960,18 @@ function treeSVG(h){
     <path d="M249 178Q262 184 276 176M244 199Q262 207 281 197M240 221Q262 230 285 219" fill="none" stroke="#c8b07a" stroke-opacity=".55" stroke-width=".7"/>
     ${orn}${star}</g>`;
 }
+function sideTableSVG(){
+  return `<g class="side-table"><ellipse cx="156" cy="312" rx="12" ry="2.6" fill="#000" opacity=".3"/>
+    <path d="M147 311Q156 306 165 311Q156 313.4 147 311Z" fill="#3a2516" stroke="#c8b07a" stroke-width=".5"/>
+    <rect x="154.6" y="276" width="2.8" height="33" fill="#4a2f1b"/><path d="M155.2 277V308" stroke="#c8b07a" stroke-opacity=".35" stroke-width=".4"/>
+    <path d="M142 274.2V276.6Q156 281.4 170 276.6V274.2" fill="#3a2516" stroke="#c8b07a" stroke-width=".5"/>
+    <ellipse cx="156" cy="274.2" rx="14" ry="3.6" fill="#5a3a20" stroke="#c8b07a" stroke-width=".7"/>
+    <path d="M145.5 273.4Q152 271.6 160 271.9" stroke="#fff" stroke-opacity=".1" stroke-width=".8" fill="none" stroke-linecap="round"/></g>`;
+}
 function mugSVG(h){
   const d=rDay(),ready=d>=1&&d<=24,o=ready?cocoaOpened(h,d):{me:false};const ball=ready&&!o.me;
-  return `<g class="room-mug${ball?' has-ball':''}">
-    <ellipse cx="180" cy="324" rx="19" ry="4.6" fill="#000" opacity=".28"/>
-    <ellipse cx="180" cy="322" rx="18" ry="4.4" fill="#5a3a20" stroke="#c8b07a" stroke-width=".7"/>
+  return `${sideTableSVG()}<g class="room-mug${ball?' has-ball':''}" transform="translate(156 274) scale(.72) translate(-180 -322.6)">
+    <ellipse cx="180" cy="322" rx="13" ry="3.4" fill="#efe6d4" stroke="#c8b07a" stroke-width=".7"/>
     <path d="M171 305H189L188 320Q180 323 172 320Z" fill="#efe6d4"/><path d="M171 305H189" stroke="#c8b07a" stroke-width=".6"/>
     <path d="M171.5 309H188.5" stroke="#8c2f3a" stroke-width="1.6" opacity=".85"/>
     <path d="M189 308.5Q195 309 194 313.5Q193 317.5 188 316.8" fill="none" stroke="#efe6d4" stroke-width="2.2"/>
@@ -1206,6 +1222,12 @@ function sofaSVG(h){
   const them=hereThem(h);
   return `<g class="sofa-people">${starFig(45,myStar(),true)}${them?starFig(89,theirStar(h),false):`<g transform="translate(46 0)">${PILLOW}</g>`}</g>`;
 }
+function starGrid(act){const cur=myStar();return `<div class="ob-stars" role="radiogroup" aria-label="별 색">${STARS.map(([n],i)=>`<button type="button" role="radio" aria-checked="${i===cur}" aria-label="${n} 별" class="${i===cur?'on':''}" data-act="${act}" data-v="${i}">${starBadge(i,30)}</button>`).join('')}</div><p class="ob-starname">${starOf(cur)[0]} 별</p>`;}
+function starPick(t){const v=+t.dataset.v;S.myStar=v;save();
+  document.querySelectorAll('.ob-stars button').forEach(b=>{const on=+b.dataset.v===v;b.classList.toggle('on',on);b.setAttribute('aria-checked',on);});
+  const l=$('.ob-starname');if(l)l.textContent=`${starOf(v)[0]} 별`;}
+function seatTags(h){const nm=[...(h.name||'')];const who=nm.length>4?nm.slice(0,3).join('')+'…':nm.join('');
+  return `<span class="seat-tag me" style="--c:${starOf(myStar())[1]}">내 자리</span><span class="seat-tag them" style="--c:${starOf(theirStar(h))[1]}">${esc(who)} 자리</span>`;}
 function hereSofa(h){const g=document.querySelector('.room svg .sofa-people');if(g)g.outerHTML=sofaSVG(h);
   const n=document.querySelector('.here-line');if(n)n.outerHTML=hereLine(h);}
 function hereLine(h){return `<p class="here-line">${hereThem(h)?`<i></i>${ga(h.name)} 지금 이 집에 같이 있어요`:''}</p>`;}
@@ -1338,7 +1360,8 @@ async function cloudAct(a,t,h,e){
   switch(a){
     case 'ob-login':{if(t.disabled)return true;t.disabled=true;try{if(await cloudSignIn()){OB=2;render();}}catch(err){t.disabled=false;toast(errKo(err));}return true;}
     case 'ob-name':{const n=$('#obName').value.trim();if(!n){$('#obErr').textContent='이름을 적어 주세요.';return true;}
-      t.disabled=true;const {error}=await sb.from('profiles').upsert({id:ME.id,name:n});if(error){t.disabled=false;$('#obErr').textContent=errKo(error);return true;}
+      t.disabled=true;let {error}=await sb.from('profiles').upsert({id:ME.id,name:n,star:myStar()});
+      if(error&&/star/.test(error.message||''))({error}=await sb.from('profiles').upsert({id:ME.id,name:n}));if(error){t.disabled=false;$('#obErr').textContent=errKo(error);return true;}
       S.myName=n;save();OB=3;render();return true;}
     case 'ob-done':case 'ob-install':{if(a==='ob-install'&&installEvt){installEvt.prompt();installEvt.userChoice.finally(()=>{installEvt=null;});}
       S.onboarded=true;OB=0;S.screen='village';save();await tryJoin();await cloudPull();render();window.scrollTo(0,0);toast(`${S.myName||''}${S.myName?'님, ':''}마을에 오신 걸 환영해요`);return true;}
@@ -1388,7 +1411,7 @@ async function cloudAct(a,t,h,e){
       if(p){S.myName=p.name;S.myBirthday=bdOf(p.birthday);if(p.star!=null)S.myStar=p.star;S.onboarded=true;save();await tryJoin();await cloudPull();render();toast(`${p.name}님, 다시 오셨네요`);}
       else{OB=2;render();}return true;}
     case 'account':{const how=ME&&ME.app_metadata&&ME.app_metadata.provider==='kakao'?'카카오':(ME&&ME.email?esc(ME.email):'이 기기');
-      openModal(`${sheetHead('Account','내 계정')}<div class="my-star">${starBadge(myStar(),56)}<p><span class="caps">My star</span><b>${starOf(myStar())[0]} 별</b></p></div><p class="hint-text" style="margin-top:4px">${esc(S.myName||'')} · ${how}(으)로 로그인했어요</p>
+      openModal(`${sheetHead('Account','내 계정')}<div class="my-star">${starBadge(myStar(),56)}<p><span class="caps">My star</span><b>${starOf(myStar())[0]} 별</b><button class="link-btn" data-act="star-pick" style="align-self:flex-start;font-size:12px">색 바꾸기</button></p></div><p class="hint-text" style="margin-top:4px">${esc(S.myName||'')} · ${how}(으)로 로그인했어요</p>
         <button class="ghost" data-act="logout">로그아웃</button>
         <button class="link-btn del-acct" data-act="del-acct">계정 삭제</button>`);return true;}
     case 'logout':{await sb.auth.signOut();try{localStorage.removeItem(KEY);}catch(e){}location.reload();return true;}
@@ -1715,7 +1738,7 @@ function wallSVG(h){
   return out;
 }
 function giftsSVG(h){
-  const n=S.day===25?S.wishMine.filter(w=>w.c&&w.by===h.id).length:0;const P=[[154,266],[204,267],[179,272],[132,273],[228,273],[166,280]];
+  const n=S.day===25?S.wishMine.filter(w=>w.c&&w.by===h.id).length:0;const P=[[190,266],[214,267],[202,274],[182,277],[226,275],[205,283]];
   const C=[['#efe8da','#8c2f3a'],['#5b1d25','#c8b07a'],['#5d6343','#efe8da'],['#efe8da','#5d6343'],['#1d2c58','#c8b07a'],['#5b1d25','#efe8da']];
   let out='';for(let k=0;k<Math.min(n,6);k++){const [x,y]=P[k],[f,r]=C[k],w=k%2?16:20,hh=k%2?12:15;
     out+=`<g class="${h._newGift&&k===n-1?'gift-drop':''}"><ellipse cx="${x}" cy="${y+1}" rx="${w*.6}" ry="2" fill="#000" opacity=".3"/><rect x="${x-w/2}" y="${y-hh}" width="${w}" height="${hh}" fill="${f}" stroke="#c8b07a" stroke-width=".5"/><rect x="${x-w/2-1}" y="${y-hh-3}" width="${w+2}" height="4" fill="${f}" stroke="#c8b07a" stroke-width=".5"/><path d="M${x} ${y-hh-3}V${y}M${x-w/2} ${y-hh/2}H${x+w/2}" stroke="${r}" stroke-width="1.8"/><path d="M${x} ${y-hh-3}C${x-5} ${y-hh-9} ${x-8} ${y-hh-5} ${x-2} ${y-hh-3}M${x} ${y-hh-3}C${x+5} ${y-hh-9} ${x+8} ${y-hh-5} ${x+2} ${y-hh-3}" fill="none" stroke="${r}" stroke-width="1.2"/></g>`;}
@@ -2035,7 +2058,7 @@ function renderHouse(){
       <button class="lp-btn" data-act="playlist" aria-label="레코드 플레이어, 함께 듣는 플레이리스트 열기"></button>
       <button class="sound-btn" data-act="sound" aria-label="배경음악 ${S.sound===false?'켜기':'끄기'}">${S.sound===false?'♪ Off':'♪ On'}</button>
       <button class="tree-btn" data-act="tree" aria-label="트리, 모은 쪽지 다시 보기"></button>
-      <button class="mug-btn${rDay()>=1&&rDay()<=24&&!cocoaOpened(h,rDay()).me?' ready':''}" data-act="cocoa" aria-label="머그잔, 오늘의 코코아볼 열기"></button>
+      ${seatTags(h)}<button class="mug-btn${rDay()>=1&&rDay()<=24&&!cocoaOpened(h,rDay()).me?' ready':''}" data-act="cocoa" aria-label="머그잔, 오늘의 코코아볼 열기"></button>
       <button class="globe-btn" data-act="globe" aria-label="스노우볼, 서로의 위시리스트 열기">${globeSVG('rg',REL[h.rel].body)}</button>
     </div>
     <div class="legend">${unhung?`<span class="lg-new">니트 양말이 부풀었어요 · 눌러서 ${unhung}개를 벽에 걸어요</span>`:''}<span>벨벳 양말 · 내가 ${esc(h.name)}에게<b>${h.sent.length}</b>${unopened?` (${ga(h.name)} 아직 안 연 것 ${unopened})`:''}</span><span>벽 · ${ga(h.name)} 보낸 추억<b>${hungOf(h).length}</b></span><span>레코드 · 함께 듣는 플레이리스트</span><span>스노우볼 · 서로 갖고 싶은 선물</span><span>머그잔 · 오늘의 코코아볼</span><span>트리 · 모은 쪽지<b>${Object.keys(cocoaOf(h).mine).length}</b></span>${S.day===25?`<span>선물 · 산타가 두고 간 것<b>${S.wishMine.filter(w=>w.c&&w.by===h.id).length}</b></span>`:''}</div>
@@ -2272,8 +2295,9 @@ function renderOnboard(){
     <div class="ob-login"><button class="ob-kakao" data-act="ob-login"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3C5.6 3 2 5.8 2 9.2c0 2.2 1.5 4.1 3.7 5.2l-.8 3 3.3-2.2c.6.1 1.2.1 1.8.1 4.4 0 8-2.8 8-6.1S14.4 3 10 3Z" fill="#191600"/></svg>카카오로 시작하기</button>
       <button class="ob-alt" data-act="ob-login">Google로 계속하기</button><button class="ob-alt" data-act="ob-login">Apple로 계속하기</button></div>
     <p class="ob-fine">프로토타입이라 실제 로그인은 되지 않아요. 아무 버튼이나 눌러 보세요.</p></div>`;
-  else if(OB===2)body=`<div class="ob-card"><p class="caps">Your name</p><h2>마을에서 어떻게 불러 드릴까요?</h2><p class="ob-p">집 이름표와 편지에 이 이름이 쓰여요.</p>
+  else if(OB===2&&(S.myStar!=null||(S.myStar=Math.floor(Math.random()*30))>=0))body=`<div class="ob-card"><p class="caps">Your name</p><h2>마을에서 어떻게 불러 드릴까요?</h2><p class="ob-p">집 이름표와 편지에 이 이름이 쓰여요.</p>
     <div class="field" style="max-width:260px;margin:22px auto 6px"><input id="obName" maxlength="10" placeholder="예: 하랑" value="${esc(S.myName||'')}" style="text-align:center"></div><p class="err" id="obErr"></p>
+    <p class="caps" style="margin:14px 0 0">Your star</p><p class="ob-p" style="margin:4px 0 0">마을에서 나를 나타낼 별의 색을 골라요.</p>${starGrid('ob-star')}
     <button class="primary" data-act="ob-name">다음</button></div>`;
   else if(OB===6){
     const ua=navigator.userAgent||'',ios=/iPhone|iPad|iPod/.test(ua),android=/Android/.test(ua),standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
@@ -2866,6 +2890,10 @@ function act(a,t,h,e){
     case 'home':S.winTips=3;leaveHouse();break;
     case 'tex':h.tex=t.dataset.v;save();renderHouseKeepModal();toast(`외벽을 ${TEX[h.tex]}${batchim(TEX[h.tex])?'으로':'로'} 바꿨어요`);break;
     case 'ob-next':OB++;render();window.scrollTo(0,0);break;
+    case 'ob-star':starPick(t);break;
+    case 'star-pick':openModal(`${sheetHead('My star','내 별 색')}${starGrid('star-set')}`);break;
+    case 'star-set':{starPick(t);const v=S.myStar;if(CLOUD&&typeof ME!=='undefined'&&ME)sb.from('profiles').update({star:v}).eq('id',ME.id).then(({error})=>{if(error)toast(errKo(error));});
+      const g=document.querySelector('.room svg .sofa-people');if(g&&H())g.outerHTML=sofaSVG(H());const m=document.querySelector('.seat-tag.me');if(m)m.style.setProperty('--c',starOf(v)[1]);break;}
     case 'ob-login':OB=2;render();toast('로그인했어요');break;
     case 'ob-name':{const n=$('#obName').value.trim();if(!n){$('#obErr').textContent='이름을 적어 주세요.';break;}S.myName=n;save();OB=3;render();break;}
     case 'ob-home':OB=6;render();window.scrollTo(0,0);break;
