@@ -633,6 +633,11 @@ function stashJoin(){const q=new URLSearchParams(location.search),c=q.get('join'
 const pendingJoin=()=>{try{return localStorage.getItem('snv-join');}catch(e){return null;}};
 async function cloudInit(){
   stashJoin();
+  // a login that bounced back with an error (e.g. Kakao cancelled) — say so, then tidy the address bar
+  const q=new URLSearchParams(location.search+'&'+location.hash.slice(1));let bounce='';
+  if(q.get('error')){bounce=q.get('error')==='access_denied'&&!/signup/i.test(q.get('error_code')||'')?'로그인을 취소했어요.':'로그인 중에 문제가 생겼어요. 다시 시도해 주세요.';
+    const keep=new URLSearchParams(location.search);['error','error_code','error_description','sb'].forEach(k=>keep.delete(k));const rest=keep.toString().replace(/=(?=&|$)/g,'');
+    history.replaceState(null,'',location.pathname+(rest?'?'+rest:''));}
   sb=window.supabase.createClient(CFG.url,CFG.anonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'snv-auth'}});
   try{const {data}=await sb.auth.getSession();ME=data.session?data.session.user:null;
     if(ME){const {data:p,error}=await sb.from('profiles').select('name,birthday').eq('id',ME.id).maybeSingle();if(error)throw error;
@@ -641,7 +646,7 @@ async function cloudInit(){
     else{S.onboarded=false;OB=0;}
   }catch(e){cloudErr=errKo(e);}
   cloudReady=true;save();render();
-  if(cloudErr)toast(cloudErr);
+  if(cloudErr)toast(cloudErr);else if(bounce)toast(bounce);
 }
 async function cloudSignIn(){
   if(CFG.kakao){const {error}=await sb.auth.signInWithOAuth({provider:'kakao',options:{redirectTo:location.origin+location.pathname+location.search,queryParams:{scope:'profile_nickname'}}});if(error)throw error;return false;}
