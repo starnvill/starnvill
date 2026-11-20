@@ -562,6 +562,8 @@ a.btn.buy{text-decoration:none;display:inline-block}
 .cloud .demo,.cloud #swapBtn{display:none!important}
 .pending-note{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 4px;padding:10px 12px;border:1px solid var(--line);background:rgba(8,14,32,.6);font-size:12.5px;color:var(--muted);font-family:var(--font-serif-ko)}
 .pending-note .btn{white-space:nowrap}
+.del-acct{display:block;margin:18px auto 0;color:var(--muted);font-size:12px;text-decoration:underline}
+.primary.danger{background:#7a2a33;color:#f6eee4}
 .invite-link{margin:14px 0 6px;padding:12px;border:1px solid var(--line);font-size:12.5px;word-break:break-all;color:var(--champagne);-webkit-user-select:all;user-select:all}
 </style>
 </head>
@@ -742,6 +744,32 @@ async function cloudAct(a,t,h,e){
     case 'save-letter':{const body=$('#letterIn').value;t.disabled=true;
       const {error}=await sb.from('letters').upsert({house_id:h.id,author:ME.id,body,updated_at:new Date().toISOString()});t.disabled=false;
       if(error){toast(errKo(error));return true;}h.letter=body;save();toast(`편지를 별에 맡겼어요. 25일에 ${h.name}에게 열려요`);return true;}
+    case 'ob-mail':OBM={step:'email',email:''};render();setTimeout(()=>{const i=$('#obMail');if(i)i.focus();},60);return true;
+    case 'ob-mail-back':OBM=null;render();return true;
+    case 'ob-mail-send':{const em=(t.dataset.again?OBM.email:($('#obMail')||{}).value||'').trim();
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){$('#obErr').textContent='이메일 주소를 확인해 주세요.';return true;}
+      t.disabled=true;const {error}=await sb.auth.signInWithOtp({email:em,options:{shouldCreateUser:true}});t.disabled=false;
+      if(error){$('#obErr').textContent=/rate|seconds/i.test(error.message)?'잠시 뒤에 다시 시도해 주세요.':errKo(error);return true;}
+      OBM={step:'code',email:em};render();setTimeout(()=>{const i=$('#obCode');if(i)i.focus();},60);if(t.dataset.again)toast('코드를 다시 보냈어요');return true;}
+    case 'ob-mail-verify':{const code=($('#obCode').value||'').replace(/\D/g,'');if(code.length<6){$('#obErr').textContent='메일로 온 숫자 6자리를 적어 주세요.';return true;}
+      t.disabled=true;const {data,error}=await sb.auth.verifyOtp({email:OBM.email,token:code,type:'email'});t.disabled=false;
+      if(error){$('#obErr').textContent=/expired|invalid/i.test(error.message)?'코드가 맞지 않거나 시간이 지났어요. 다시 받아 주세요.':errKo(error);return true;}
+      ME=data.user;OBM=null;const {data:p}=await sb.from('profiles').select('name,birthday').eq('id',ME.id).maybeSingle();
+      if(p){S.myName=p.name;S.myBirthday=bdOf(p.birthday);S.onboarded=true;save();await tryJoin();await cloudPull();render();toast(`${p.name}님, 다시 오셨네요`);}
+      else{OB=2;render();}return true;}
+    case 'account':{const how=ME&&ME.app_metadata&&ME.app_metadata.provider==='kakao'?'카카오':(ME&&ME.email?esc(ME.email):'이 기기');
+      openModal(`${sheetHead('Account','내 계정')}<p class="hint-text" style="margin-top:-4px">${esc(S.myName||'')} · ${how}(으)로 로그인했어요</p>
+        <button class="ghost" data-act="logout">로그아웃</button>
+        <button class="link-btn del-acct" data-act="del-acct">계정 삭제</button>`);return true;}
+    case 'logout':{await sb.auth.signOut();try{localStorage.removeItem(KEY);}catch(e){}location.reload();return true;}
+    case 'del-acct':openModal(`${sheetHead('Delete account','정말 계정을 지울까요?')}<p class="hint-text" style="margin-top:-4px">내가 지은 집, 보낸 추억과 사진, 편지, 위시리스트가 모두 지워지고 되돌릴 수 없어요.<br>친구가 지은 집에서는 나가게 돼요.</p>
+        <p class="err" id="delErr"></p><button class="primary danger" data-act="del-acct-ok">네, 모두 지울게요</button><button class="ghost" data-act="close">취소</button>`);return true;
+    case 'del-acct-ok':{t.disabled=true;
+      try{const {data:mine}=await sb.from('memories').select('id,house_id').eq('author',ME.id);
+        if(mine&&mine.length)await sb.storage.from('originals').remove(mine.map(m=>`${m.house_id}/${m.id}.jpg`));
+        const {error}=await sb.rpc('delete_me');if(error)throw error;
+        await sb.auth.signOut();try{localStorage.removeItem(KEY);}catch(e){}location.reload();}
+      catch(err){t.disabled=false;$('#delErr').textContent=errKo(err);}return true;}
     case 'reset':case 'demo-claim':case 'swap-view':return true;
   }
   return false;
@@ -1317,7 +1345,7 @@ function renderVillage(){
       <p class="v-date">${dayLine()}</p>${count}${S.sound===false?'':'<p class="tap-hint">♪ 화면을 한 번 누르면 음악이 시작돼요</p>'}</header>
     <div class="scene">${sceneSVG()}${sceneFx(d)}${pills}</div>
     <section class="residents" aria-label="마을 주민"><div class="sect-head"><p class="caps">Residents</p><h3>내 마을의 집들</h3><p>집 한 채에 한 사람, 최대 다섯 채</p></div>${rows}</section>
-    <p class="v-foot">지금은 예시로 채운 프로토타입이에요.<br>실제로 친구와 연결되는 건 다음 단계에서 만들어요.</p>`;
+    ${CLOUD?`<p class="v-foot"><button class="link-btn" data-act="account">${esc(S.myName||'나')} · 계정</button></p>`:`<p class="v-foot">지금은 예시로 채운 프로토타입이에요.<br>실제로 친구와 연결되는 건 다음 단계에서 만들어요.</p>`}`;
 }
 function matCard(m,who){
   const dark=m.mat==='midnight'||m.mat==='olive';
@@ -1560,6 +1588,19 @@ function obArt(k){
   if(k==='stocking')return `<div class="ob-art ob-stk">${stockingSVG('','ob',true,3)}</div>`;
   return `<svg viewBox="0 0 160 110" class="ob-art"><g stroke="#c8b07a" stroke-opacity=".6" stroke-width=".8" fill="none"><path class="cline" pathLength="1" d="M22 78L48 52L80 64L108 34L138 46"/></g>${[[22,78],[48,52],[80,64],[108,34],[138,46]].map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="9" fill="#ffd77a" opacity=".18"/><path d="${star4(x,y,i===3?7:5)}" fill="#ffe8a8"/>`).join('')}<path d="${star4(80,18,4)}" fill="#f6ecd4" opacity=".7"/></svg>`;
 }
+let OBM=null; // email login state {step:'email'|'code', email}
+function obLoginCard(){
+  const kakao=`<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3C5.6 3 2 5.8 2 9.2c0 2.2 1.5 4.1 3.7 5.2l-.8 3 3.3-2.2c.6.1 1.2.1 1.8.1 4.4 0 8-2.8 8-6.1S14.4 3 10 3Z" fill="#191600"/></svg>`;
+  if(OBM&&OBM.step==='email')return `<div class="ob-card"><p class="caps">Sign in</p><h2>이메일로 들어가기</h2><p class="ob-p">이메일로 6자리 코드를 보내 드려요.<br>비밀번호는 필요 없어요.</p>
+    <div class="field" style="max-width:300px;margin:22px auto 6px"><input id="obMail" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" value="${esc(OBM.email||'')}" style="text-align:center"></div><p class="err" id="obErr"></p>
+    <button class="primary" data-act="ob-mail-send">코드 받기</button><button class="link-btn ob-skip" data-act="ob-mail-back">← 다른 방법으로</button></div>`;
+  if(OBM&&OBM.step==='code')return `<div class="ob-card"><p class="caps">Check your inbox</p><h2>메일로 온 코드를 적어 주세요</h2><p class="ob-p"><b>${esc(OBM.email)}</b>(으)로 6자리 코드를 보냈어요.<br>메일이 안 보이면 스팸함도 확인해 주세요.</p>
+    <div class="field" style="max-width:220px;margin:22px auto 6px"><input id="obCode" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="000000" style="text-align:center;letter-spacing:.3em;font-size:20px"></div><p class="err" id="obErr"></p>
+    <button class="primary" data-act="ob-mail-verify">들어가기</button><button class="link-btn ob-skip" data-act="ob-mail-send" data-again="1">코드 다시 받기</button></div>`;
+  return `<div class="ob-card"><p class="caps">Sign in</p><h2>마을에 들어가기</h2><p class="ob-p">로그인하면 어느 기기에서든<br>내 마을과 추억이 그대로 있어요.</p>
+    <div class="ob-login">${CFG.kakao?`<button class="ob-kakao" data-act="ob-login">${kakao}카카오로 시작하기</button>`:''}
+    <button class="ob-alt" data-act="ob-mail">이메일로 시작하기</button>${CFG.kakao?'':'<button class="ob-alt" data-act="ob-login">로그인 없이 둘러보기</button>'}</div></div>`;
+}
 function renderOnboard(){
   const dots=n=>`<div class="ob-dots">${[0,1,2].map(i=>`<i class="${i===n?'on':''}"></i>`).join('')}</div>`;
   let body='';
@@ -1568,7 +1609,7 @@ function renderOnboard(){
     <p class="ob-tag">그 자체로 선물이 되어주는 소중한 곳.<br>연인, 가족, 친구, 누구든지<br>함께 추억을 기록해요.</p>
     <p class="ob-q">당신의 <i>loved 5</i>는 누구인가요?</p>
     <button class="primary" data-act="ob-next">시작하기</button><p class="ob-fine">이미 마을이 있나요? <button class="link-btn" data-act="ob-next">로그인</button></p></div>`;
-  else if(OB===1&&CLOUD)body=`<div class="ob-card"><p class="caps">Sign in</p><h2>마을에 들어가기</h2>${CFG.kakao?`<p class="ob-p">로그인하면 어느 기기에서든<br>내 마을과 추억이 그대로 있어요.</p><div class="ob-login"><button class="ob-kakao" data-act="ob-login"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3C5.6 3 2 5.8 2 9.2c0 2.2 1.5 4.1 3.7 5.2l-.8 3 3.3-2.2c.6.1 1.2.1 1.8.1 4.4 0 8-2.8 8-6.1S14.4 3 10 3Z" fill="#191600"/></svg>카카오로 시작하기</button></div>`:`<p class="ob-p">지금은 이 브라우저에 내 마을이 저장돼요.<br>카카오 로그인은 곧 열려요.</p><div class="ob-login"><button class="primary" data-act="ob-login">마을에 들어가기</button></div><p class="ob-fine">브라우저 기록을 지우면 마을을 찾을 수 없으니 주의해 주세요.</p>`}</div>`;
+  else if(OB===1&&CLOUD)body=obLoginCard();
   else if(OB===1)body=`<div class="ob-card"><p class="caps">Sign in</p><h2>마을에 들어가기</h2><p class="ob-p">로그인하면 어느 기기에서든<br>내 마을과 추억이 그대로 있어요.</p>
     <div class="ob-login"><button class="ob-kakao" data-act="ob-login"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3C5.6 3 2 5.8 2 9.2c0 2.2 1.5 4.1 3.7 5.2l-.8 3 3.3-2.2c.6.1 1.2.1 1.8.1 4.4 0 8-2.8 8-6.1S14.4 3 10 3Z" fill="#191600"/></svg>카카오로 시작하기</button>
       <button class="ob-alt" data-act="ob-login">Google로 계속하기</button><button class="ob-alt" data-act="ob-login">Apple로 계속하기</button></div>
@@ -2154,7 +2195,7 @@ function audioKick(){audioUnlock();if(S.sound===false)return;
   const go=()=>{if(S.screen!=='house')sceneMusic();if(AUD.ctx&&AUD.ctx.state==='running'&&AUD.playing){AUDIO_EVENTS.forEach(ev=>document.removeEventListener(ev,audioKick,true));}};
   if(AUD.ctx&&AUD.ctx.state!=='running'&&AUD.ctx.resume)AUD.ctx.resume().then(go).catch(()=>{});else setTimeout(go,30);}
 AUDIO_EVENTS.forEach(ev=>document.addEventListener(ev,audioKick,true));
-const CLOUD_ACTS=new Set(['ob-login','ob-name','ob-done','ob-install','ob-home','build','invite','inv-share','inv-copy','tex','claim','wdel','wadd','save-bday','save-letter','reset','demo-claim','swap-view']);
+const CLOUD_ACTS=new Set(['ob-mail','ob-mail-back','ob-mail-send','ob-mail-verify','account','logout','del-acct','del-acct-ok','ob-login','ob-name','ob-done','ob-install','ob-home','build','invite','inv-share','inv-copy','tex','claim','wdel','wadd','save-bday','save-letter','reset','demo-claim','swap-view']);
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-act]');if(!t)return;const a=t.dataset.act;const h=H();
   if(CLOUD&&CLOUD_ACTS.has(a)){(a==='ob-home'&&!CFG.kakao?cloudAct('ob-done',t,h,e):cloudAct(a,t,h,e)).then(done=>{if(!done)act(a,t,h,e);}).catch(err=>toast(errKo(err)));return;}
