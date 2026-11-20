@@ -635,14 +635,14 @@ async function cloudInit(){
   try{const {data}=await sb.auth.getSession();ME=data.session?data.session.user:null;
     if(ME){const {data:p,error}=await sb.from('profiles').select('name,birthday').eq('id',ME.id).maybeSingle();if(error)throw error;
       if(p){S.myName=p.name;S.myBirthday=bdOf(p.birthday);S.onboarded=true;await tryJoin();await cloudPull();}
-      else{S.onboarded=false;OB=2;}}
+      else{const md=ME.user_metadata||{};S.myName=(md.name||md.full_name||md.nickname||md.preferred_username||md.user_name||'').slice(0,10);S.onboarded=false;OB=2;}}
     else{S.onboarded=false;OB=0;}
   }catch(e){cloudErr=errKo(e);}
   cloudReady=true;save();render();
   if(cloudErr)toast(cloudErr);
 }
 async function cloudSignIn(){
-  if(CFG.kakao){const {error}=await sb.auth.signInWithOAuth({provider:'kakao',options:{redirectTo:location.origin+location.pathname+location.search}});if(error)throw error;return false;}
+  if(CFG.kakao){const {error}=await sb.auth.signInWithOAuth({provider:'kakao',options:{redirectTo:location.origin+location.pathname+location.search,queryParams:{scope:'profile_nickname'}}});if(error)throw error;return false;}
   const {data,error}=await sb.auth.signInAnonymously();if(error)throw error;ME=data.user;return true;
 }
 async function tryJoin(){const code=pendingJoin();if(!code||!ME)return;
