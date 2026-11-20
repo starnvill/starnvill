@@ -1254,6 +1254,8 @@ const PILLOW=`<g transform="rotate(-10 44 270)"><rect x="34" y="259" width="21" 
    CLOUD — the real, shared village (Supabase). Off in the prototype/demo.
    ===================================================================== */
 const CFG=window.SNV_SUPABASE||null;
+/* Kakao sign-in is paused: existing Kakao accounts stay signed in; new people use email. Set true to bring the button back. */
+const KAKAO_OPEN=false;
 const CLOUD=!!(CFG&&window.supabase&&/^https?:$/.test(location.protocol)&&!/[?&]demo\b/.test(location.search));
 let sb=null,ME=null,cloudReady=false,cloudErr='';
 const REL_DB={love:'lovers',friend:'friends',family:'family'},REL_APP={lovers:'love',friends:'friend',family:'family'};
@@ -1308,7 +1310,8 @@ async function cloudInit(){
 async function profSel(cols,id){const q=c=>{const x=sb.from('profiles').select(c);return id?x.eq('id',id).maybeSingle():x;};
   let r=await q(cols);if(r.error&&/star/.test(r.error.message||''))r=await q(cols.replace(',star',''));return r;}
 async function cloudSignIn(){
-  if(CFG.kakao){const {error}=await sb.auth.signInWithOAuth({provider:'kakao',options:{redirectTo:location.origin+location.pathname+location.search,queryParams:{scope:'profile_nickname'}}});if(error)throw error;return false;}
+  if(CFG.kakao&&!KAKAO_OPEN)throw new Error('카카오 로그인은 잠시 쉬어요. 이메일로 들어와 주세요');
+  if(CFG.kakao&&KAKAO_OPEN){const {error}=await sb.auth.signInWithOAuth({provider:'kakao',options:{redirectTo:location.origin+location.pathname+location.search,queryParams:{scope:'profile_nickname'}}});if(error)throw error;return false;}
   const {data,error}=await sb.auth.signInAnonymously();if(error)throw error;ME=data.user;return true;
 }
 async function tryJoin(){const code=pendingJoin();if(!code||!ME)return;
@@ -2303,7 +2306,7 @@ function obLoginCard(){
     <div class="field" style="max-width:220px;margin:22px auto 6px"><input id="obCode" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="이메일로 받은 코드를 입력" style="text-align:center;letter-spacing:.3em;font-size:20px"></div><p class="err" id="obErr"></p>
     <button class="primary" data-act="ob-mail-verify">들어가기</button><button class="link-btn ob-skip" data-act="ob-mail-send" data-again="1">코드 다시 받기</button></div>`;
   return `<div class="ob-card"><p class="caps">Sign in</p><h2>마을에 들어가기</h2><p class="ob-p">로그인하면 어느 기기에서든<br>내 마을과 추억이 그대로 있어요.</p>
-    <div class="ob-login">${CFG.kakao?`<button class="ob-kakao" data-act="ob-login">${kakao}카카오로 시작하기</button>`:''}
+    <div class="ob-login">${CFG.kakao&&KAKAO_OPEN?`<button class="ob-kakao" data-act="ob-login">${kakao}카카오로 시작하기</button>`:''}
     <button class="ob-alt" data-act="ob-mail">이메일로 시작하기</button>${CFG.kakao?'':'<button class="ob-alt" data-act="ob-login">로그인 없이 둘러보기</button>'}</div></div>`;
 }
 function renderOnboard(){
