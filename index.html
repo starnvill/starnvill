@@ -1413,7 +1413,7 @@ async function cloudAct(a,t,h,e){
       t.disabled=true;const {error}=await sb.auth.signInWithOtp({email:em,options:{shouldCreateUser:true}});t.disabled=false;
       if(error){$('#obErr').textContent=/rate|seconds/i.test(error.message)?'잠시 뒤에 다시 시도해 주세요.':errKo(error);return true;}
       OBM={step:'code',email:em};render();setTimeout(()=>{const i=$('#obCode');if(i)i.focus();},60);if(t.dataset.again)toast('코드를 다시 보냈어요');return true;}
-    case 'ob-mail-verify':{const code=($('#obCode').value||'').replace(/\D/g,'');if(code.length<6||code.length>8){$('#obErr').textContent='메일로 온 숫자 코드를 적어 주세요.';return true;}
+    case 'ob-mail-verify':{const code=($('#obCode').value||'').replace(/\D/g,'');if(code.length<6||code.length>8){$('#obErr').textContent='이메일로 받은 코드를 입력해 주세요.';return true;}
       t.disabled=true;const {data,error}=await sb.auth.verifyOtp({email:OBM.email,token:code,type:'email'});t.disabled=false;
       if(error){$('#obErr').textContent=/expired|invalid/i.test(error.message)?'코드가 맞지 않거나 시간이 지났어요. 다시 받아 주세요.':errKo(error);return true;}
       ME=data.user;OBM=null;const {data:p}=await profSel('name,birthday,star',ME.id);
@@ -1999,10 +1999,13 @@ function dayLine(){
   if(CLOUD&&d===0){const k=kstParts();return `${k.m}월 ${k.d}일 · 12월 1일에 시작해요`;}
   return `${dayLabel(d)}${SPECIAL.has(d)?' · <b>특별한 날</b>':''}${d===25?' · <b>크리스마스</b>':''}`;
 }
+/* counts from today (KST) to 25 Dec, so it starts now, not on 1 Dec */
+function daysToXmas(){const k=new Date(Date.now()+9*3600e3);const y=k.getUTCFullYear();
+  const n=Math.round((Date.UTC(y,11,25)-Date.UTC(y,k.getUTCMonth(),k.getUTCDate()))/864e5);return Math.max(0,n);}
 function renderVillage(){
   const d=S.day;
   const count=d===25?`<div class="dcount"><span class="xmas">Merry Christmas</span></div><button class="link-btn end-link" data-act="ending">마을의 마지막 페이지 →</button>`
-    :`<div class="dcount"><span class="l">크리스마스까지</span><span class="n">${25-d}</span><span class="l">일</span></div>`;
+    :`<div class="dcount"><span class="l">크리스마스까지</span><span class="n">${daysToXmas()}</span><span class="l">일</span></div>`;
   const pills=PLOTS.map((p,i)=>{const h=S.houses[i];
     const st=`left:${((p.x-70*p.s)/360*100).toFixed(2)}%;top:${((p.y-108*p.s-120)/420*100).toFixed(2)}%;width:${(140*p.s/360*100).toFixed(2)}%;height:${((108*p.s+40)/420*100).toFixed(2)}%`;
     if(!h) return `<button class="plot" style="${st}" data-act="newhouse" aria-label="빈 집터, 새 집 짓기"><span class="pill lot-pill"><span class="nm">새 집 짓기</span></span></button>`;
@@ -2282,11 +2285,11 @@ function obArt(k){
 let OBM=null; // email login state {step:'email'|'code', email}
 function obLoginCard(){
   const kakao=`<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3C5.6 3 2 5.8 2 9.2c0 2.2 1.5 4.1 3.7 5.2l-.8 3 3.3-2.2c.6.1 1.2.1 1.8.1 4.4 0 8-2.8 8-6.1S14.4 3 10 3Z" fill="#191600"/></svg>`;
-  if(OBM&&OBM.step==='email')return `<div class="ob-card"><p class="caps">Sign in</p><h2>이메일로 들어가기</h2><p class="ob-p">이메일로 숫자 코드를 보내 드려요.<br>비밀번호는 필요 없어요.</p>
+  if(OBM&&OBM.step==='email')return `<div class="ob-card"><p class="caps">Sign in</p><h2>이메일로 들어가기</h2><p class="ob-p">이메일로 코드를 보내 드려요.<br>비밀번호는 필요 없어요.</p>
     <div class="field" style="max-width:300px;margin:22px auto 6px"><input id="obMail" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" value="${esc(OBM.email||'')}" style="text-align:center"></div><p class="err" id="obErr"></p>
     <button class="primary" data-act="ob-mail-send">코드 받기</button><button class="link-btn ob-skip" data-act="ob-mail-back">← 다른 방법으로</button></div>`;
-  if(OBM&&OBM.step==='code')return `<div class="ob-card"><p class="caps">Check your inbox</p><h2>메일로 온 코드를 적어 주세요</h2><p class="ob-p"><b>${esc(OBM.email)}</b>(으)로 숫자 코드를 보냈어요.<br>메일이 안 보이면 스팸함도 확인해 주세요.</p>
-    <div class="field" style="max-width:220px;margin:22px auto 6px"><input id="obCode" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="숫자 코드" style="text-align:center;letter-spacing:.3em;font-size:20px"></div><p class="err" id="obErr"></p>
+  if(OBM&&OBM.step==='code')return `<div class="ob-card"><p class="caps">Check your inbox</p><h2>메일로 온 코드를 적어 주세요</h2><p class="ob-p"><b>${esc(OBM.email)}</b>(으)로 코드를 보냈어요.<br>메일이 안 보이면 스팸함도 확인해 주세요.</p>
+    <div class="field" style="max-width:220px;margin:22px auto 6px"><input id="obCode" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="이메일로 받은 코드를 입력" style="text-align:center;letter-spacing:.3em;font-size:20px"></div><p class="err" id="obErr"></p>
     <button class="primary" data-act="ob-mail-verify">들어가기</button><button class="link-btn ob-skip" data-act="ob-mail-send" data-again="1">코드 다시 받기</button></div>`;
   return `<div class="ob-card"><p class="caps">Sign in</p><h2>마을에 들어가기</h2><p class="ob-p">로그인하면 어느 기기에서든<br>내 마을과 추억이 그대로 있어요.</p>
     <div class="ob-login">${CFG.kakao?`<button class="ob-kakao" data-act="ob-login">${kakao}카카오로 시작하기</button>`:''}
