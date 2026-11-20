@@ -676,6 +676,7 @@ a.btn.buy{text-decoration:none;display:inline-block}
 .santa-note h2{font-family:var(--font-serif-ko);font-weight:500;font-size:21px;margin:6px 0 18px}
 .santa-note p{font-size:14px;line-height:1.75;color:var(--muted);margin:0 0 12px}
 .santa-note p b{color:var(--champagne);font-weight:500}
+.santa-note .santa-never{display:block;margin:14px auto 0;font-size:12.5px;color:var(--muted)}
 .santa-note .sig{font-family:var(--font-display);font-style:italic;color:var(--champagne);margin:18px 0 20px;font-size:15px}
 </style>
 </head>
@@ -2047,16 +2048,16 @@ function renderVillage(){
     ${CLOUD?`<p class="v-foot"><button class="link-btn" data-act="account">${esc(S.myName||'나')} · 계정</button></p>`:`<p class="v-foot">지금은 예시로 채운 프로토타입이에요.<br>실제로 친구와 연결되는 건 다음 단계에서 만들어요.</p>`}`;
   santaNote();
 }
-/* a one-time note from Santa, shown in November only */
-function santaNote(){let seen=false;try{seen=!!localStorage.getItem('snv-santa-note');}catch(e){}
-  if(seen||kstParts().m!==11)return;
-  setTimeout(()=>{if(S.screen!=='village'||!$('#modal').hidden)return;try{localStorage.setItem('snv-santa-note','1');}catch(e){}
+/* a note from Santa: first visit of each day in November, until they say not to */
+function santaNote(){const k=kstParts(),today=`${k.m}-${k.d}`;let seen='';try{seen=localStorage.getItem('snv-santa-note')||'';}catch(e){}
+  if(seen==='never'||seen===today||k.m!==11)return;
+  setTimeout(()=>{if(S.screen!=='village'||!$('#modal').hidden)return;try{localStorage.setItem('snv-santa-note',today);}catch(e){}
     openModal(`<div class="santa-note"><p class="caps">A Note from Santa</p><h2>마을에 온 걸 환영해요</h2>
       <p>별과 마을은 익명의 개발자가 만든<br>작은 웹사이트예요.</p>
       <p><b>12월 1일</b>부터 본격적인 기능들을<br>쓸 수 있어요. 그 전에는 집을 짓고<br>소중한 사람을 초대해 두세요.</p>
       <p>미리 가입한 분들께는<br><b>특별한 선물</b>이 도착할 예정이에요.</p>
       <p class="sig">— 산타가</p>
-      <button class="primary" data-act="close">기다릴게요</button></div>`);},900);}
+      <button class="primary" data-act="close">기다릴게요</button><button class="link-btn santa-never" data-act="santa-never">앞으로 안 볼래요</button></div>`);},900);}
 function matCard(m,who){
   const dark=m.mat==='midnight'||m.mat==='olive';
   return `<div><button class="mat ${dark?'dark':''}" style="--mat:${MATS[m.mat]||MATS.ivory}" data-act="view" data-who="${who}" data-id="${m.id}" aria-label="${dayLabel(m.day)} 추억 크게 보기">
@@ -2942,6 +2943,7 @@ function act(a,t,h,e){
     case 'open':enterHouse(t.dataset.id);break;
     case 'home':S.winTips=3;leaveHouse();break;
     case 'deco-open':openModal(decoSheet(h));break;
+    case 'santa-never':try{localStorage.setItem('snv-santa-note','never');}catch(e){}closeModal();toast('산타 공지를 더 보여 주지 않을게요');break;
     case 'hcol':break;if((HCOL[h.rel]||{})[t.dataset.v]){h.color=t.dataset.v;save();renderHouseKeepModal();}break;
     case 'tex':h.tex=t.dataset.v;save();renderHouseKeepModal();toast(`외벽을 ${TEX[h.tex]}${batchim(TEX[h.tex])?'으로':'로'} 바꿨어요`);break;
     case 'ob-next':OB++;render();window.scrollTo(0,0);break;
