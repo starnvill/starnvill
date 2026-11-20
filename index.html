@@ -672,6 +672,11 @@ a.btn.buy{text-decoration:none;display:inline-block}
 .deco-entry{text-align:center}
 .deco-open{border:1px solid rgba(200,176,122,.55);background:none;color:var(--champagne);font-size:14px;padding:12px 22px;border-radius:2px;letter-spacing:.04em}
 .deco-entry p{margin:8px 0 0;font-size:12px;color:var(--muted)}
+.santa-note{text-align:center;padding:6px 4px 2px}
+.santa-note h2{font-family:var(--font-serif-ko);font-weight:500;font-size:21px;margin:6px 0 18px}
+.santa-note p{font-size:14px;line-height:1.75;color:var(--muted);margin:0 0 12px}
+.santa-note p b{color:var(--champagne);font-weight:500}
+.santa-note .sig{font-family:var(--font-display);font-style:italic;color:var(--champagne);margin:18px 0 20px;font-size:15px}
 </style>
 </head>
 <body>
@@ -1208,8 +1213,8 @@ function hereWatch(h){
     hereCh=sb.channel('here:'+h.id,{config:{presence:{key:ME.id}}});
     hereCh.on('presence',{event:'sync'},()=>{const st=hereCh.presenceState(),was=!!HERE[h.id];HERE[h.id]=Object.keys(st).some(k=>k!==ME.id);
       if(was!==HERE[h.id]&&S.screen==='house'&&H()&&H().id===h.id){hereSofa(h);if(HERE[h.id])toast(`${ga(h.name)} 지금 이 집에 들어왔어요`);}})
-      .on('broadcast',{event:'deco'},m=>{const p=m&&m.payload;if(!p||!['theme','paper','floor','sofa'].includes(p.k))return;
-        if(p.k==='theme')h.theme=p.v;else decoOf(h)[p.k]=p.v;save();if(S.screen==='house'&&H()&&H().id===h.id)renderHouseKeepModal();})
+      .on('broadcast',{event:'deco'},m=>{const p=m&&m.payload;if(!p||!['theme','paper','floor','sofa','roof','crown'].includes(p.k))return;
+        if(p.k==='theme'||p.k==='roof'||p.k==='crown')h[p.k]=p.v;else decoOf(h)[p.k]=p.v;save();if(S.screen==='house'&&H()&&H().id===h.id)renderHouseKeepModal();})
       .subscribe(s=>{if(s==='SUBSCRIBED')hereCh.track({at:Date.now()});});
   }catch(e){hereCh=null;}
 }
@@ -1401,12 +1406,14 @@ async function cloudAct(a,t,h,e){
     case 'theme':case 'paper':case 'floor':case 'sofa':{const v=t.dataset.v;if(a==='theme'&&!REL_THEMES[h.rel].includes(v))return true;const {error}=await sb.rpc('set_deco',{hid:h.id,k:a,v});
       if(error&&!/set_deco|function/i.test(error.message||'')){toast(errKo(error));return true;}
       if(!error&&hereCh&&hereCh.send)try{hereCh.send({type:'broadcast',event:'deco',payload:{k:a,v}});}catch(e){}return false;}
-    case 'roof':case 'crown':if(!h.owner){toast('지붕은 집을 지은 사람이 바꿀 수 있어요');return true;}
-      {const v=t.dataset.v;const {error}=await sb.from('houses').update({[a]:v}).eq('id',h.id);if(error){toast(errKo(error));return true;}}return false;
+    case 'roof':case 'crown':{const v=t.dataset.v;let {error}=await sb.rpc('set_look',{hid:h.id,k:a,v});
+      if(error&&/set_look|function/i.test(error.message||'')){if(!h.owner){toast('지붕은 집을 지은 사람이 바꿀 수 있어요');return true;}({error}=await sb.from('houses').update({[a]:v}).eq('id',h.id));}
+      if(error){toast(errKo(error));return true;}
+      if(hereCh&&hereCh.send)try{hereCh.send({type:'broadcast',event:'deco',payload:{k:a,v}});}catch(e){}return false;}
     case 'hcol':return true;/* the outside colour is chosen once, when the house is built */
       {const v=t.dataset.v;if(!(HCOL[h.rel]||{})[v])return true;const {error}=await sb.from('houses').update({color:v}).eq('id',h.id);if(error){toast(errKo(error));return true;}h.color=v;save();renderHouseKeepModal();}return true;
-    case 'tex':if(!h.owner){toast('외벽은 집을 지은 사람이 바꿀 수 있어요');return true;}
-      {const v=t.dataset.v;const {error}=await sb.from('houses').update({texture:v}).eq('id',h.id);if(error){toast(errKo(error));return true;}h.tex=v;save();renderHouseKeepModal();toast(`외벽을 ${TEX[v]}${batchim(TEX[v])?'으로':'로'} 바꿨어요`);}return true;
+    case 'tex':{const v=t.dataset.v;let {error}=await sb.rpc('set_look',{hid:h.id,k:'texture',v});
+      if(error&&/set_look|function/i.test(error.message||'')){if(!h.owner){toast('외벽은 집을 지은 사람이 바꿀 수 있어요');return true;}({error}=await sb.from('houses').update({texture:v}).eq('id',h.id));}if(error){toast(errKo(error));return true;}h.tex=v;save();renderHouseKeepModal();toast(`외벽을 ${TEX[v]}${batchim(TEX[v])?'으로':'로'} 바꿨어요`);}return true;
     case 'claim':{const w=h.wishTheirs[Number(t.dataset.i)];if(!w||w.c)return true;t.disabled=true;
       const {error}=await sb.from('wish_claims').insert({wish_id:w.id});if(error){toast(errKo(error));await cloudPull();renderWish();return true;}
       w.c=true;w.mineClaim=true;w.by=h.id;save();renderWish();toast(`산타가 선물을 가지고 출발했어요. ${h.name}에겐 비밀이에요`);return true;}
@@ -2038,7 +2045,18 @@ function renderVillage(){
     <div class="scene">${sceneSVG()}${sceneFx(d)}${pills}</div>
     <section class="residents" aria-label="마을 주민"><div class="sect-head"><p class="caps">Residents</p><h3>내 마을의 집들</h3><p>집 한 채에 한 사람, 최대 다섯 채</p></div>${rows}</section>
     ${CLOUD?`<p class="v-foot"><button class="link-btn" data-act="account">${esc(S.myName||'나')} · 계정</button></p>`:`<p class="v-foot">지금은 예시로 채운 프로토타입이에요.<br>실제로 친구와 연결되는 건 다음 단계에서 만들어요.</p>`}`;
+  santaNote();
 }
+/* a one-time note from Santa, shown in November only */
+function santaNote(){let seen=false;try{seen=!!localStorage.getItem('snv-santa-note');}catch(e){}
+  if(seen||kstParts().m!==11)return;
+  setTimeout(()=>{if(S.screen!=='village'||!$('#modal').hidden)return;try{localStorage.setItem('snv-santa-note','1');}catch(e){}
+    openModal(`<div class="santa-note"><p class="caps">A Note from Santa</p><h2>마을에 온 걸 환영해요</h2>
+      <p>별과 마을은 익명의 개발자가 만든<br>작은 웹사이트예요.</p>
+      <p><b>12월 1일</b>부터 본격적인 기능들을<br>쓸 수 있어요. 그 전에는 집을 짓고<br>소중한 사람을 초대해 두세요.</p>
+      <p>미리 가입한 분들께는<br><b>특별한 선물</b>이 도착할 예정이에요.</p>
+      <p class="sig">— 산타가</p>
+      <button class="primary" data-act="close">기다릴게요</button></div>`);},900);}
 function matCard(m,who){
   const dark=m.mat==='midnight'||m.mat==='olive';
   return `<div><button class="mat ${dark?'dark':''}" style="--mat:${MATS[m.mat]||MATS.ivory}" data-act="view" data-who="${who}" data-id="${m.id}" aria-label="${dayLabel(m.day)} 추억 크게 보기">
@@ -2765,7 +2783,7 @@ function decoSheet(h){return `${sheetHead('Decorate','집 꾸미기')}<div class
       ${optRow('벽지','paper',PAPER,decoOf(h).paper||'damask')}
       ${optRow('바닥','floor',FLOOR,decoOf(h).floor||'plank')}
       ${optRow('소파','sofa',SOFA,decoOf(h).sofa||'auto',v=>v[0],v=>v[1]||'')}
-      <p class="caps" style="text-align:center;margin:22px 0 4px">Exterior</p><p class="hint-text" style="text-align:center;margin:0 0 6px">마을에서 모두에게 보여요${CLOUD&&!h.owner?` · 집을 지은 ${ga(h.name)} 바꿀 수 있어요`:''}</p>
+      <p class="caps" style="text-align:center;margin:22px 0 4px">Exterior</p><p class="hint-text" style="text-align:center;margin:0 0 6px">마을에서 모두에게 보여요 · 둘 중 누구나 바꿀 수 있어요</p>
             ${optRow('외벽','tex',TEX,texOf(h))}
       ${optRow('지붕','roof',ROOF,roofOf(h),v=>v[0],v=>v[1])}
       ${optRow('지붕 장식','crown',CROWN,crownOf(h))}</div>`;}
