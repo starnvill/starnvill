@@ -1403,7 +1403,7 @@ async function cloudAct(a,t,h,e){
       if(!error&&hereCh&&hereCh.send)try{hereCh.send({type:'broadcast',event:'deco',payload:{k:a,v}});}catch(e){}return false;}
     case 'roof':case 'crown':if(!h.owner){toast('지붕은 집을 지은 사람이 바꿀 수 있어요');return true;}
       {const v=t.dataset.v;const {error}=await sb.from('houses').update({[a]:v}).eq('id',h.id);if(error){toast(errKo(error));return true;}}return false;
-    case 'hcol':if(!h.owner){toast('집 색은 집을 지은 사람이 바꿀 수 있어요');return true;}
+    case 'hcol':return true;/* the outside colour is chosen once, when the house is built */
       {const v=t.dataset.v;if(!(HCOL[h.rel]||{})[v])return true;const {error}=await sb.from('houses').update({color:v}).eq('id',h.id);if(error){toast(errKo(error));return true;}h.color=v;save();renderHouseKeepModal();}return true;
     case 'tex':if(!h.owner){toast('외벽은 집을 지은 사람이 바꿀 수 있어요');return true;}
       {const v=t.dataset.v;const {error}=await sb.from('houses').update({texture:v}).eq('id',h.id);if(error){toast(errKo(error));return true;}h.tex=v;save();renderHouseKeepModal();toast(`외벽을 ${TEX[v]}${batchim(TEX[v])?'으로':'로'} 바꿨어요`);}return true;
@@ -2766,8 +2766,7 @@ function decoSheet(h){return `${sheetHead('Decorate','집 꾸미기')}<div class
       ${optRow('바닥','floor',FLOOR,decoOf(h).floor||'plank')}
       ${optRow('소파','sofa',SOFA,decoOf(h).sofa||'auto',v=>v[0],v=>v[1]||'')}
       <p class="caps" style="text-align:center;margin:22px 0 4px">Exterior</p><p class="hint-text" style="text-align:center;margin:0 0 6px">마을에서 모두에게 보여요${CLOUD&&!h.owner?` · 집을 지은 ${ga(h.name)} 바꿀 수 있어요`:''}</p>
-      ${HCOL[h.rel]?optRow('집 색','hcol',HCOL[h.rel],colOf(h),v=>v[0],v=>v[1]):''}
-      ${optRow('외벽','tex',TEX,texOf(h))}
+            ${optRow('외벽','tex',TEX,texOf(h))}
       ${optRow('지붕','roof',ROOF,roofOf(h),v=>v[0],v=>v[1])}
       ${optRow('지붕 장식','crown',CROWN,crownOf(h))}</div>`;}
 function renderHouseKeepModal(){if(CS)return;const y=window.scrollY;renderHouse();window.scrollTo(0,y);if(AUD.playing){const r=$('.room');if(r)r.classList.add('playing');}if(!$('#modal').hidden){if($('#modal .deco-sheet')){const sc=$('#modal .sheet').scrollTop;openModal(decoSheet(H()));$('#modal .sheet').scrollTop=sc;}else openPlaylist();}}
@@ -2925,7 +2924,7 @@ function act(a,t,h,e){
     case 'open':enterHouse(t.dataset.id);break;
     case 'home':S.winTips=3;leaveHouse();break;
     case 'deco-open':openModal(decoSheet(h));break;
-    case 'hcol':if((HCOL[h.rel]||{})[t.dataset.v]){h.color=t.dataset.v;save();renderHouseKeepModal();}break;
+    case 'hcol':break;if((HCOL[h.rel]||{})[t.dataset.v]){h.color=t.dataset.v;save();renderHouseKeepModal();}break;
     case 'tex':h.tex=t.dataset.v;save();renderHouseKeepModal();toast(`외벽을 ${TEX[h.tex]}${batchim(TEX[h.tex])?'으로':'로'} 바꿨어요`);break;
     case 'ob-next':OB++;render();window.scrollTo(0,0);break;
     case 'ob-star':starPick(t);break;
@@ -3008,7 +3007,7 @@ function act(a,t,h,e){
         <p class="hint-text" style="margin:0">집 한 채에 한 사람. 링크를 보내면 그 사람도 내 집을 꾸밀 수 있어요.</p>
         <div class="field"><label for="nhName">누구의 집인가요?</label><input id="nhName" maxlength="10" placeholder="예: 서윤"></div>
         <div class="field"><label for="nhRel">관계</label><select id="nhRel">${Object.entries(REL).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}</select></div>
-        <div class="field" id="nhColF"><label for="nhCol">집 색</label><select id="nhCol">${colOpts(Object.keys(REL)[0])}</select></div>
+        <div class="field" id="nhColF"><label for="nhCol">집 색<span>처음 지을 때만 고를 수 있어요</span></label><select id="nhCol">${colOpts(Object.keys(REL)[0])}</select></div>
         <div class="field"><label for="nhTex">외벽</label><select id="nhTex">${Object.entries(TEX).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
         <p class="err" id="nhErr"></p><button class="primary" data-act="build">집 짓기</button>`);break;
     case 'build':{const n=$('#nhName').value.trim();if(!n){$('#nhErr').textContent='이름을 적어 주세요.';break;}
