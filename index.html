@@ -92,6 +92,12 @@ h2,h3{font-family:var(--font-serif-ko)}
 .house-screen.theme-blue{--wall:#16224a;--wall-side:#111a3a;--wall-deep:#090f24;--rug:#5b1d25;--chair:#3f4430;--chair-2:#4b5139}
 .room{position:relative;aspect-ratio:360/380;margin:6px -20px 0;overflow:hidden}
 .room>svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.room>svg.room-live{pointer-events:none;will-change:transform;inset:auto;left:34.722%;top:18.421%;width:30.556%;height:47.368%}
+.win-snow{position:absolute;top:11.579%;height:52.632%;width:16.111%;left:1.667%;pointer-events:none;container-type:size;overflow:hidden;clip-path:polygon(0 0,100% 11%,100% 74%,0 100%)}
+.win-snow.r{left:82.222%;clip-path:polygon(0 11%,100% 0,100% 100%,0 74%)}
+.win-snow i{position:absolute;top:-6px;border-radius:50%;background:#fff;opacity:.85;animation:wfall2 7s linear infinite;will-change:transform}
+@keyframes wfall2{0%{transform:translate3d(0,0,0)}50%{transform:translate3d(4px,52cqh,0)}100%{transform:translate3d(-2px,106cqh,0)}}
+@media (prefers-reduced-motion:reduce){.win-snow i{animation:none;top:auto}}
 .flame{transform-origin:180px 239px;animation:flick 1.6s ease-in-out infinite alternate}
 .flame.f2{animation-duration:1.1s}
 .flame.f3{animation-duration:2s}
@@ -398,7 +404,7 @@ a.btn.buy{text-decoration:none;display:inline-block}
 @keyframes chalo{0%,100%{opacity:.13;transform:scale(1)}50%{opacity:.24;transform:scale(1.15)}}
 .globe-btn svg{transform-origin:50% 92%;animation:nudge 5.4s ease-in-out 1.2s infinite}
 @keyframes nudge{0%,76%,100%{transform:rotate(0)}82%{transform:rotate(-5deg)}88%{transform:rotate(4deg)}93%{transform:rotate(-2deg)}97%{transform:rotate(.8deg)}}
-.lp-idle{transform-box:fill-box;transform-origin:50% 100%;animation:hop 6.2s ease-in-out 3.4s infinite}
+.lp-idle{transform-box:fill-box;transform-origin:50% 100%;animation:hop 6.2s ease-in-out 3.4s 2}
 @keyframes hop{0%,78%,100%{transform:translateY(0)}83%{transform:translateY(-3px) rotate(-1.5deg)}89%{transform:translateY(0)}93%{transform:translateY(-1.2px) rotate(.8deg)}97%{transform:translateY(0)}}
 .stocking{animation:idlesway 3.5s ease-in-out infinite}
 .stocking.s-me{animation-duration:4s;animation-delay:-1.6s}
@@ -407,7 +413,7 @@ a.btn.buy{text-decoration:none;display:inline-block}
 .win-btn.r .win-lbl{animation:lblR 8s ease-in-out 1s infinite}
 @keyframes lblL{0%,80%,100%{transform:rotate(20.8deg) translateY(0)}86%{transform:rotate(17deg) translateY(-1.5px)}92%{transform:rotate(23deg) translateY(0)}96%{transform:rotate(19.8deg)}}
 @keyframes lblR{0%,80%,100%{transform:rotate(-20.8deg) translateY(0)}86%{transform:rotate(-17deg) translateY(-1.5px)}92%{transform:rotate(-23deg) translateY(0)}96%{transform:rotate(-19.8deg)}}
-.frame-glint{animation:glint 6.7s ease-in-out 5s infinite}.frame-glint.r{animation-delay:1s}
+.frame-glint{animation:glint 6.7s ease-in-out 5s 2}.frame-glint.r{animation-delay:1s}
 .stocking:hover,.stocking.s-me:hover{animation:sway 1.4s ease-in-out}
 @keyframes glint{0%,78%,100%{stroke:#c8b07a}88%{stroke:#f3dfae}}
 .match{text-align:center;opacity:0;animation:fadein .9s ease 2s forwards}
@@ -430,7 +436,7 @@ a.btn.buy{text-decoration:none;display:inline-block}
 .tap-hint{font-size:11.5px;color:var(--muted);letter-spacing:.04em;margin:10px 0 0;animation:hintpulse 2.6s ease-in-out infinite}
 .audio-on .tap-hint{display:none}
 @keyframes hintpulse{0%,100%{opacity:.45}50%{opacity:.9}}
-.wreath .wl{animation:wlt 2.4s ease-in-out infinite}
+.wl{animation:wlt 2.4s ease-in-out infinite}
 @keyframes wlt{0%,100%{opacity:.35}50%{opacity:1}}
 .glide.lit path.pop{transform-box:fill-box;transform-origin:center;animation:pop .9s cubic-bezier(.3,1.6,.5,1) both,steadyp 2.8s ease-in-out 3.6s infinite alternate}
 @keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.7);filter:drop-shadow(0 0 8px #ffe3a0)}100%{transform:scale(1)}}
@@ -565,6 +571,91 @@ a.btn.buy{text-decoration:none;display:inline-block}
 .del-acct{display:block;margin:18px auto 0;color:var(--muted);font-size:12px;text-decoration:underline}
 .primary.danger{background:#7a2a33;color:#f6eee4}
 .invite-link{margin:14px 0 6px;padding:12px;border:1px solid var(--line);font-size:12.5px;word-break:break-all;color:var(--champagne);-webkit-user-select:all;user-select:all}
+
+/* ---------- cocoa ball, tree, lucky things ---------- */
+.mug-btn{position:absolute;left:44.2%;top:76.6%;width:11.6%;height:9%;background:none;border:0;padding:0;border-radius:50%}
+.tree-btn{position:absolute;left:64.2%;top:36.6%;width:17%;height:28.4%;background:none;border:0;padding:0}
+.mug-btn:focus-visible,.tree-btn:focus-visible{outline:1px solid var(--champagne)}
+.mug-btn.ready::after{content:'';position:absolute;inset:-30%;border-radius:50%;background:radial-gradient(circle,rgba(255,217,143,.32),rgba(255,217,143,0) 62%);animation:mugHint 2.6s ease-in-out infinite;will-change:opacity;pointer-events:none}
+@keyframes mugHint{0%,100%{opacity:.15}50%{opacity:1}}
+.orn-new{animation:ornDrop 1.1s cubic-bezier(.3,1.5,.5,1) both;transform-box:fill-box;transform-origin:50% 0}
+@keyframes ornDrop{from{transform:translateY(-14px);opacity:0}to{transform:none;opacity:1}}
+.meteor{stroke-dasharray:30 200;animation:meteor 5.5s linear infinite}.meteor.m2{animation-delay:2.7s}
+@keyframes meteor{0%{stroke-dashoffset:30;opacity:0}6%{opacity:1}22%{stroke-dashoffset:-60;opacity:0}100%{stroke-dashoffset:-60;opacity:0}}
+.santa-fly{animation:santa 16s linear infinite}
+@keyframes santa{from{transform:translate(380px,150px)}to{transform:translate(270px,70px)}}
+.fx-lights .bulb,.blink .bulb{opacity:.25;transition:opacity .25s}
+[data-ph="0"] .fx-lights .bulb.b0,[data-ph="1"] .fx-lights .bulb.b1,[data-ph="2"] .fx-lights .bulb.b2,[data-ph="0"] .blink .bulb.b0,[data-ph="1"] .blink .bulb.b1,[data-ph="2"] .blink .bulb.b2{opacity:1}
+.fx-line{text-align:center;font-family:var(--font-serif-ko);font-size:12px;color:var(--champagne);margin:-8px 0 12px;opacity:.9}
+.cocoa-open{overflow:hidden}
+.cocoa-scene{position:fixed;inset:0;z-index:60;background:radial-gradient(ellipse at 50% 42%,#2a1a14 0%,#120c0a 55%,#07060a 100%);clip-path:circle(0 at var(--cx) var(--cy));transition:clip-path .7s cubic-bezier(.6,0,.2,1);overflow:auto;-webkit-overflow-scrolling:touch}
+.cocoa-scene.in{clip-path:circle(150% at var(--cx) var(--cy))}
+.cocoa-scene.out{clip-path:circle(0 at var(--cx) var(--cy));transition-duration:.5s}
+.cs-close{position:absolute;top:calc(14px + env(safe-area-inset-top));right:16px;z-index:2}
+.cs-inner{max-width:420px;margin:0 auto;padding:calc(54px + env(safe-area-inset-top)) 24px calc(40px + env(safe-area-inset-bottom));text-align:center}
+.cs-stage{width:min(62vw,240px);margin:10px auto 0}
+.cs-mug{width:100%;height:auto;display:block;overflow:visible}
+.cs-milk{stroke-dasharray:120;stroke-dashoffset:120;opacity:0}
+.cs-mug.pour .cs-milk{animation:milk 1.5s ease-in forwards}
+@keyframes milk{0%{opacity:1;stroke-dashoffset:120}55%{opacity:1;stroke-dashoffset:0}100%{opacity:0;stroke-dashoffset:-120}}
+.cs-ball{transform-box:fill-box;transform-origin:50% 100%}
+.cs-mug.pour .cs-ball{animation:melt 1.6s .7s ease-in forwards}
+@keyframes melt{0%{transform:none;opacity:1}60%{transform:translateY(14px) scale(1.05,.55);opacity:.9}100%{transform:translateY(22px) scale(1.25,.15);opacity:0}}
+.cs-mug.done .cs-ball{opacity:0}
+.cs-marsh{opacity:0;transform-box:fill-box;transform-origin:50% 100%}
+.cs-mug.pour .cs-marsh{animation:marsh .7s 1.9s cubic-bezier(.3,1.6,.5,1) forwards}.cs-mug.done .cs-marsh{opacity:1}
+@keyframes marsh{from{opacity:0;transform:translateY(8px) scale(.4)}to{opacity:1;transform:none}}
+.cs-steam{opacity:0}.cs-mug.done .cs-steam,.cs-mug.pour .cs-steam{animation:steam 3.2s 2s ease-in-out infinite}
+.cs-mug.done .cs-steam{animation-delay:0s}
+@keyframes steam{0%{opacity:0;transform:translateY(4px)}40%{opacity:1}100%{opacity:0;transform:translateY(-10px)}}
+.cs-ctrl{min-height:70px}.cs-ctrl .primary{max-width:300px}
+.cs-hint{font-size:12.5px;color:var(--muted);margin-top:10px;font-family:var(--font-serif-ko)}
+.cs-note{opacity:0;transform:translateY(26px) scale(.96);pointer-events:none;transition:opacity .9s ease,transform 1s cubic-bezier(.2,.9,.3,1)}
+.cs-note.show{opacity:1;transform:none;pointer-events:auto}
+.cs-paper{margin:4px auto 0;max-width:340px;background:#f3ecdf;color:#2b2119;padding:24px 22px 20px;border-radius:2px;box-shadow:0 18px 50px rgba(0,0,0,.5);position:relative}
+.cs-paper:before{content:'';position:absolute;inset:6px;border:1px solid rgba(140,47,58,.22);pointer-events:none}
+.cs-paper .caps{color:#8c2f3a}
+.cs-text{font-family:var(--font-scene);font-size:16.5px;line-height:1.75;margin:12px 0 6px;word-break:keep-all}
+.cs-sub{font-size:12.5px;color:#6b5a48;margin-top:8px}
+.cs-together{font-family:var(--font-serif-ko);font-size:12.5px;color:#8c2f3a;margin-top:12px}
+.cs-paper .ghost{color:#2b2119;border-color:rgba(43,33,25,.25);margin-top:16px}
+.tree-notes{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.tn{border:1px solid var(--line);padding:12px 14px}.tn p{font-family:var(--font-scene);font-size:13.5px;line-height:1.7;word-break:keep-all}
+.tn .tn-d{font-family:var(--font-display);font-size:11px;letter-spacing:.14em;color:var(--champagne);margin-bottom:4px}
+/* ---------- telepathy ---------- */
+.tele-card{display:flex;align-items:center;gap:14px;width:100%;margin:16px 0 0;padding:14px 16px;border:1px solid var(--line);background:linear-gradient(120deg,rgba(28,22,52,.75),rgba(8,14,32,.6));text-align:left;border-radius:2px}
+.tele-card:hover{border-color:var(--champagne)}
+.tc-orb{position:relative;flex:none;width:34px;height:34px}
+.tc-orb i{position:absolute;top:7px;width:20px;height:20px;border-radius:50%;border:1px solid var(--champagne)}
+.tc-orb i:first-child{left:0}.tc-orb i:last-child{right:0;border-color:#b98fd0}
+.tele-card.ready .tc-orb i:first-child{animation:orbL 3.2s ease-in-out infinite}.tele-card.ready .tc-orb i:last-child{animation:orbR 3.2s ease-in-out infinite}
+@keyframes orbL{50%{transform:translateX(4px)}}@keyframes orbR{50%{transform:translateX(-4px)}}
+.tc-body{flex:1;display:flex;flex-direction:column;gap:3px;min-width:0}
+.tc-q{font-family:var(--font-scene);font-size:14px;color:var(--ivory);line-height:1.5;word-break:keep-all}
+.tc-st{font-size:11.5px;color:var(--muted)}
+.tc-go{color:var(--champagne);font-family:var(--font-display);font-size:18px}
+.tele-q{font-family:var(--font-scene);font-size:17px;line-height:1.7;text-align:center;margin:6px 0 18px;word-break:keep-all}
+.tele-picks{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tele-pick{border:1px solid var(--line);background:none;padding:13px 10px;font-size:14px;border-radius:2px;font-family:var(--font-serif-ko)}
+.tele-pick:last-child:nth-child(odd){grid-column:1/-1}
+.tele-pick:hover:not(:disabled){border-color:var(--champagne)}
+.tele-pick:disabled{opacity:.4}.tele-pick.on{opacity:1;border-color:var(--champagne);color:var(--champagne);background:rgba(200,176,122,.08)}
+.tele-reveal{text-align:center;padding:6px 0 2px}
+.tr-row{display:flex;align-items:stretch;justify-content:center;gap:10px;margin:6px 0 16px}
+.tr-side{flex:1;max-width:150px;border:1px solid var(--line);padding:16px 8px;display:flex;flex-direction:column;gap:8px;animation:trIn .8s cubic-bezier(.2,.9,.3,1) both}
+.tr-side b{font-family:var(--font-scene);font-size:17px;font-weight:500;color:var(--ivory)}
+.tr-mid{align-self:center;color:var(--champagne);font-size:18px;animation:trIn .6s 1.3s both}
+.tele-reveal.same .tr-side{border-color:var(--champagne);box-shadow:0 0 26px rgba(255,217,143,.12)}
+@keyframes trIn{from{opacity:0;transform:translateY(12px) rotateX(70deg)}to{opacity:1;transform:none}}
+.tr-line{font-family:var(--font-serif-ko);font-size:13.5px;color:var(--muted);animation:trIn .6s 1.5s both}.tr-line b{color:var(--champagne);font-weight:400}
+/* ---------- who is home, decorating ---------- */
+.here-line{text-align:center;font-family:var(--font-serif-ko);font-size:12.5px;color:var(--champagne);margin:10px 0 0;min-height:0}
+.here-line:empty{display:none}
+.here-line i{display:inline-block;width:6px;height:6px;border-radius:50%;background:#9fd59a;margin-right:8px;vertical-align:1px;box-shadow:0 0 8px #9fd59a}
+.my-star{display:flex;align-items:center;justify-content:center;gap:14px;margin:0 0 6px}.my-star p{display:flex;flex-direction:column;gap:2px}.my-star b{font-family:var(--font-scene);font-weight:500;font-size:16px}
+.opt-row{margin:0 0 14px}.opt-l{display:block;text-align:center;font-size:11.5px;color:var(--muted);margin:0 0 8px;letter-spacing:.08em}
+.prep-note{text-align:center;font-family:var(--font-serif-ko);font-size:13px;color:var(--muted);margin:18px 0 0;line-height:1.8}
+@media (prefers-reduced-motion:reduce){.cocoa-scene{transition:none}.meteor,.santa-fly{animation:none}}
 </style>
 </head>
 <body>
@@ -604,6 +695,522 @@ const STK={
   sprig:{d:'M50 56C36 40 18 40 8 50C22 52 36 62 50 56ZM50 56C64 40 82 40 92 50C78 52 64 62 50 56ZM50 56C44 40 46 22 50 12C54 22 56 40 50 56Z',c:'#6f7a4c'},
   candle:{d:'M41 42H59V92H41ZM50 10C59 22 59 32 50 36C41 32 41 22 50 10Z',c:'#efe8da'}
 };
+/* ---------- cocoa ball notes: 60 per relationship, shuffled per house ----------
+   [kind, text, extra]
+   f fortune · m mission · q question · e emoji · l lucky (extra = what happens tomorrow) */
+const NUM5=['1','2','3','4','5'],SNACK=['붕어빵','군고구마','호떡','어묵','핫초코'],COLOR5=['빨강','초록','금색','하늘색','보라'],MOOD5=['1 · 이불 속','2 · 그럭저럭','3 · 무난','4 · 좋음','5 · 최고'];
+const COCOA={
+love:[
+['f','오늘 처음 들은 노래가 오늘 밤 두 사람의 주제곡이에요. 제목만 보내 줘요.'],
+['f','오늘의 행운 색은 처음 마주친 빨간색. 찍어서 보내면 행운이 두 배.'],
+['f','오늘은 평소보다 3초 더 눈을 마주치면 좋은 일이 생기는 날이에요.'],
+['f','오늘 밤 마지막 메시지를 보내는 사람에게 작은 행운이 따라요. 먼저 자지 말기.'],
+['f','따뜻한 음료를 먼저 사 주는 사람이 이번 주 운을 다 가져가요.'],
+['f','오늘 길에서 들은 가장 웃긴 말 한마디가 오늘의 부적이에요. 전해 주세요.'],
+['f','오늘은 "괜찮아?" 대신 "오늘 뭐가 제일 좋았어?"라고 물으면 대화가 길어지는 날.'],
+['f','오늘 손이 더 차가운 사람이 내일 커피를 사요. 별의 규칙이에요.'],
+['f','오늘 밤 가장 먼저 보이는 별에 두 사람의 이니셜을 붙여 두세요. 이제 그 별은 둘 거예요.'],
+['f','오늘은 아주 작은 약속 하나를 지키면 큰 운이 들어오는 날. 지금 하나 만들어요.'],
+['f','오늘 우연히 같은 걸 먹었다면, 그건 우연이 아니에요.'],
+['f','오늘의 행운 숫자는 처음 만난 날의 날짜예요. 기억나요? 바로 말하면 정답.'],
+['f','별이 그러는데, 오늘 서로에게 보내는 셀카는 평소보다 30% 더 잘 나온대요.'],
+['m','서로의 사진첩에서 "이건 진짜 아니다" 싶은 사진 한 장씩 교환하기. 거절 불가.'],
+['m','지금 칭찬 세 개를 보내 주세요. 단, 외모 칭찬은 금지.'],
+['m','상대 말투를 흉내 낸 메시지 하나 보내기. 들키면 성공이에요.'],
+['m','오늘 하루를 영화 제목처럼 지어서 보내 주세요. 장르도 함께.'],
+['m','최애 노래 하나씩 교환하고, 오늘 안에 끝까지 들어 보기.'],
+['m','상대가 지금 제일 먹고 싶은 간식을 맞혀 보세요. 틀리면 그 간식 담당.'],
+['m','둘만 아는 단어를 오늘 하나 새로 만들어요. 뜻은 둘만 알기.'],
+['m','지금 창밖 하늘을 찍어서 보내기. 흐려도 괜찮아요, 그게 오늘의 하늘이니까.'],
+['m','서로의 휴대폰 배경화면을 캡처해서 보내기. 설명은 금지.'],
+['m','오늘의 날씨를 기분으로만 알려 주기. 예: 약간 서운한 흐림, 오후엔 맑음.'],
+['m','처음 만난 날 상대가 입었던 옷을 기억나는 만큼 적어 보내기. 채점은 상대가.'],
+['m','3년 뒤 12월의 우리에게 한 줄을 써서 각자 메모장에 숨겨 두기.'],
+['m','상대를 동물로 표현하면? 이유까지 세 줄로.'],
+['m','오늘은 "보고 싶어"를 그 단어 없이 표현해 보세요.'],
+['m','서로에게 오늘의 수고상을 주세요. 상 이름은 직접 지어서.'],
+['q','처음 반했던 순간, 둘이 기억하는 장면이 같을까요? 각자 적고 동시에 보내기.'],
+['q','상대가 아직 모르는 나의 아주 사소한 습관 하나는?'],
+['q','같이 가 보고 싶은데 아직 못 간 곳, 하나씩.'],
+['q','상대가 해 준 말 중에 아직도 기억나는 한 문장은?'],
+['q','서로의 첫인상을 세 단어로 말한다면?'],
+['q','상대의 어떤 버릇이 은근히 귀여워요?'],
+['q','"우리" 하면 떠오르는 냄새는?'],
+['q','함께한 날 중 다시 살아 보고 싶은 하루는?'],
+['q','10년 뒤 크리스마스, 우리는 어디서 뭘 하고 있을까요?'],
+['q','고마웠는데 아직 말 못 한 일 하나. 오늘은 말해도 돼요.'],
+['q','하루 동안 서로 몸이 바뀐다면, 제일 먼저 뭘 할 거예요?'],
+['q','상대가 웃을 때 제일 좋은 순간은 언제예요?'],
+['q','우리 둘의 이야기가 책이라면, 지금은 몇 장쯤일까요?'],
+['q','상대 덕분에 새로 좋아하게 된 것 하나는?'],
+['e','오늘 하루를 이모지 세 개로만 보내요. 해석은 상대 몫.'],
+['e','상대를 이모지 하나로 표현한다면? 이유는 내일 말해 주기.'],
+['e','우리 사이를 이모지 두 개로. 같은 걸 골랐다면, 그건 운명.'],
+['l','오늘 밤, 이 집 창밖으로 별똥별이 떨어질 거예요. 내일 창문을 꼭 봐요.','meteor'],
+['l','내일은 노을이 아주 오래 머무는 날이래요. 집에 들러 창밖을 봐요.','sunset'],
+['l','산타가 이 집 주소를 적어 갔다는 소문이 있어요. 내일, 창밖을 지켜봐요.','santa'],
+['l','내일 밤하늘은 분홍과 보라로 물들 거예요. 둘이 같이 보면 더 예뻐요.','pink'],
+['l','내일은 이 집에 작은 불빛들이 걸려요. 누가 걸었는지는 비밀.','lights'],
+['l','내일은 함박눈 예보. 우산은 필요 없어요.','snow'],
+['l','내일 아침, 소파에 작은 손님이 와 있을지도 몰라요.','cat'],
+['l','내일은 벽난로가 유난히 따뜻한 날. 그 온기로 먼저 연락하기.','warm'],
+['l','오늘 밤 이 집 위로 별똥별이 두 번 지나가요. 소원은 하나씩.','meteor'],
+['l','내일 저녁, 창밖이 노을빛으로 물들어요. 그 시간에 서로 생각하기.','sunset'],
+],
+friend:[
+['f','오늘 처음 들은 노래가 이번 주 우리의 공식 테마곡이에요. 공유 필수.'],
+['f','오늘 마주친 첫 번째 빨간색이 행운의 색이에요. 인증샷 보내기.'],
+['f','오늘은 단톡 말고 1:1로 먼저 연락하는 사람에게 행운이 따라요.'],
+['f','오늘 웃음 참기에 실패한 사람이 다음에 간식 사기. 별의 규칙이에요.'],
+['f','오늘 들은 가장 이상한 말 한마디가 오늘의 부적이에요. 전해 주세요.'],
+['f','오늘은 "나중에 밥 한번 먹자"를 진짜 날짜로 바꾸면 운이 트이는 날.'],
+['f','오늘의 행운 장소는 편의점. 서로를 위한 1+1을 하나씩 골라 보기.'],
+['f','오늘 우연히 같은 걸 먹었다면, 그건 우정의 증거예요.'],
+['f','별이 그러는데 오늘 보내는 셀카는 평소보다 잘 나온대요. 확인해 봐요.'],
+['f','오늘은 친구의 오래된 농담에 다시 웃어 주면 복이 오는 날이에요.'],
+['f','오늘의 행운 숫자는 처음 만난 해의 마지막 숫자. 몇 년도였는지 기억나요?'],
+['f','오늘은 사소한 부탁 하나를 들어주면 큰 행운이 돌아오는 날이에요.'],
+['f','오늘 본 가장 웃긴 간판 하나가 오늘의 행운 문장이에요. 찍어서 보내기.'],
+['m','서로의 사진첩에서 흑역사 사진 한 장씩 교환하기. 거절 불가, 유출 금지.'],
+['m','상대 말투를 흉내 낸 메시지 하나 보내기. 들키면 성공.'],
+['m','서로의 휴대폰 배경화면을 캡처해서 보내기. 설명은 금지.'],
+['m','우리 우정을 영화 제목으로 지어 보세요. 장르도 정하기.'],
+['m','최애 노래 하나씩 교환하고 오늘 안에 끝까지 듣기.'],
+['m','친구가 요즘 빠져 있는 걸 맞혀 보세요. 틀리면 음료 한 잔.'],
+['m','둘만 아는 유행어를 오늘 하나 새로 만들기. 내일부터 써야 해요.'],
+['m','오늘 하루를 뉴스 헤드라인으로 보내기. 속보 형식 환영.'],
+['m','서로에게 오늘의 수고상 주기. 상 이름은 직접 지어서.'],
+['m','친구를 동물로 표현하면? 이유까지 세 줄로.'],
+['m','10년 뒤 우리에게 한 줄을 써서 각자 메모장에 숨겨 두기.'],
+['m','처음 친해진 계기, 서로 다르게 기억할지도 몰라요. 각자 적고 동시에 보내기.'],
+['m','지금 눈앞의 물건 하나로 친구를 칭찬하기. 예: 이 머그컵처럼 든든해.'],
+['m','"우리 진짜 웃겼던 날"을 하나씩 꺼내기. 같은 날이면 소름.'],
+['m','다음에 만날 날짜를 지금 정하기. 미루기 금지.'],
+['q','친구의 첫인상, 세 단어로?'],
+['q','친구가 아직 모르는 나의 사소한 습관 하나는?'],
+['q','같이 꼭 가 보고 싶은 여행지, 하나씩.'],
+['q','친구가 해 준 말 중 아직 기억나는 한 문장은?'],
+['q','둘 중 누가 영화 보다가 먼저 울 것 같아요?'],
+['q','친구의 어떤 점이 은근히 부러워요?'],
+['q','우리 둘이 시트콤 주인공이라면, 제목은?'],
+['q','같이 보낸 날 중 다시 살고 싶은 하루는?'],
+['q','고마웠는데 말 못 한 일 하나. 오늘은 말해도 돼요.'],
+['q','요즘 제일 자주 듣는 노래와 그 이유.'],
+['q','5년 뒤 크리스마스, 우리는 어디서 뭘 하고 있을까?'],
+['q','서로의 인생 음식은? 다음에 그거 먹으러 가기.'],
+['q','친구한테 배운 것 중 제일 쓸모 있는 하나는?'],
+['q','우리 우정에 주제가가 있다면 어떤 노래일까요?'],
+['e','오늘 하루를 이모지 세 개로. 해석은 친구 몫.'],
+['e','친구를 이모지 하나로 표현한다면? 이유는 내일 공개.'],
+['e','우리 우정을 이모지 두 개로. 같으면 찐친 인증.'],
+['l','오늘 밤, 이 집 창밖으로 별똥별이 떨어질 거예요. 내일 창문을 꼭 봐요.','meteor'],
+['l','내일은 노을이 오래 머무는 날. 집에 들러 창밖을 봐요.','sunset'],
+['l','산타가 이 집 주소를 적어 갔다는 소문이 있어요. 내일, 창밖을 지켜봐요.','santa'],
+['l','내일 밤하늘은 분홍과 보라로 물들 거예요.','pink'],
+['l','내일은 이 집에 작은 불빛들이 걸려요. 누가 걸었는지는 비밀.','lights'],
+['l','내일은 함박눈 예보. 눈사람은 각자 집에서.','snow'],
+['l','내일 아침, 소파에 작은 손님이 와 있을지도 몰라요.','cat'],
+['l','내일은 벽난로가 유난히 따뜻한 날. 그 온기로 안부 한 번.','warm'],
+['l','오늘 밤 별똥별이 두 번 지나가요. 소원은 각자 하나씩.','meteor'],
+['l','내일 저녁, 창밖이 노을빛이에요. 사진 찍어서 서로 비교하기.','sunset'],
+],
+family:[
+['f','오늘 집에서 처음 들은 말이 오늘의 부적이에요. 기억해 두기.'],
+['f','오늘 먼저 "잘 다녀와"를 말하는 사람에게 행운이 와요.'],
+['f','오늘 저녁 메뉴를 맞히는 사람이 이번 주 운을 다 가져가요.'],
+['f','오늘은 오래된 가족사진 한 장을 꺼내 보면 좋은 일이 생기는 날이에요.'],
+['f','오늘의 행운 장소는 부엌. 같이 뭐라도 하나 만들어 봐요.'],
+['f','오늘 처음 마주친 빨간색이 행운의 색. 사진 찍어 보내기.'],
+['f','오늘은 잔소리 하나를 칭찬 하나로 바꾸면 집안 운이 트이는 날이에요.'],
+['f','별이 그러는데, 오늘 같이 찍는 사진은 평소보다 잘 나온대요.'],
+['f','오늘 따뜻한 차를 먼저 내미는 사람에게 복이 와요.'],
+['f','오늘의 행운 숫자는 가족 중 누군가의 생일. 누구 생일인지 맞혀 봐요.'],
+['f','오늘은 "고마워"를 한 번 더 말하면 운이 두 배가 되는 날이에요.'],
+['f','오늘 우연히 같은 걸 먹었다면, 역시 가족이에요.'],
+['f','오늘 들은 노래 하나를 우리 집 공식 겨울 노래로 정해 보세요.'],
+['m','어릴 때 사진 한 장씩 찾아서 보내기. 설명은 짧게.'],
+['m','"요즘 고마운 것" 하나씩 메시지로 보내기. 진지해도 괜찮아요.'],
+['m','가족만 아는 옛날 이야기 하나 꺼내기. 서로 다른 버전으로 기억할지도 몰라요.'],
+['m','오늘 저녁 메뉴 투표하기. 진 사람이 설거지.'],
+['m','서로의 휴대폰 배경화면을 캡처해서 보내기. 왜 그건지도 한 줄.'],
+['m','상대가 좋아하는 음식 세 가지 맞히기. 틀리면 내일 간식 담당.'],
+['m','오늘 하루를 일기예보처럼 알려 주기. 예: 오후 한때 피곤, 저녁엔 맑음.'],
+['m','함께 찍은 사진 한 장 보내기. 없으면 오늘 찍기.'],
+['m','서로에게 오늘의 수고상 주기. 상 이름은 직접 지어서.'],
+['m','우리 가족을 영화 장르로 표현하면? 이유도 한 줄.'],
+['m','10년 뒤 크리스마스의 우리에게 한 줄을 써서 각자 간직하기.'],
+['m','어릴 때 들었던 말 중 아직 기억나는 한 문장 보내기.'],
+['m','집에서 제일 좋아하는 자리를 사진 찍어 보내기.'],
+['m','"우리 집 전설의 날"을 하나씩 꺼내기.'],
+['m','같이 듣고 싶은 노래 하나씩 교환하기.'],
+['q','상대의 어릴 적 꿈은 뭐였을까요? 맞혀 보고, 물어보기.'],
+['q','상대가 아직 모르는 나의 사소한 습관 하나.'],
+['q','같이 가 보고 싶은 여행지, 하나씩.'],
+['q','상대가 해 준 말 중 아직 기억하는 한 문장.'],
+['q','우리 집만의 이상한 규칙이 있다면?'],
+['q','상대를 닮았다고 느낀 순간은?'],
+['q','어릴 때 크리스마스 중 제일 기억나는 장면은?'],
+['q','같이 보낸 날 중 다시 살고 싶은 하루는?'],
+['q','고마웠는데 말 못 한 일 하나. 오늘은 말해도 돼요.'],
+['q','요즘 상대가 제일 바쁜 이유, 알고 있나요? 모르면 물어보기.'],
+['q','10년 뒤 우리 가족은 어떤 모습일까요?'],
+['q','"우리 집" 하면 떠오르는 냄새는?'],
+['q','상대가 만든 요리 중 최고는?'],
+['q','상대가 웃을 때 제일 좋은 순간은?'],
+['e','오늘 하루를 이모지 세 개로만. 해석은 상대 몫.'],
+['e','상대를 이모지 하나로 표현한다면? 이유는 내일.'],
+['e','우리 가족을 이모지 세 개로. 같은 게 나오면 신기한 날.'],
+['l','오늘 밤, 이 집 창밖으로 별똥별이 떨어질 거예요. 내일 창문을 꼭 봐요.','meteor'],
+['l','내일은 노을이 오래 머무는 날. 집에 들러 창밖을 봐요.','sunset'],
+['l','산타가 이 집 주소를 적어 갔다는 소문이 있어요. 내일, 창밖을 지켜봐요.','santa'],
+['l','내일 밤하늘은 분홍과 보라로 물들 거예요.','pink'],
+['l','내일은 이 집에 작은 불빛들이 걸려요. 누가 걸었는지는 비밀.','lights'],
+['l','내일은 함박눈 예보. 따뜻하게 입기.','snow'],
+['l','내일 아침, 소파에 작은 손님이 와 있을지도 몰라요.','cat'],
+['l','내일은 벽난로가 유난히 따뜻한 날. 그 온기로 먼저 안부 묻기.','warm'],
+['l','오늘 밤 별똥별이 두 번 지나가요. 가족 소원 하나씩.','meteor'],
+['l','내일 저녁, 창밖이 노을빛이에요. 같은 하늘 아래 있다는 걸 기억하기.','sunset'],
+]};
+
+/* ---------- telepathy: one question a day, both pick in secret, revealed the next morning ---------- */
+const TELE_ALL=[
+['텔레파시 시험. 1부터 5 중 숫자 하나를 마음속으로 골라요.',NUM5],
+['지금 떠오르는 색 하나.',COLOR5],
+['같이 먹고 싶은 겨울 간식 하나. 같으면 이번 주 안에 먹기.',SNACK],
+['크리스마스 아침, 눈 뜨자마자 제일 먼저 할 일은?',['선물 뜯기','다시 자기','창밖 보기','연락하기','케이크 먹기']],
+['지금 이 순간 듣고 싶은 소리.',['눈 밟는 소리','장작 타는 소리','빗소리','파도 소리','캐럴']],
+['겨울 하면 떠오르는 냄새.',['귤','군밤','장작','첫눈','시나몬']],
+['딱 하루, 어디든 갈 수 있다면.',['핀란드 오로라','교토 온천','뉴욕 트리','제주 바다','이불 속']],
+['오늘 밤 하늘에서 하나만 떨어진다면.',['눈','별똥별','선물상자','귤','돈']],
+['동물이 되어 겨울을 난다면.',['곰','펭귄','고양이','북극여우','순록']],
+['12월 31일 자정에 하고 있을 것 같은 것.',['카운트다운','자는 중','먹는 중','폰 보는 중','소원 비는 중']],
+['산타에게 딱 하나만 받을 수 있다면.',['시간','여행','잠','용기','돈']],
+['오늘 하루 쓸 수 있는 초능력.',['순간이동','시간 멈추기','마음 읽기','투명인간','하늘 날기']],
+['트리 꼭대기에 하나만 올린다면.',['별','리본','고양이','천사','작은 사진']],
+['지금 손에 쥐고 싶은 따뜻한 것.',['핫초코','붕어빵','손난로','고양이','군고구마']],
+['눈사람의 코로 쓸 것.',['당근','귤','단추','솔방울','초콜릿']],
+['올해를 한 단어로.',['폭풍','성장','버티기','설렘','평화']],
+['지금 가장 그리운 계절.',['봄','여름','가을','지금 이 겨울','없음']],
+['눈이 펑펑 오는 날 하고 싶은 것.',['눈싸움','창밖 구경','낮잠','산책','사진 찍기']],
+['오늘 밤 꿈에 나왔으면 하는 것.',['바다','어릴 적 집','하늘','좋아하는 사람','아무것도']],
+['내년의 나에게 하나만 보낸다면.',['편지','사진','노래','용돈','잔소리']]
+];
+const TELE_REL={
+love:[
+['다음 데이트는 어디가 좋을까요?',['영화관','바다','작은 카페','집에서','즉흥 여행']],
+['크리스마스이브 저녁 메뉴.',['파스타','스테이크','떡볶이','치킨','집밥']],
+['상대에게 어울리는 겨울 별명.',['곰돌이','눈송이','귤','펭귄','핫초코']],
+['둘이 닮은 동물.',['고양이','강아지','곰','토끼','여우']]],
+friend:[
+['다음에 같이 할 것 하나.',['노래방','방탈출','카페 수다','영화','즉흥 여행']],
+['노래방 첫 곡의 장르.',['발라드','아이돌','밴드','트로트','팝송']],
+['우리 우정을 겨울 음식으로.',['붕어빵','호떡','어묵','귤','군고구마']],
+['같이 떠나고 싶은 여행지.',['부산','도쿄','방콕','제주','파리']]],
+family:[
+['오늘 저녁으로 먹고 싶은 것.',['김치찌개','치킨','떡볶이','삼겹살','라면']],
+['연말에 같이 하고 싶은 것.',['외식','여행','사진관','집에서 영화','보드게임']],
+['우리 가족을 겨울 동물로.',['펭귄 가족','곰 가족','고양이 가족','순록 가족','오리 가족']],
+['어릴 때 겨울 하면 떠오르는 것.',['눈사람','귤','전기장판','캐럴','방학']]]
+};
+
+/* =====================================================================
+   COCOA BALL + TREE — one cocoa a day, a note inside, an ornament for the tree
+   ===================================================================== */
+const COCOA_KIND={f:'Fortune',m:'Mission',q:'Question',e:'Emoji',l:'Lucky'};
+const COCOA_KO={f:'오늘의 운세',m:'오늘의 미션',q:'오늘의 질문',e:'이모지 편지',l:'행운 쪽지'};
+function cocoaPool(h){return COCOA[h.rel]||COCOA.friend;}
+function cocoaOrder(h){
+  if(!h._cocoaOrder){const pool=cocoaPool(h),idx=pool.map((_,i)=>i),R=rng(hash('cocoa:'+h.id));
+    for(let i=idx.length-1;i>0;i--){const j=Math.floor(R()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}
+    Object.defineProperty(h,'_cocoaOrder',{value:idx,enumerable:false,writable:true});}
+  return h._cocoaOrder;
+}
+function cocoaNote(h,d){if(d<1||d>24)return null;const n=cocoaPool(h)[cocoaOrder(h)[d-1]];return {kind:n[0],text:n[1],extra:n[2]||null};}
+function cocoaFx(h,d){const y=d===25?cocoaNote(h,24):d>1&&d<25?cocoaNote(h,d-1):null;return y&&y.kind==='l'?y.extra:null;}
+function cocoaOf(h){S.cocoa=S.cocoa||{};const c=S.cocoa[h.id]=S.cocoa[h.id]||{mine:{},theirs:{}};c.mine=c.mine||{};c.theirs=c.theirs||{};return c;}
+function cocoaOpened(h,d){const c=cocoaOf(h);return {me:!!c.mine[d],them:!!c.theirs[d]};}
+// demo only: the other person "opens" most days so the tree and telepathy can be seen without a friend
+function cocoaDemoFill(h){if(CLOUD)return;const c=cocoaOf(h),t=teleOf(h);for(let d=1;d<=S.day&&d<=24;d++){const R=rng(hash(h.id+':t:'+d));
+  if(!c.theirs[d]&&d<S.day&&R()<.8)c.theirs[d]={};
+  if(t.theirs[d]==null&&R()<.85)t.theirs[d]=Math.floor(R()*5);}}
+
+/* ---------- art inside the room ---------- */
+const TREE_SLOTS=[[262,166],[256,178],[268,180],[250,191],[262,193],[274,190],[246,204],[257,206],[268,205],[279,203],[243,217],[253,219],[264,220],[275,218],[284,215],[240,229],[249,231],[259,232],[270,232],[280,230],[288,227],[262,153],[247,224],[277,211]];
+function treeSVG(h){
+  const d=S.day,c=cocoaOf(h);let orn='';
+  for(let k=1;k<=24;k++){const me=!!c.mine[k],th=!!c.theirs[k];if(!me&&!th)continue;const [x,y]=TREE_SLOTS[k-1],both=me&&th,
+    col=both?'#e9d29a':me?'#c8b07a':'#8c2f3a';
+    orn+=`<g class="orn${h._newOrn===k?' orn-new':''}"><path d="M${x} ${y-4.2}V${y-2.6}" stroke="#c8b07a" stroke-width=".5"/>${both?`<circle cx="${x}" cy="${y}" r="5.4" fill="#ffd98f" opacity=".16"/>`:''}<circle cx="${x}" cy="${y}" r="2.7" fill="${col}"/><circle cx="${x-.8}" cy="${y-.9}" r=".8" fill="#fff" opacity=".55"/></g>`;}
+  const lit=d===25;
+  const star=`<path d="M262 139L263.6 145.4L270 147L263.6 148.6L262 155L260.4 148.6L254 147L260.4 145.4Z" fill="${lit?'#ffe3a3':'none'}" stroke="#c8b07a" stroke-width="${lit?.6:.8}" stroke-opacity="${lit?1:.55}"/>${lit?'<circle cx="262" cy="147" r="13" fill="#ffd98f" opacity=".18"/>':''}`;
+  return `<g class="room-tree">
+    <ellipse cx="262" cy="246" rx="30" ry="3.2" fill="#000" opacity=".28"/>
+    <path d="M253 233H271L268 246H256Z" fill="#6b4b2a" stroke="#c8b07a" stroke-width=".6"/><path d="M252.5 233H271.5" stroke="#c8b07a" stroke-width="1"/>
+    <path d="M262 150C258 160 250 168 244 172C250 173 253 172 256 171C251 181 243 188 237 192C245 193 250 192 254 190C248 202 239 210 233 214C242 215 249 214 254 212C249 222 240 230 232 234H292C284 230 275 222 270 212C275 214 282 215 291 214C285 210 276 202 270 190C274 192 279 193 287 192C281 188 273 181 268 171C271 172 274 173 280 172C274 168 266 160 262 150Z" fill="#203a2c"/>
+    <path d="M262 150C259 160 254 167 249 171M262 150C265 160 270 167 275 171M256 171C252 181 246 187 241 191M268 171C272 181 278 187 283 191M254 190C249 202 242 209 237 213M270 190C275 202 282 209 287 213M254 212C249 222 242 229 236 233M270 212C275 222 282 229 288 233" fill="none" stroke="#3b5a45" stroke-width="1.1" stroke-linecap="round"/>
+    <path d="M249 178Q262 184 276 176M244 199Q262 207 281 197M240 221Q262 230 285 219" fill="none" stroke="#c8b07a" stroke-opacity=".55" stroke-width=".7"/>
+    ${orn}${star}</g>`;
+}
+function mugSVG(h){
+  const d=S.day,ready=d>=1&&d<=24,o=ready?cocoaOpened(h,d):{me:false};const ball=ready&&!o.me;
+  return `<g class="room-mug${ball?' has-ball':''}">
+    <ellipse cx="180" cy="324" rx="19" ry="4.6" fill="#000" opacity=".28"/>
+    <ellipse cx="180" cy="322" rx="18" ry="4.4" fill="#5a3a20" stroke="#c8b07a" stroke-width=".7"/>
+    <path d="M171 305H189L188 320Q180 323 172 320Z" fill="#efe6d4"/><path d="M171 305H189" stroke="#c8b07a" stroke-width=".6"/>
+    <path d="M171.5 309H188.5" stroke="#8c2f3a" stroke-width="1.6" opacity=".85"/>
+    <path d="M189 308.5Q195 309 194 313.5Q193 317.5 188 316.8" fill="none" stroke="#efe6d4" stroke-width="2.2"/>
+    <ellipse cx="180" cy="305" rx="9" ry="1.8" fill="${ball?'#2a1810':'#5a3220'}"/>
+    ${ball?`<circle cx="180" cy="300.2" r="5.4" fill="#4a2a18"/><path d="M175.3 299Q178 297.4 180 299.4T184.8 298.6" fill="none" stroke="#efe6d4" stroke-width=".7" stroke-linecap="round"/><circle cx="178" cy="298" r="1.1" fill="#fff" opacity=".18"/>`
+      :`<g fill="#f4ede0"><rect x="175" y="302.6" width="3.2" height="2.6" rx=".9"/><rect x="180" y="302.2" width="3.2" height="2.6" rx=".9" transform="rotate(14 181.6 303.5)"/></g><path d="M177 299Q175.5 295 177.5 292M182.5 299Q184 295 182 291.5" fill="none" stroke="#efe8da" stroke-opacity=".35" stroke-width=".8" stroke-linecap="round"/>`}
+  </g>`;
+}
+/* lucky things that happen the day after a lucky note */
+function fxWindowFill(fx){return fx==='sunset'?'url(#fxSunset)':fx==='pink'?'url(#fxPink)':'url(#nightw)';}
+const FX_DEFS=`<linearGradient id="fxSunset" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2350"/><stop offset=".55" stop-color="#b5536a"/><stop offset="1" stop-color="#f0a35e"/></linearGradient>
+   <linearGradient id="fxPink" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#241a48"/><stop offset=".5" stop-color="#6c4396"/><stop offset="1" stop-color="#e3a2c8"/></linearGradient>`;
+function fxSVG(fx){
+  if(fx==='meteor')return `<g clip-path="url(#winL)"><path class="meteor" d="M58 70L36 92" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></g><g clip-path="url(#winR)"><path class="meteor m2" d="M350 64L326 88" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></g>`;
+  if(fx==='santa')return `<g clip-path="url(#winR)"><g class="santa-fly"><path d="M0 0Q6 4 14 1L16 -2H22L20 2Q12 8 2 5Z" fill="#0b1226"/><path d="M-14 -3l4-3 3 2 4-3 2 3-5 2-3-1-3 2Z M-26 -6l4-3 3 2 4-3 2 3-5 2-3-1-3 2Z" fill="#0b1226"/><path d="M-12 -2L2 1" stroke="#0b1226" stroke-width=".5"/><circle cx="-27" cy="-6" r=".9" fill="#ff6b5b"/></g></g>`;
+  if(fx==='lights'){let b='',k=0;[[70,52,126,58],[126,58,180,50],[180,50,234,58],[234,58,290,52]].forEach(([x0,y0,x1,y1])=>{for(let t=.1;t<1;t+=.2){const x=x0+(x1-x0)*t,y=y0+(y1-y0)*t+Math.sin(t*Math.PI)*6;b+=`<g class="bulb b${k++%3}"><circle cx="${x.toFixed(1)}" cy="${(y+2).toFixed(1)}" r="1.6" fill="${['#ffd98f','#ff8f8f','#9fd0ff'][k%3]}"/><circle cx="${x.toFixed(1)}" cy="${(y+2).toFixed(1)}" r="4" fill="${['#ffd98f','#ff8f8f','#9fd0ff'][k%3]}" opacity=".18"/></g>`;}});
+    return `<g class="fx-lights"><path d="M70 52Q98 64 126 58Q153 58 180 50Q207 58 234 58Q262 64 290 52" fill="none" stroke="#3b3326" stroke-width=".7"/>${b}</g>`;}
+  if(fx==='cat')return `<g class="fx-cat" transform="translate(40 26)"><ellipse cx="88" cy="283" rx="13" ry="6" fill="#2b2622"/><circle cx="99" cy="279" r="5" fill="#2b2622"/><path d="M95.5 275.5L96.5 271.5L99 274.5M102.5 275.5L101.5 271.5L99.2 274.3" fill="#2b2622"/><path d="M76 285Q70 288 76 290Q86 291 92 288" fill="none" stroke="#2b2622" stroke-width="2.4" stroke-linecap="round"/><path d="M97 279.5h1.6M100.4 279.5H102" stroke="#c8b07a" stroke-width=".5" opacity=".7"/></g>`;
+  if(fx==='warm')return `<rect width="360" height="380" fill="url(#warm)" opacity=".9"/><ellipse cx="180" cy="230" rx="70" ry="40" fill="#f0a650" opacity=".08"/>`;
+  return '';
+}
+function fxNote(fx){return {meteor:'어젯밤 행운 쪽지대로, 창밖에 별똥별이 지나가요',sunset:'행운 쪽지대로, 오늘 창밖은 노을빛이에요',santa:'쉿, 창밖을 봐요. 산타가 지나가고 있어요',pink:'오늘 밤하늘은 분홍과 보라예요',lights:'누군가 이 집에 작은 불빛들을 걸어 두었어요',snow:'함박눈이 내리는 날이에요',cat:'소파에 작은 손님이 잠들어 있어요',warm:'오늘은 벽난로가 유난히 따뜻해요'}[fx]||'';}
+
+/* ---------- the cocoa scene (zooms in from the mug) ---------- */
+let CS=null;
+function openCocoa(){
+  const h=H(),d=S.day;if(!(d>=1&&d<=24)){toast(d===25?'오늘은 트리에 별이 켜졌어요':'코코아볼은 12월 1일부터 매일 하나씩 도착해요');return;}
+  const n=cocoaNote(h,d),o=cocoaOpened(h,d),mug=$('.mug-btn'),r=mug?mug.getBoundingClientRect():{left:innerWidth/2,top:innerHeight/2,width:0,height:0};
+  const cx=r.left+r.width/2,cy=r.top+r.height/2;
+  const el=document.createElement('div');el.className='cocoa-scene';el.style.setProperty('--cx',cx+'px');el.style.setProperty('--cy',cy+'px');
+  el.innerHTML=`<button class="link-btn cs-close" data-act="cocoa-close">Close</button>
+    <div class="cs-inner">
+      <p class="caps">December ${d} · Cocoa ball</p>
+      <div class="cs-stage">${cocoaBigSVG(o.me)}</div>
+      <div class="cs-ctrl">${o.me?'':`<button class="primary" data-act="cocoa-pour">따뜻한 우유 붓기</button><p class="cs-hint">${o.them?`${esc(h.name)}도 오늘의 코코아볼을 열었어요`:'우유를 부으면 코코아볼이 녹아요'}</p>`}</div>
+      <div class="cs-note${o.me?' show':''}" id="csNote">${noteCard(h,d)}</div>
+    </div>`;
+  document.body.appendChild(el);document.body.classList.add('cocoa-open');CS={el,h,d};
+  requestAnimationFrame(()=>el.classList.add('in'));
+}
+function cocoaBigSVG(done){
+  return `<svg viewBox="0 0 220 220" class="cs-mug${done?' done':''}" aria-hidden="true">
+    <defs><radialGradient id="csGlow" cx="50%" cy="45%" r="55%"><stop offset="0" stop-color="#ffd98f" stop-opacity=".22"/><stop offset="1" stop-color="#ffd98f" stop-opacity="0"/></radialGradient>
+    <clipPath id="csCup"><path d="M58 92H162L156 176Q110 190 64 176Z"/></clipPath></defs>
+    <circle cx="110" cy="120" r="100" fill="url(#csGlow)"/>
+    <path class="cs-milk" d="M150 0C150 30 128 50 112 92" fill="none" stroke="#f6efe2" stroke-width="7" stroke-linecap="round"/>
+    <ellipse cx="110" cy="186" rx="70" ry="9" fill="#000" opacity=".3"/>
+    <path d="M162 108Q194 110 190 140Q186 166 156 162" fill="none" stroke="#efe6d4" stroke-width="11"/>
+    <path d="M58 92H162L156 176Q110 190 64 176Z" fill="#efe6d4"/>
+    <path d="M60 118H160" stroke="#8c2f3a" stroke-width="7" opacity=".85"/><path d="M60 126H160" stroke="#c8b07a" stroke-width="1.2" opacity=".7"/>
+    <ellipse cx="110" cy="92" rx="52" ry="9" fill="#3a2016"/><ellipse class="cs-surface" cx="110" cy="92" rx="52" ry="9" fill="#6b3d26"/>
+    <g class="cs-ball"><circle cx="110" cy="70" r="27" fill="#4a2a18"/><path d="M86 64Q98 56 110 66T134 60" fill="none" stroke="#efe6d4" stroke-width="2.4" stroke-linecap="round"/><path d="M92 78Q104 72 114 80T132 76" fill="none" stroke="#c8b07a" stroke-width="1.2" stroke-linecap="round" opacity=".7"/><circle cx="100" cy="58" r="6" fill="#fff" opacity=".12"/></g>
+    <g class="cs-marsh"><rect x="88" y="82" width="12" height="10" rx="3" fill="#f6efe2"/><rect x="104" y="80" width="12" height="10" rx="3" fill="#fbe7ea" transform="rotate(12 110 85)"/><rect x="120" y="83" width="11" height="9" rx="3" fill="#f6efe2" transform="rotate(-10 125 87)"/></g>
+    <g class="cs-steam" fill="none" stroke="#efe8da" stroke-opacity=".4" stroke-width="2" stroke-linecap="round"><path d="M96 70Q90 56 98 44"/><path d="M122 68Q128 54 120 40"/></g>
+  </svg>`;
+}
+function noteCard(h,d){
+  const n=cocoaNote(h,d),o=cocoaOpened(h,d);if(!n)return '';
+  let body=`<p class="cs-text">${esc(n.text)}</p>`;
+  if(n.kind==='l')body+=`<p class="cs-sub">✦ 내일 이 집에서 확인해 보세요</p>`;
+  const together=o.them&&o.me?`<p class="cs-together">${esc(h.name)}도 오늘 이 쪽지를 열었어요 ✦</p>`:'';
+  return `<div class="cs-paper"><p class="caps">${COCOA_KIND[n.kind]} · ${COCOA_KO[n.kind]}</p>${body}${together}
+    ${o.me?`<button class="ghost" data-act="cocoa-close">트리 보러 가기</button>`:''}</div>`;
+}
+async function cocoaMark(h,d){
+  const c=cocoaOf(h);if(c.mine[d])return true;
+  if(CLOUD){const {error}=await sb.from('daily').insert({house_id:h.id,day:d,kind:'cocoa'});if(error&&!/duplicate/i.test(error.message)){toast(errKo(error));return false;}}
+  c.mine[d]={};h._newOrn=d;save();return true;
+}
+async function cocoaPour(btn){
+  if(!CS)return;const {el,h,d}=CS,n=cocoaNote(h,d);btn.disabled=true;
+  el.querySelector('.cs-mug').classList.add('pour');
+  {const ok=await cocoaMark(h,d);if(!ok){btn.disabled=false;el.querySelector('.cs-mug').classList.remove('pour');return;}}
+  setTimeout(()=>{el.querySelector('.cs-ctrl').innerHTML='';const box=$('#csNote');box.innerHTML=noteCard(h,d);
+    box.classList.add('show');},reduce?0:2300);
+}
+function closeCocoa(){if(!CS)return;const {el}=CS;el.classList.remove('in');el.classList.add('out');document.body.classList.remove('cocoa-open');CS=null;
+  setTimeout(()=>{el.remove();renderHouseKeepModal();const h=H();if(h&&h._newOrn){setTimeout(()=>{h._newOrn=null;},1600);}},reduce?0:520);}
+function openTreeNotes(){
+  const h=H(),c=cocoaOf(h);const days=[];for(let k=1;k<=Math.min(24,S.day);k++)if(c.mine[k])days.push(k);
+  openModal(`${sheetHead('The Tree','트리에 걸린 쪽지')}<p class="hint-text" style="margin-top:-4px">코코아볼에서 나온 쪽지가 오너먼트가 되어 걸려요.<br>금빛은 둘 다 연 날, 버건디는 ${ga(h.name)} 먼저 연 날이에요.</p>
+    ${days.length?`<div class="tree-notes">${days.reverse().map(k=>{const n=cocoaNote(h,k),o=cocoaOpened(h,k),extra='';
+      return `<div class="tn"><p class="tn-d">12월 ${k}일 · ${COCOA_KO[n.kind]}${o.them?' · 함께 ✦':''}</p><p>${esc(n.text)}</p>${extra}</div>`;}).join('')}</div>`
+      :`<p class="empty">아직 걸린 오너먼트가 없어요. 머그잔의 코코아볼을 열어 보세요.</p>`}`);
+}
+
+/* =====================================================================
+   TELEPATHY — one question a day, both answer in secret, revealed next morning
+   ===================================================================== */
+function telePool(h){return TELE_ALL.concat(TELE_REL[h.rel]||TELE_REL.friend);}
+function teleOrder(h){
+  if(!h._teleOrder){const pool=telePool(h),idx=pool.map((_,i)=>i),R=rng(hash('tele:'+h.id));
+    for(let i=idx.length-1;i>0;i--){const j=Math.floor(R()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}
+    const one=idx.indexOf(0);[idx[0],idx[one]]=[idx[one],idx[0]];   // day 1 is always the number test
+    Object.defineProperty(h,'_teleOrder',{value:idx,enumerable:false,writable:true});}
+  return h._teleOrder;
+}
+function teleQ(h,d){if(d<1||d>24)return null;const q=telePool(h)[teleOrder(h)[d-1]];return {text:q[0],choices:q[1]};}
+// mine[d] = index; theirs[d] = index, or -1 when they answered but it is still secret
+function teleOf(h){S.tele=S.tele||{};const t=S.tele[h.id]=S.tele[h.id]||{mine:{},theirs:{},seen:0};t.mine=t.mine||{};t.theirs=t.theirs||{};return t;}
+function teleCard(h){
+  const d=S.day;if(!(d>=1&&d<=24))return '';
+  const q=teleQ(h,d),t=teleOf(h),mine=t.mine[d],them=t.theirs[d]!=null;
+  return `<button class="tele-card${mine==null?' ready':''}" data-act="tele" aria-label="오늘의 텔레파시${mine==null?', 아직 안 골랐어요':''}">
+    <span class="tc-orb" aria-hidden="true"><i></i><i></i></span>
+    <span class="tc-body"><span class="caps">Telepathy · 오늘의 텔레파시</span><span class="tc-q">${esc(q.text)}</span>
+    <span class="tc-st">${mine==null?(them?`${ga(h.name)} 벌써 골랐어요 · 나도 고르기`:'마음속으로 하나 고르기'):`나는 골랐어요 · ${them?`${esc(h.name)}도 골랐어요. `:''}내일 아침에 공개`}</span></span>
+    <span class="tc-go" aria-hidden="true">${mine==null?'→':'✓'}</span></button>`;
+}
+function openTele(){
+  const h=H(),d=S.day;if(!(d>=1&&d<=24)){toast(d===25?'텔레파시는 24일까지였어요':'텔레파시는 12월 1일부터 매일 하나씩 열려요');return;}
+  const q=teleQ(h,d),t=teleOf(h),mine=t.mine[d];
+  openModal(`${sheetHead('Telepathy · December '+d,'오늘의 텔레파시')}
+    <p class="tele-q">${esc(q.text)}</p>
+    <div class="tele-picks" role="group" aria-label="답 고르기">${q.choices.map((x,i)=>`<button class="tele-pick${mine===i?' on':''}" data-act="tele-pick" data-i="${i}"${mine!=null?' disabled':''}>${esc(x)}</button>`).join('')}</div>
+    <p class="hint-text" style="text-align:center">${mine==null?`서로의 답은 안 보여요. 한 번 고르면 바꿀 수 없어요.<br>${wa(h.name)} 같은 걸 골랐는지는 내일 아침, 집 문을 열면 알려 드려요.`:`별에 맡겼어요. 내일 아침, 집 문을 열면 공개돼요.`}</p>`);
+}
+async function telePick(i){
+  const h=H(),d=S.day,t=teleOf(h);if(t.mine[d]!=null||!(d>=1&&d<=24))return;
+  document.querySelectorAll('.tele-pick').forEach(b=>b.disabled=true);
+  if(CLOUD){const {error}=await sb.from('daily').insert({house_id:h.id,day:d,kind:'tele',pick:i});if(error&&!/duplicate/i.test(error.message)){toast(errKo(error));document.querySelectorAll('.tele-pick').forEach(b=>b.disabled=false);return;}}
+  t.mine[d]=i;save();closeModal();renderHouseKeepModal();toast('답을 별에 맡겼어요. 내일 아침에 공개돼요');
+}
+// when the door opens: yesterday's answers, first thing
+function teleReveal(h){
+  const d=S.day,y=d===25?24:d-1;if(y<1)return false;const t=teleOf(h);if(t.seen>=y)return false;
+  const a=t.mine[y],b=t.theirs[y];if(a==null&&(b==null||b<0))return false;
+  t.seen=y;save();
+  const q=teleQ(h,y),ch=q.choices,same=a!=null&&b!=null&&b>=0&&a===b;
+  const side=(who,v,k)=>`<div class="tr-side" style="animation-delay:${k*.35+.5}s"><span class="caps">${who}</span><b>${v==null||v<0?'—':esc(ch[v])}</b></div>`;
+  const line=a==null?`어제는 나만 답하지 않았어요. ${ga(h.name)} <b>${esc(ch[b])}</b>${batchim(ch[b])?'을':'를'} 골랐어요.`
+    :b==null||b<0?`${ga(h.name)} 어제는 답하지 못했어요. 오늘은 같이 골라 봐요.`
+    :same?`<b>통했어요.</b> 둘 다 같은 걸 골랐어요 ✦`:'아쉽게 엇갈렸어요. 오늘은 통할지도.';
+  openModal(`<div class="tele-reveal${same?' same':''}"><p class="caps">Yesterday's telepathy · 12월 ${y}일</p>
+    <p class="tele-q">${esc(q.text)}</p>
+    <div class="tr-row">${side('나',a,0)}<span class="tr-mid" aria-hidden="true">${same?'✦':'·'}</span>${side(esc(h.name),b,1)}</div>
+    <p class="tr-line">${line}</p>
+    <button class="primary" data-act="close">집 안으로 들어가기</button></div>`);
+  return true;
+}
+
+/* =====================================================================
+   ROOFS (shared, the builder chooses) · INTERIOR (mine, only I see it)
+   ===================================================================== */
+const ROOF={slate:['슬레이트','#2e3342','#171a24'],clay:['붉은 기와','#74302a','#3d1513'],copper:['청동','#4f7a6b','#253f37'],cedar:['삼나무','#62483a','#33241a']};
+const CROWN={wreath:'리스',star:'금빛 별',lights:'전구',garland:'갈랜드',none:'없음'};
+const roofOf=h=>ROOF[h.roof]?h.roof:'slate',crownOf=h=>CROWN[h.crown]?h.crown:'wreath';
+const PAPER={damask:'다마스크',stripe:'스트라이프',star:'작은 별',plain:'민무늬'};
+const FLOOR={plank:'나무 마루',check:'체커 타일',carpet:'카펫'};
+const SOFA={auto:['기본'],bordeaux:['보르도','#4c1a22','#5b2029'],forest:['포레스트','#2f3a2b','#3b4935'],navy:['네이비','#1b2444','#263159'],camel:['카멜','#755233','#86603e'],cream:['크림','#a39a85','#b8ae98']};
+function decoOf(h){if(!h.deco||typeof h.deco!=='object')h.deco={};return h.deco;}
+function sofaStyle(h){const s=SOFA[decoOf(h).sofa];return s&&s[1]?`--chair:${s[1]};--chair-2:${s[2]}`:'';}
+
+/* the roof itself: a little thicker, shingle courses, icicles under the snow */
+function roofParts(id,h){
+  const [,a,b]=ROOF[roofOf(h)];
+  let sh='';for(let k=1;k<=6;k++){const t=k/7;const lx=70-49*t,ly=28.6+36.9*t,rx=70+49*t;
+    sh+=`M${(lx-3.6).toFixed(1)} ${(ly-1.6).toFixed(1)}L${(lx-.9).toFixed(1)} ${(ly+1.9).toFixed(1)}M${(rx+3.6).toFixed(1)} ${(ly-1.6).toFixed(1)}L${(rx+.9).toFixed(1)} ${(ly+1.9).toFixed(1)}`;}
+  const ice=[27,34,41,99,106,113].map((x,k)=>{const yy=(x<70?66.6-(x-21.4)*37.2/48.6:66.6-(118.6-x)*37.2/48.6)+.2,l=k%2?2.4:3.6;
+    return `M${x-1} ${yy.toFixed(1)}L${x} ${(yy+l).toFixed(1)}L${x+1} ${yy.toFixed(1)}Z`;}).join('');
+  return {defs:`<linearGradient id="r${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`,
+    body:`<path d="M14 65L70 21L126 65L118.6 66.6L70 29.4L21.4 66.6Z" fill="url(#r${id})"/>
+  <path d="${sh}" stroke="#000" stroke-opacity=".28" stroke-width=".55"/>
+  <path d="M21.4 66.6L70 29.4L118.6 66.6" fill="none" stroke="#c8b07a" stroke-opacity=".6" stroke-width=".6"/>`,
+    ice:`<path d="${ice}" fill="#e9eff7" opacity=".9"/>`};
+}
+/* what hangs on the front of the house */
+function crownParts(h){
+  const c=crownOf(h);
+  if(c==='star')return `<circle cx="70" cy="46" r="10" fill="#ffd98f" opacity=".14"/><path d="${star4(70,46,7)}" fill="#e9d29a"/><path d="${star4(70,46,3.2)}" transform="rotate(45 70 46)" fill="#fff4d6" opacity=".9"/>`;
+  if(c==='lights'){let b='';const pts=[];for(let k=1;k<12;k++){const t=k/12,x=21.4+97.2*t,y=t<.5?66.6-37.2*(t*2):29.4+37.2*((t-.5)*2);pts.push([x,y+2.4]);}
+    pts.forEach(([x,y],k)=>{const col=['#ffd98f','#ff9a8a','#a9d4ff'][k%3];b+=`<g class="bulb b${k%3}"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.4" fill="${col}" opacity=".22"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.25" fill="${col}"/></g>`;});
+    return `<g class="blink"><path d="M21.4 69L70 31.8L118.6 69" fill="none" stroke="#2a2a26" stroke-width=".5"/>${b}</g><circle cx="70" cy="46" r="3.6" fill="#1a1410" stroke="#c8b07a" stroke-width=".7"/><path d="M70 42.4V49.6M66.4 46H73.6" stroke="#c8b07a" stroke-width=".5"/>`;}
+  if(c==='garland')return `<path d="M30 60.5Q50 69 70 61.5Q90 69 110 60.5" fill="none" stroke="#1f3a2a" stroke-width="3.6" stroke-linecap="round"/><path d="M30 60.5Q50 69 70 61.5Q90 69 110 60.5" fill="none" stroke="#4f6e4c" stroke-width="1.2" stroke-dasharray="1.4 1.8" stroke-linecap="round"/>
+    <g fill="#c8b07a">${[[40,64.2],[56,65.4],[84,65.4],[100,64.2]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="1.1"/>`).join('')}</g>
+    <g fill="#8c2f3a">${[30,70,110].map(x=>`<path d="M${x} ${x===70?61.5:60.5}l-3.6-2.4v4.8Zm0 0l3.6-2.4v4.8Z"/><path d="M${x} ${x===70?61.5:60.5}l-1.6 4.6M${x} ${x===70?61.5:60.5}l1.6 4.6" stroke="#8c2f3a" stroke-width=".9"/>`).join('')}</g>
+    <circle cx="70" cy="46" r="3.6" fill="#1a1410" stroke="#c8b07a" stroke-width=".7"/><path d="M70 42.4V49.6M66.4 46H73.6" stroke="#c8b07a" stroke-width=".5"/>`;
+  if(c==='none')return `<circle cx="70" cy="46" r="3.6" fill="#1a1410" stroke="#c8b07a" stroke-width=".7"/><path d="M70 42.4V49.6M66.4 46H73.6" stroke="#c8b07a" stroke-width=".5"/>`;
+  return `<circle cx="70" cy="46" r="5.5" fill="none" stroke="#5f6a48" stroke-width="2.2"/><circle cx="70" cy="46" r="5.5" fill="none" stroke="#7b8457" stroke-width="1" stroke-dasharray="1.2 1.4"/><path d="M67 51.5L70 49L73 51.5" stroke="#7a2632" stroke-width="1.4" fill="none"/>`;
+}
+
+/* wallpaper — motifs placed one by one so none is cut by a border */
+const starMotif=(cx,top)=>`<path d="${star4(cx,top+12,3.4)}" fill="#c8b07a" fill-opacity=".2"/>`;
+function backPaper(m){let o='';for(let j=0;j<4;j++){const top=56+j*34;for(let i=0;i<9;i++){const cx=84+i*24;o+=m(cx,top);if(m===motif&&i<8)o+=dot(cx+12,top+12);}}return o;}
+function sidePaper(m,mirror){let o='';const X=x=>mirror?360-x:x;
+  for(const cx of [16,40,62])for(let top=6;top<230;top+=32){const yTop=40*(cx+8)/70+6,yRail=196+(70-(cx+8))*26/70-6;if(top>=yTop&&top+24<=yRail)o+=m(X(cx),top);}return o;}
+function stripes(){let b='',s='';for(let x=82;x<=278;x+=14)b+=`M${x} 44V194`;
+  for(const x of [10,24,38,52,64]){const y0=40*x/70+3,y1=222-26*x/70-3;s+=`M${x} ${y0.toFixed(1)}V${y1.toFixed(1)}M${360-x} ${y0.toFixed(1)}V${y1.toFixed(1)}`;}
+  return `<path d="${b}" stroke="#c8b07a" stroke-opacity=".05" stroke-width="5"/><path d="${b}" stroke="#c8b07a" stroke-opacity=".16" stroke-width=".6"/><g opacity=".7"><path d="${s}" stroke="#c8b07a" stroke-opacity=".05" stroke-width="4"/><path d="${s}" stroke="#c8b07a" stroke-opacity=".16" stroke-width=".55"/></g>`;}
+const PAPER_SVG={};
+function paperSVG(h){const k=PAPER[decoOf(h).paper]?decoOf(h).paper:'damask';
+  if(!PAPER_SVG[k])PAPER_SVG[k]=k==='damask'?{back:DAMASK,side:`<g opacity=".7">${DAMASK_L}</g><g opacity=".7">${DAMASK_R}</g>`}
+    :k==='star'?{back:backPaper(starMotif),side:`<g opacity=".7">${sidePaper(starMotif,false)}${sidePaper(starMotif,true)}</g>`}
+    :k==='stripe'?{back:'',side:stripes()}:{back:'',side:''};
+  return PAPER_SVG[k];}
+
+/* floors, drawn in the room's own perspective */
+function floorSVG(h,boards){
+  const k=FLOOR[decoOf(h).floor]?decoOf(h).floor:'plank';
+  if(k==='carpet')return `<path d="M70 240H290L360 330V380H0V330Z" fill="#3a2822" opacity=".7"/><path d="${boards}" clip-path="url(#floorClip)" stroke="#000" stroke-opacity=".12" stroke-dasharray="1 3"/>`;
+  if(k==='check'){const xs=[];for(let xb=70;xb<=290;xb+=20)xs.push(xb);const ys=[240,252,268,290,320,358,400];
+    const X=(xb,y)=>xb+(180+(xb-180)*230/90-xb)*(y-240)/140;let c='';
+    for(let r=0;r<ys.length-1;r++)for(let i=-3;i<xs.length+2;i++){if((i+r)%2)continue;const a=70+i*20,b=a+20,y0=ys[r],y1=ys[r+1];
+      c+=`M${X(a,y0).toFixed(1)} ${y0}L${X(b,y0).toFixed(1)} ${y0}L${X(b,y1).toFixed(1)} ${y1}L${X(a,y1).toFixed(1)} ${y1}Z`;}
+    return `<path d="${c}" clip-path="url(#floorClip)" fill="#e9e1cf" opacity=".06"/>`;}
+  return `<path d="${boards}" clip-path="url(#floorClip)" stroke="#c8b07a" stroke-opacity=".08"/>`;
+}
+
+/* =====================================================================
+   WHO IS HOME — little figures on the sofa, live
+   ===================================================================== */
+const HERE={};          // houseId -> true when the other person is in this house right now
+let hereCh=null,hereId=null;
+function hereWatch(h){
+  if(!CLOUD||!h||h.pending){hereStop();return;}
+  if(hereId===h.id&&hereCh)return;hereStop();hereId=h.id;
+  try{
+    hereCh=sb.channel('here:'+h.id,{config:{presence:{key:ME.id}}});
+    hereCh.on('presence',{event:'sync'},()=>{const st=hereCh.presenceState(),was=!!HERE[h.id];HERE[h.id]=Object.keys(st).some(k=>k!==ME.id);
+      if(was!==HERE[h.id]&&S.screen==='house'&&H()&&H().id===h.id){hereSofa(h);if(HERE[h.id])toast(`${ga(h.name)} 지금 이 집에 들어왔어요`);}})
+      .subscribe(s=>{if(s==='SUBSCRIBED')hereCh.track({at:Date.now()});});
+  }catch(e){hereCh=null;}
+}
+function hereStop(){if(hereCh){try{sb.removeChannel(hereCh);}catch(e){}}hereCh=null;if(hereId)HERE[hereId]=false;hereId=null;}
+function hereThem(h){return CLOUD?!!HERE[h.id]:!!h._demoHere;}
+/* everyone is a little star; only the colour is yours (30 colours, handed out so they repeat as little as possible) */
+const STARS=[['샴페인','#e9d29a'],['로즈','#e8a4ad'],['버건디','#9b3a4a'],['라벤더','#b9a6dd'],['민트','#9fd5c0'],['하늘','#9cc6ea'],['피치','#f2b394'],['레몬','#f3e08a'],['세이지','#a9bb98'],['코랄','#ef8f7c'],
+ ['라일락','#d4a6d6'],['아이보리','#f1e9d6'],['미드나잇','#4a5a9a'],['에메랄드','#4f9e83'],['체리','#d35b6b'],['허니','#e6b55c'],['아쿠아','#7fd0d6'],['모카','#b08868'],['블러시','#f4c6c6'],['올리브','#8e9a5c'],
+ ['플럼','#8a5a8f'],['실버','#c9cfd8'],['탠저린','#f39a52'],['포레스트','#3f7a5a'],['페리윙클','#8f9fe6'],['시나몬','#c27a4f'],['펄 핑크','#f7dde6'],['딥 블루','#2f4a8a'],['피스타치오','#c3d89a'],['루비','#b8303f']];
+const starOf=i=>STARS[((Number(i)%30)+30)%30];
+function myStar(){if(S.myStar==null)S.myStar=hash(S.myName||'me')%30;return S.myStar;}
+function theirStar(h){return h.star!=null?h.star:(hash(h.id)+7)%30;}
+function starD(cx,cy,R,r){let d='';for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,q=i%2?r:R;d+=(i?'L':'M')+(cx+q*Math.cos(a)).toFixed(1)+' '+(cy+q*Math.sin(a)).toFixed(1);}return d+'Z';}
+function lumOf(hex){const n=parseInt(hex.slice(1),16);return (.299*(n>>16)+.587*(n>>8&255)+.114*(n&255))/255;}
+function starFig(cx,idx,me,mug=true,cy=271){
+  const col=starOf(idx)[1],dark=lumOf(col)<.45,eye=dark?'#f6efe2':'#2b2119',s=me?1:-1;
+  return `<g class="sitter${me?' me':''}"><circle cx="${cx}" cy="${cy}" r="19" fill="${col}" opacity=".12"/>
+    <path d="${starD(cx,cy+1.4,15,7.8)}" fill="${shade(col,-.3)}" stroke="${shade(col,-.3)}" stroke-width="4.6" stroke-linejoin="round"/>
+    <path d="${starD(cx,cy,15,7.8)}" fill="${col}" stroke="${col}" stroke-width="4.6" stroke-linejoin="round"/>
+    <ellipse cx="${cx-4.6}" cy="${cy-6.4}" rx="2.6" ry="1.4" fill="#fff" opacity=".35" transform="rotate(-30 ${cx-4.6} ${cy-6.4})"/>
+    <circle cx="${cx-2.7}" cy="${cy+1}" r=".62" fill="${eye}"/><circle cx="${cx+2.7}" cy="${cy+1}" r=".62" fill="${eye}"/>
+    <circle cx="${cx-5.2}" cy="${cy+3}" r="1.5" fill="#ff8f8f" opacity="${dark?.25:.32}"/><circle cx="${cx+5.2}" cy="${cy+3}" r="1.5" fill="#ff8f8f" opacity="${dark?.25:.32}"/>
+    ${mug?`<g transform="translate(${cx+s*11.5} ${cy+9})"><rect x="-2.8" y="-3.6" width="5.6" height="5.8" rx="1.3" fill="#efe6d4"/><path d="M-2.8 -2H2.8" stroke="#8c2f3a" stroke-width=".9"/><path d="M${s*2.8} -2.4q${s*2.2} .4 ${s*2} 2.2q-.2 1.6 ${-s*2} 1.4" fill="none" stroke="#efe6d4" stroke-width=".8"/></g>`:''}
+  </g>`;
+}
+function starBadge(idx,size=28){return `<svg class="star-badge" viewBox="0 0 40 40" width="${size}" height="${size}" aria-hidden="true">${starFig(20,idx,true,false,20)}</svg>`;}
+function sofaSVG(h){
+  const them=hereThem(h);
+  return `<g class="sofa-people">${starFig(45,myStar(),true)}${them?starFig(89,theirStar(h),false):`<g transform="translate(46 0)">${PILLOW}</g>`}</g>`;
+}
+function hereSofa(h){const g=document.querySelector('.room svg .sofa-people');if(g)g.outerHTML=sofaSVG(h);
+  const n=document.querySelector('.here-line');if(n)n.outerHTML=hereLine(h);}
+function hereLine(h){return `<p class="here-line">${hereThem(h)?`<i></i>${ga(h.name)} 지금 이 집에 같이 있어요`:''}</p>`;}
+
+const PILLOW=`<g transform="rotate(-10 44 270)"><rect x="34" y="259" width="21" height="21" rx="5" fill="#6a2330"/><rect x="34" y="259" width="21" height="21" rx="5" fill="none" stroke="#c8b07a" stroke-opacity=".7" stroke-width=".6"/><path d="M37 263Q44 260 52 263" stroke="#fff" stroke-opacity=".14" stroke-width="1.2" fill="none" stroke-linecap="round"/><circle cx="44.5" cy="269.5" r=".9" fill="#c8b07a" opacity=".8"/></g>`;
 /* =====================================================================
    CLOUD — the real, shared village (Supabase). Off in the prototype/demo.
    ===================================================================== */
@@ -613,7 +1220,10 @@ let sb=null,ME=null,cloudReady=false,cloudErr='';
 const REL_DB={love:'lovers',friend:'friends',family:'family'},REL_APP={lovers:'love',friends:'friend',family:'family'};
 const THEME_OF={love:'brick',friend:'olive',family:'blue'};
 function kstParts(ms){const d=new Date((ms||window.__SNV_NOW||Date.now())+9*36e5);return {y:d.getUTCFullYear(),m:d.getUTCMonth()+1,d:d.getUTCDate()};}
-function realDay(){const k=kstParts();if(k.y>2026||(k.m===12&&k.d>=25))return 25;if(k.m===12)return k.d;return previewOn()?1:0;}
+function realDay(){const k=kstParts();if(k.y>2026||(k.m===12&&k.d>=25))return 25;if(k.m===12)return k.d;return testerDay();}
+// ?tester (or ?tester=7) lets Harang walk through December early; ?notester turns it off
+function testerDay(){try{const q=location.search.match(/[?&]tester(?:=(\d+))?/);if(/[?&]notester\b/.test(location.search))localStorage.removeItem('snv-tester');
+  else if(q)localStorage.setItem('snv-tester',String(Math.min(25,Math.max(1,Number(q[1])||1))));return Number(localStorage.getItem('snv-tester'))||0;}catch(e){return 0;}}
 const dayOfDate=s=>{const [y,m,d]=String(s).split('-').map(Number);return m===12?Math.min(d,25):1;};
 const bdOf=s=>{if(!s)return null;const [,m,d]=String(s).split('-').map(Number);return {m,d};};
 const errKo=e=>{const m=(e&&(e.message||e.error_description))||String(e||'');
@@ -640,14 +1250,17 @@ async function cloudInit(){
     history.replaceState(null,'',location.pathname+(rest?'?'+rest:''));}
   sb=window.supabase.createClient(CFG.url,CFG.anonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'snv-auth'}});
   try{const {data}=await sb.auth.getSession();ME=data.session?data.session.user:null;
-    if(ME){const {data:p,error}=await sb.from('profiles').select('name,birthday').eq('id',ME.id).maybeSingle();if(error)throw error;
-      if(p){S.myName=p.name;S.myBirthday=bdOf(p.birthday);S.onboarded=true;await tryJoin();await cloudPull();}
+    if(ME){const {data:p,error}=await profSel('name,birthday,star',ME.id);if(error)throw error;
+      if(p){S.myName=p.name;S.myBirthday=bdOf(p.birthday);if(p.star!=null)S.myStar=p.star;S.onboarded=true;await tryJoin();await cloudPull();}
       else{const md=ME.user_metadata||{};S.myName=(md.name||md.full_name||md.nickname||md.preferred_username||md.user_name||'').slice(0,10);S.onboarded=false;OB=2;}}
     else{S.onboarded=false;OB=0;}
   }catch(e){cloudErr=errKo(e);}
   cloudReady=true;save();render();
   if(cloudErr)toast(cloudErr);else if(bounce)toast(bounce);
 }
+// works before and after the star column exists (patch 3)
+async function profSel(cols,id){const q=c=>{const x=sb.from('profiles').select(c);return id?x.eq('id',id).maybeSingle():x;};
+  let r=await q(cols);if(r.error&&/star/.test(r.error.message||''))r=await q(cols.replace(',star',''));return r;}
 async function cloudSignIn(){
   if(CFG.kakao){const {error}=await sb.auth.signInWithOAuth({provider:'kakao',options:{redirectTo:location.origin+location.pathname+location.search,queryParams:{scope:'profile_nickname'}}});if(error)throw error;return false;}
   const {data,error}=await sb.auth.signInAnonymously();if(error)throw error;ME=data.user;return true;
@@ -661,7 +1274,7 @@ let pulling=null;
 function cloudPull(){if(!sb||!ME)return Promise.resolve(false);if(pulling)return pulling;
   pulling=(async()=>{
     const q=t=>sb.from(t).select('*');
-    const [hs,ps,ms,ss,ls,ws,cs]=await Promise.all([q('houses'),sb.from('profiles').select('id,name,birthday'),
+    const [hs,ps,ms,ss,ls,ws,cs]=await Promise.all([q('houses'),profSel('id,name,birthday,star'),
       sb.from('memories').select('id,house_id,author,day,hint,mat,mosaic,opened,created_at').order('created_at'),q('memory_secrets'),q('letters'),q('wishes').order('created_at'),q('wish_claims')]);
     for(const r of [hs,ps,ms,ss,ls,ws,cs])if(r.error)throw r.error;
     const unlocked=realDay()===25;
@@ -683,16 +1296,19 @@ function cloudPull(){if(!sb||!ME)return Promise.resolve(false);if(pulling)return
       const name=op?op.name:r.guest_name;
       const wishTheirs=other?ws.data.filter(w=>w.owner===other).map(w=>{const cl=cs.data.find(c=>c.wish_id===w.id);const ow=(o.wishTheirs||[]).find(x=>x.id===w.id)||{};
         return {id:w.id,n:w.title,l:w.link||'',c:!!cl,mineClaim:!!(cl&&cl.santa===ME.id),by:cl?(cl.santa===ME.id?r.id:'_'):null,v:ow.v||false};}):[];
-      return {id:r.id,name,rel,tex:r.texture||'brick',theme:o.theme||THEME_OF[rel],owner:mine,pending:!other,invite:mine?r.invite_code:null,
+      return {id:r.id,name,rel,tex:r.texture||'brick',roof:r.roof||'slate',crown:r.crown||'wreath',deco:o.deco||{},theme:o.theme||THEME_OF[rel],owner:mine,pending:!other,invite:mine?r.invite_code:null,
         sent,recv,wishTheirs,wishMine:[],letter:myL?myL.body:(o.letter||''),
         theirLetter:thL?thL.body:(unlocked?`${name}의 편지는 비어 있어요.`:`${name}의 편지는 25일에 열려요.`),
-        theirBirthday:op?bdOf(op.birthday):null,playlist:o.playlist||defaultPlaylist(name),now:o.now||0};});
+        theirBirthday:op?bdOf(op.birthday):null,star:op&&op.star!=null?op.star:null,playlist:o.playlist||defaultPlaylist(name),now:o.now||0};});
     const oldW=Object.fromEntries((S.wishMine||[]).map(w=>[w.id,w]));
     S.wishMine=ws.data.filter(w=>w.owner===ME.id).map(w=>{const s=santas.find(x=>x.wish_id===w.id);const cl=cs.data.find(c=>c.wish_id===w.id);
       const by=cl&&houseOfPerson[cl.santa]||null;return {id:w.id,n:w.title,l:w.link||'',c:!!s,by,santa:s?s.santa_name:'',v:(oldW[w.id]||{}).v||false};});
-    if(prof[ME.id]){S.myName=prof[ME.id].name;S.myBirthday=bdOf(prof[ME.id].birthday);}
+    if(prof[ME.id]){S.myName=prof[ME.id].name;S.myBirthday=bdOf(prof[ME.id].birthday);if(prof[ME.id].star!=null)S.myStar=prof[ME.id].star;}
     const sig=JSON.stringify(houses.map(h=>[h.id,h.name,h.pending,h.sent.map(m=>[m.id,m.opened,!!m.img]),h.recv.map(m=>[m.id,m.hung,!!m.img]),h.wishTheirs.map(w=>[w.id,w.c]),h.theirLetter,h.theirBirthday]))+JSON.stringify(S.wishMine.map(w=>[w.id,w.c]));
-    const changed=sig!==S._sig;S._sig=sig;S.houses=houses;S.day=realDay();
+    {const r=await sb.rpc('daily_state');if(!r.error){const C={},T={};houses.forEach(h=>{C[h.id]={mine:{},theirs:{}};const ot=(S.tele||{})[h.id]||{};T[h.id]={mine:{},theirs:{},seen:ot.seen||0};});
+      (r.data||[]).forEach(x=>{const me=x.author===ME.id;if(x.kind==='cocoa'&&C[x.house_id])C[x.house_id][me?'mine':'theirs'][x.day]={};
+        if(x.kind==='tele'&&T[x.house_id])T[x.house_id][me?'mine':'theirs'][x.day]=x.pick==null?-1:x.pick;});S.cocoa=C;S.tele=T;}}
+    const changed=sig!==S._sig||JSON.stringify([S.cocoa,S.tele])!==S._sig2;S._sig=sig;S._sig2=JSON.stringify([S.cocoa,S.tele]);S.houses=houses;S.day=realDay();
     if(S.houseId&&!H()){S.houseId=null;S.screen='village';}
     save();return changed;
   })().catch(e=>{toast(errKo(e));return false;}).finally(()=>{pulling=null;});
@@ -730,6 +1346,8 @@ async function cloudAct(a,t,h,e){
       try{await navigator.share({title:'별과 마을 · Star n Vill\'',text:`${S.myName||''}${S.myName?'이(가) ':''}별과 마을에 우리 집을 지었어요 ✦`,url:inviteURL(hh)});}catch(err){}return true;}
     case 'inv-copy':{const hh=S.houses.find(x=>x.id===$('#modal').dataset.inv);if(!hh)return true;
       try{await navigator.clipboard.writeText(inviteURL(hh));toast('초대 링크를 복사했어요');}catch(err){const r=document.createRange();r.selectNodeContents($('#invLink'));const s=getSelection();s.removeAllRanges();s.addRange(r);$('#invErr').textContent='링크를 길게 눌러 복사해 주세요.';}return true;}
+    case 'roof':case 'crown':if(!h.owner){toast('지붕은 집을 지은 사람이 바꿀 수 있어요');return true;}
+      {const v=t.dataset.v;const {error}=await sb.from('houses').update({[a]:v}).eq('id',h.id);if(error){toast(errKo(error));return true;}}return false;
     case 'tex':if(!h.owner){toast('외벽은 집을 지은 사람이 바꿀 수 있어요');return true;}
       {const v=t.dataset.v;const {error}=await sb.from('houses').update({texture:v}).eq('id',h.id);if(error){toast(errKo(error));return true;}h.tex=v;save();renderHouseKeepModal();toast(`외벽을 ${TEX[v]}${batchim(TEX[v])?'으로':'로'} 바꿨어요`);}return true;
     case 'claim':{const w=h.wishTheirs[Number(t.dataset.i)];if(!w||w.c)return true;t.disabled=true;
@@ -759,11 +1377,11 @@ async function cloudAct(a,t,h,e){
     case 'ob-mail-verify':{const code=($('#obCode').value||'').replace(/\D/g,'');if(code.length<6){$('#obErr').textContent='메일로 온 숫자 6자리를 적어 주세요.';return true;}
       t.disabled=true;const {data,error}=await sb.auth.verifyOtp({email:OBM.email,token:code,type:'email'});t.disabled=false;
       if(error){$('#obErr').textContent=/expired|invalid/i.test(error.message)?'코드가 맞지 않거나 시간이 지났어요. 다시 받아 주세요.':errKo(error);return true;}
-      ME=data.user;OBM=null;const {data:p}=await sb.from('profiles').select('name,birthday').eq('id',ME.id).maybeSingle();
-      if(p){S.myName=p.name;S.myBirthday=bdOf(p.birthday);S.onboarded=true;save();await tryJoin();await cloudPull();render();toast(`${p.name}님, 다시 오셨네요`);}
+      ME=data.user;OBM=null;const {data:p}=await profSel('name,birthday,star',ME.id);
+      if(p){S.myName=p.name;S.myBirthday=bdOf(p.birthday);if(p.star!=null)S.myStar=p.star;S.onboarded=true;save();await tryJoin();await cloudPull();render();toast(`${p.name}님, 다시 오셨네요`);}
       else{OB=2;render();}return true;}
     case 'account':{const how=ME&&ME.app_metadata&&ME.app_metadata.provider==='kakao'?'카카오':(ME&&ME.email?esc(ME.email):'이 기기');
-      openModal(`${sheetHead('Account','내 계정')}<p class="hint-text" style="margin-top:-4px">${esc(S.myName||'')} · ${how}(으)로 로그인했어요</p>
+      openModal(`${sheetHead('Account','내 계정')}<div class="my-star">${starBadge(myStar(),56)}<p><span class="caps">My star</span><b>${starOf(myStar())[0]} 별</b></p></div><p class="hint-text" style="margin-top:4px">${esc(S.myName||'')} · ${how}(으)로 로그인했어요</p>
         <button class="ghost" data-act="logout">로그아웃</button>
         <button class="link-btn del-acct" data-act="del-acct">계정 삭제</button>`);return true;}
     case 'logout':{await sb.auth.signOut();try{localStorage.removeItem(KEY);}catch(e){}location.reload();return true;}
@@ -959,14 +1577,14 @@ function texPattern(id,tex,body){
   return `<pattern id="${id}" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="${shade(body,.06)}"/><circle cx="2" cy="3" r=".35" fill="${dk}" opacity=".35"/><circle cx="6" cy="6.5" r=".3" fill="${lt}" opacity=".5"/><circle cx="5.2" cy="1.4" r=".25" fill="${dk}" opacity=".3"/></pattern>`;
 }
 function houseParts(h,glow,uid,ground){
-  const r=REL[h.rel];const gl=glow?'win-glow':'';const id='w'+uid,tex=texOf(h),body=r.body;
+  const r=REL[h.rel];const gl=glow?'win-glow':'';const id='w'+uid,tex=texOf(h),body=r.body,RP=roofParts(id,h);
   const beams=tex==='plaster'?`<g stroke="${shade(body,-.45)}" stroke-width="2.2" opacity=".85"><path d="M30 70H110M56 58V108M84 58V108M30 58L56 70M110 58L84 70"/></g>`:'';
   return `<defs><radialGradient id="${id}" cx="50%" cy="60%" r="70%"><stop offset="0" stop-color="#ffe2a6"/><stop offset="1" stop-color="#d9973f"/></radialGradient>
   <radialGradient id="g${id}"><stop offset="0" stop-color="#ffd98f" stop-opacity=".55"/><stop offset="1" stop-color="#ffd98f" stop-opacity="0"/></radialGradient>
   <linearGradient id="s${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".08"/><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".32"/></linearGradient>
   <linearGradient id="e${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".45"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
   <linearGradient id="n${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbfcfe"/><stop offset="1" stop-color="#d6deeb"/></linearGradient>
-  <linearGradient id="r${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b2f3d"/><stop offset="1" stop-color="#171a24"/></linearGradient>
+  ${RP.defs}
   ${texPattern('t'+id,tex,body)}
   <filter id="b${id}" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter></defs>
   <ellipse cx="70" cy="${ground?86:104}" rx="${ground?46:58}" ry="${ground?20:12}" fill="#e9b45f" opacity="${ground?.16:.32}" filter="url(#b${id})"/>
@@ -978,12 +1596,11 @@ function houseParts(h,glow,uid,ground){
   <rect x="30" y="58" width="80" height="9" fill="url(#e${id})"/>
   <rect x="30" y="58" width="80" height="50" fill="none" stroke="#c8b07a" stroke-opacity=".35" stroke-width=".6"/>
   <path d="M27 60L70 28.5L113 60Z" fill="url(#t${id})"/><path d="M27 60L70 28.5L113 60Z" fill="url(#s${id})"/><path d="M27 60L70 28.5L113 60Z" fill="#000" opacity=".12"/>
-  <path d="M15 64.5L70 22L125 64.5L119 65.5L70 28.6L21 65.5Z" fill="url(#r${id})"/>
-  <path d="M21 65.5L70 28.6L119 65.5" fill="none" stroke="#c8b07a" stroke-opacity=".55" stroke-width=".6"/>
+  ${RP.body}
   <path d="M13.5 63.2Q12.6 61.2 15 59.8L68 19.4Q70 18 72 19.4L125 59.8Q127.4 61.2 126.5 63.2Q125 64.6 122.6 63.2L70 23.2L17.4 63.2Q15 64.6 13.5 63.2Z" fill="url(#n${id})"/>
-  <path d="M17 63.4q.9 2.2 1.8 0M122 63.4q.9 2.2 1.8 0" fill="#e6ecf4"/>
+  <path d="M17 63.4q.9 2.2 1.8 0M122 63.4q.9 2.2 1.8 0" fill="#e6ecf4"/>${RP.ice}
   <path d="M91.5 30.2Q98 27.6 104.5 30.2V31.6H91.5Z" fill="url(#n${id})"/>
-  <circle cx="70" cy="46" r="5.5" fill="none" stroke="#5f6a48" stroke-width="2.2"/><circle cx="70" cy="46" r="5.5" fill="none" stroke="#7b8457" stroke-width="1" stroke-dasharray="1.2 1.4"/><path d="M67 51.5L70 49L73 51.5" stroke="#7a2632" stroke-width="1.4" fill="none"/>
+  ${crownParts(h)}
   <circle cx="45" cy="80" r="13" fill="url(#g${id})" class="${gl}"/><circle cx="95" cy="80" r="13" fill="url(#g${id})" class="${gl}"/>
   <path d="M38 88V76A7 7 0 0 1 52 76V88Z" fill="url(#${id})" class="${gl}"/>
   <path d="M88 88V76A7 7 0 0 1 102 76V88Z" fill="url(#${id})" class="${gl}"/>
@@ -1097,8 +1714,11 @@ function giftsSVG(h){
     out+=`<g class="${h._newGift&&k===n-1?'gift-drop':''}"><ellipse cx="${x}" cy="${y+1}" rx="${w*.6}" ry="2" fill="#000" opacity=".3"/><rect x="${x-w/2}" y="${y-hh}" width="${w}" height="${hh}" fill="${f}" stroke="#c8b07a" stroke-width=".5"/><rect x="${x-w/2-1}" y="${y-hh-3}" width="${w+2}" height="4" fill="${f}" stroke="#c8b07a" stroke-width=".5"/><path d="M${x} ${y-hh-3}V${y}M${x-w/2} ${y-hh/2}H${x+w/2}" stroke="${r}" stroke-width="1.8"/><path d="M${x} ${y-hh-3}C${x-5} ${y-hh-9} ${x-8} ${y-hh-5} ${x-2} ${y-hh-3}M${x} ${y-hh-3}C${x+5} ${y-hh-9} ${x+8} ${y-hh-5} ${x+2} ${y-hh-3}" fill="none" stroke="${r}" stroke-width="1.2"/></g>`;}
   return out;
 }
-function windowSnow(id,x0,x1){
-  let f='';for(let k=0;k<22;k++){const x=x0+((k*37)%100)/100*(x1-x0),r=(.6+((k*13)%10)/10*.9).toFixed(2),dur=(5+((k*7)%9)*.55).toFixed(2),del=(-((k*53)%90)/10).toFixed(2);
+function winSnowHTML(side,big){let f='';for(let k=0;k<(big?30:22);k++){const x=((k*37)%100),d=((.6+((k*13)%10)/10*.9)*(big?2:1)*2*1.12).toFixed(1),dur=(5+((k*7)%9)*.55).toFixed(2),del=(-((k*53)%90)/10).toFixed(2);
+    f+=`<i style="left:${x}%;width:${d}px;height:${d}px;animation-duration:${dur}s;animation-delay:${del}s"></i>`;}
+  return `<div class="win-snow ${side}" aria-hidden="true">${f}</div>`;}
+function windowSnow(id,x0,x1,big){
+  let f='';for(let k=0;k<(big?30:22);k++){const x=x0+((k*37)%100)/100*(x1-x0),r=((.6+((k*13)%10)/10*.9)*(big?2:1)).toFixed(2),dur=(5+((k*7)%9)*.55).toFixed(2),del=(-((k*53)%90)/10).toFixed(2);
     f+=`<circle class="wflake" style="animation-duration:${dur}s;animation-delay:${del}s" cx="${x.toFixed(1)}" cy="40" r="${r}"/>`;}
   return `<g clip-path="url(#${id})" fill="#fff" opacity=".85">${f}</g>`;
 }
@@ -1113,6 +1733,7 @@ function sideDamask(mirror){let o='';const X=x=>mirror?360-x:x;
   return o;}
 const DAMASK_L=sideDamask(false),DAMASK_R=sideDamask(true);
 function roomSVG(h){
+  const fx=cocoaFx(h,S.day),pap=paperSVG(h);
   let boards='';for(let xb=70;xb<=290;xb+=20){const xf=180+(xb-180)*(230/90);boards+=`M${xb} 240L${xf.toFixed(1)} 380`;}
   [256,280,312,354].forEach(y=>boards+=`M0 ${y}H360`);
   const orn=[[44,186,'#c8b07a'],[58,212,'#8c2f3a'],[30,234,'#c8b07a'],[66,250,'#efe8da'],[44,270,'#8c2f3a'],[16,288,'#c8b07a'],[78,294,'#c8b07a'],[36,312,'#efe8da'],[62,318,'#8c2f3a'],[4,318,'#8c2f3a']].map(([x,y,c])=>`<circle cx="${x}" cy="${y}" r="3.3" fill="${c}"/><circle cx="${x-1}" cy="${y-1}" r="1" fill="#fff" opacity=".5"/>`).join('');
@@ -1125,12 +1746,13 @@ function roomSVG(h){
    <radialGradient id="hearth" cx="50%" cy="80%" r="70%"><stop offset="0" stop-color="#f0a650" stop-opacity=".6"/><stop offset="1" stop-color="#f0a650" stop-opacity="0"/></radialGradient>
    <radialGradient id="warm" cx="50%" cy="58%" r="62%"><stop offset="0" stop-color="#f0a650" stop-opacity=".2"/><stop offset=".6" stop-color="#f0a650" stop-opacity=".05"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></radialGradient>
    <clipPath id="winL"><path d="M6 44L64 66V214L6 244Z"/></clipPath><clipPath id="winR"><path d="M354 44L296 66V214L354 244Z"/></clipPath>
+   ${FX_DEFS}
    <clipPath id="floorClip"><path d="M70 240H290L360 330V380H0V330Z"/></clipPath>
   </defs>
   <path d="M0 0H360L290 40H70Z" fill="var(--wall-deep)"/>
-  <rect x="70" y="40" width="220" height="200" fill="var(--wall)"/>${DAMASK}<rect x="70" y="197" width="220" height="43" fill="#000" opacity=".1"/>
-  <path d="M0 0L70 40V240L0 330Z" fill="var(--wall-side)"/><g opacity=".7">${DAMASK_L}</g><path d="M0 222L70 196V240L0 330Z" fill="#000" opacity=".1"/>
-  <path d="M360 0L290 40V240L360 330Z" fill="var(--wall-side)"/><g opacity=".7">${DAMASK_R}</g><path d="M360 222L290 196V240L360 330Z" fill="#000" opacity=".1"/>
+  <rect x="70" y="40" width="220" height="200" fill="var(--wall)"/>${pap.back}<rect x="70" y="197" width="220" height="43" fill="#000" opacity=".1"/>
+  <path d="M0 0L70 40V240L0 330Z" fill="var(--wall-side)"/><path d="M0 222L70 196V240L0 330Z" fill="#000" opacity=".1"/>
+  <path d="M360 0L290 40V240L360 330Z" fill="var(--wall-side)"/>${pap.side}<path d="M360 222L290 196V240L360 330Z" fill="#000" opacity=".1"/>
   <g stroke="#c8b07a" fill="none">
     <path d="M70 40H290M70 40L0 0M290 40L360 0" stroke-opacity=".35"/>
     <path d="M70 44H290" stroke-opacity=".2"/>
@@ -1139,8 +1761,9 @@ function roomSVG(h){
     <path d="M70 40V240M290 40V240" stroke-opacity=".25"/>
   </g>
   ${wallSVG(h)}
+  ${fx==='lights'?fxSVG(fx):''}
   <path d="M2 40L68 62" stroke="#c8b07a" stroke-width="1.4"/>
-  <path d="M6 44L64 66V214L6 244Z" fill="url(#nightw)"/>
+  <path d="M6 44L64 66V214L6 244Z" fill="${fxWindowFill(fx)}"/>
   <g fill="#efe8da" opacity=".8"><circle cx="20" cy="80" r=".7"/><circle cx="50" cy="90" r=".6"/></g>
   <g fill="#efe8da"><circle cx="48" cy="96" r=".8"/><circle cx="16" cy="130" r=".7"/><circle cx="54" cy="150" r=".8"/><circle cx="30" cy="180" r=".6"/><circle cx="44" cy="118" r=".6"/></g>
   <path d="M6 196Q22 182 36 188T64 176V214L6 244Z" fill="#1c2b57"/>
@@ -1148,25 +1771,25 @@ function roomSVG(h){
   <g fill="#141d3a" opacity=".9"><path d="M10 207L14 194L18 207Z"/><path d="M24 201L28 189L32 201Z"/><path d="M49 196L53 182L57 196Z"/><path d="M57 203L60 193L63 203Z"/><path d="M32 206V197.5L39 191.5L46 197.5V206Z"/><path d="M17 214V206.5L23 201.5L29 206.5V214Z"/></g>
   <g fill="#ffd98f"><rect x="37.6" y="200" width="2" height="2.2" opacity=".85"/><rect x="21.9" y="208.5" width="1.8" height="2" opacity=".75"/></g>
   <circle cx="36" cy="201" r="12" fill="#ffd98f" opacity=".06"/>
-  ${windowSnow('winL',6,64)}
   <path d="M35 55V229M6 146L64 138" stroke="#c8b07a" stroke-width=".9"/>
   <path class="frame-glint" d="M6 44L64 66V214L6 244Z" fill="none" stroke="#c8b07a" stroke-width="1.8"/>
   <path d="M2 250L68 218" stroke="#c8b07a" stroke-width="2.4"/>
   <path d="M358 40L292 62" stroke="#c8b07a" stroke-width="1.4"/>
-  <path d="M354 44L296 66V214L354 244Z" fill="url(#nightw)"/>
+  <path d="M354 44L296 66V214L354 244Z" fill="${fxWindowFill(fx)}"/>
   <g fill="#efe8da"><circle cx="312" cy="96" r=".8"/><circle cx="344" cy="124" r=".7"/><circle cx="306" cy="150" r=".8"/><circle cx="330" cy="176" r=".6"/><circle cx="338" cy="82" r=".9"/><circle cx="318" cy="120" r=".6"/></g>
   <circle cx="338" cy="86" r="7" fill="#efe8da" opacity=".95"/><circle cx="338" cy="86" r="15" fill="#efe8da" opacity=".08"/>
   <g fill="#efe8da"><circle cx="304" cy="110" r=".7"/><circle cx="348" cy="160" r=".6"/><circle cx="310" cy="186" r=".7"/><circle cx="326" cy="104" r=".5"/><circle cx="342" cy="190" r=".6"/></g>
   <path d="M352 228Q336 214 320 216T296 204V214L354 244Z" fill="#c9d2e4" opacity=".75"/>
-  ${windowSnow('winR',296,354)}
+  ${fx==='meteor'||fx==='santa'?fxSVG(fx):''}
   <path d="M325 55V229M354 146L296 138" stroke="#c8b07a" stroke-width=".9"/>
   <path class="frame-glint r" d="M354 44L296 66V214L354 244Z" fill="none" stroke="#c8b07a" stroke-width="1.8"/>
   <path d="M358 250L292 218" stroke="#c8b07a" stroke-width="2.4"/>
   <path d="M70 240H290L360 330V380H0V330Z" fill="#150e0a"/>
-  <path d="${boards}" clip-path="url(#floorClip)" stroke="#c8b07a" stroke-opacity=".08"/>
+  ${floorSVG(h,boards)}
   <path d="M70 240H290M70 240L0 330M290 240L360 330" stroke="#c8b07a" stroke-opacity=".35"/>
   <ellipse cx="180" cy="304" rx="104" ry="24" fill="var(--rug)" opacity=".7"/>
   <ellipse cx="180" cy="304" rx="94" ry="19" fill="none" stroke="#c8b07a" stroke-opacity=".5"/>
+  ${treeSVG(h)}
   <g class="wreath"><path d="M180 54V76.5" stroke="#c8b07a" stroke-width=".9"/><circle cx="180" cy="54" r="1.2" fill="#c8b07a"/><circle cx="180" cy="100" r="20.5" fill="none" stroke="#14261c" stroke-width="8.5"/><ellipse cx="197.9" cy="100.0" rx="4.2" ry="1.5" fill="#1f3a2a" transform="rotate(72 197.9 100.0)"/><ellipse cx="200.4" cy="102.5" rx="4.2" ry="1.5" fill="#23402f" transform="rotate(92 200.4 102.5)"/><ellipse cx="202.4" cy="105.5" rx="4.2" ry="1.5" fill="#2f5242" transform="rotate(112 202.4 105.5)"/><ellipse cx="198.0" cy="106.8" rx="4.2" ry="1.5" fill="#28483a" transform="rotate(96 198.0 106.8)"/><ellipse cx="199.3" cy="110.1" rx="4.2" ry="1.5" fill="#1f3a2a" transform="rotate(116 199.3 110.1)"/><ellipse cx="194.7" cy="110.2" rx="4.2" ry="1.5" fill="#23402f" transform="rotate(136 194.7 110.2)"/><ellipse cx="195.3" cy="113.6" rx="4.2" ry="1.5" fill="#2f5242" transform="rotate(120 195.3 113.6)"/><ellipse cx="195.3" cy="117.3" rx="4.2" ry="1.5" fill="#28483a" transform="rotate(139 195.3 117.3)"/><ellipse cx="190.9" cy="115.8" rx="4.2" ry="1.5" fill="#1f3a2a" transform="rotate(159 190.9 115.8)"/><ellipse cx="190.1" cy="119.3" rx="4.2" ry="1.5" fill="#23402f" transform="rotate(143 190.1 119.3)"/><ellipse cx="186.3" cy="116.7" rx="4.2" ry="1.5" fill="#2f5242" transform="rotate(163 186.3 116.7)"/><ellipse cx="184.9" cy="119.9" rx="4.2" ry="1.5" fill="#28483a" transform="rotate(183 184.9 119.9)"/><ellipse cx="182.8" cy="122.9" rx="4.2" ry="1.5" fill="#1f3a2a" transform="rotate(167 182.8 122.9)"/><ellipse cx="180.0" cy="119.2" rx="4.2" ry="1.5" fill="#23402f" transform="rotate(187 180.0 119.2)"/><ellipse cx="177.4" cy="121.6" rx="4.2" ry="1.5" fill="#2f5242" transform="rotate(171 177.4 121.6)"/><ellipse cx="175.7" cy="117.4" rx="4.2" ry="1.5" fill="#28483a" transform="rotate(191 175.7 117.4)"/><ellipse cx="172.7" cy="119.2" rx="4.2" ry="1.5" fill="#1f3a2a" transform="rotate(211 172.7 119.2)"/><ellipse cx="169.3" cy="120.5" rx="4.2" ry="1.5" fill="#23402f" transform="rotate(195 169.3 120.5)"/><ellipse cx="169.1" cy="115.8" rx="4.2" ry="1.5" fill="#2f5242" transform="rotate(215 169.1 115.8)"/><ellipse cx="165.5" cy="116.3" rx="4.2" ry="1.5" fill="#28483a" transform="rotate(235 165.5 116.3)"/><ellipse cx="166.6" cy="111.9" rx="4.2" ry="1.5" fill="#1f3a2a" transform="rotate(218 166.6 111.9)"/><ellipse cx="163.1" cy="111.6" rx="4.2" ry="1.5" fill="#23402f" transform="rotate(238 163.1 111.6)"/><ellipse cx="159.5" cy="110.7" rx="4.2" ry="1.5" fill="#2f5242" transform="rotate(258 159.5 110.7)"/><ellipse cx="162.0" cy="106.8" rx="4.2" ry="1.5" fill="#28483a" transform="rotate(242 162.0 106.8)"/><ellipse cx="158.8" cy="105.2" rx="4.2" ry="1.5" fill="#1f3a2a" transform="rotate(262 158.8 105.2)"/><ellipse cx="162.2" cy="102.2" rx="4.2" ry="1.5" fill="#23402f" transform="rotate(246 162.2 102.2)"/><ellipse cx="159.5" cy="100.0" rx="4.2" ry="1.5" fill="#2f5242" transform="rotate(266 159.5 100.0)"/><ellipse cx="157.1" cy="97.2" rx="4.2" ry="1.5" fill="#28483a" transform="rotate(286 157.1 97.2)"/><ellipse cx="161.4" cy="95.4" rx="4.2" ry="1.5" fill="#1f3a2a" transform="rotate(270 161.4 95.4)"/><ellipse cx="159.6" cy="92.3" rx="4.2" ry="1.5" fill="#23402f" transform="rotate(290 159.6 92.3)"/><ellipse cx="164.2" cy="91.7" rx="4.2" ry="1.5" fill="#2f5242" transform="rotate(310 164.2 91.7)"/><ellipse cx="163.1" cy="88.4" rx="4.2" ry="1.5" fill="#28483a" transform="rotate(294 163.1 88.4)"/><ellipse cx="162.7" cy="84.7" rx="4.2" ry="1.5" fill="#1f3a2a" transform="rotate(314 162.7 84.7)"/><ellipse cx="167.3" cy="85.6" rx="4.2" ry="1.5" fill="#23402f" transform="rotate(333 167.3 85.6)"/><ellipse cx="167.6" cy="82.1" rx="4.2" ry="1.5" fill="#2f5242" transform="rotate(317 167.6 82.1)"/><ellipse cx="171.7" cy="84.2" rx="4.2" ry="1.5" fill="#28483a" transform="rotate(337 171.7 84.2)"/><ellipse cx="172.7" cy="80.8" rx="4.2" ry="1.5" fill="#1f3a2a" transform="rotate(321 172.7 80.8)"/><ellipse cx="174.5" cy="77.6" rx="4.2" ry="1.5" fill="#23402f" transform="rotate(341 174.5 77.6)"/><ellipse cx="177.7" cy="80.9" rx="4.2" ry="1.5" fill="#2f5242" transform="rotate(361 177.7 80.9)"/><ellipse cx="180.0" cy="78.2" rx="4.2" ry="1.5" fill="#28483a" transform="rotate(345 180.0 78.2)"/><ellipse cx="182.2" cy="82.2" rx="4.2" ry="1.5" fill="#1f3a2a" transform="rotate(365 182.2 82.2)"/><ellipse cx="184.9" cy="80.1" rx="4.2" ry="1.5" fill="#23402f" transform="rotate(385 184.9 80.1)"/><ellipse cx="188.2" cy="78.4" rx="4.2" ry="1.5" fill="#2f5242" transform="rotate(369 188.2 78.4)"/><ellipse cx="188.9" cy="83.0" rx="4.2" ry="1.5" fill="#28483a" transform="rotate(389 188.9 83.0)"/><ellipse cx="192.4" cy="82.1" rx="4.2" ry="1.5" fill="#1f3a2a" transform="rotate(409 192.4 82.1)"/><ellipse cx="191.9" cy="86.6" rx="4.2" ry="1.5" fill="#23402f" transform="rotate(393 191.9 86.6)"/><ellipse cx="195.3" cy="86.4" rx="4.2" ry="1.5" fill="#2f5242" transform="rotate(412 195.3 86.4)"/><ellipse cx="199.0" cy="86.9" rx="4.2" ry="1.5" fill="#28483a" transform="rotate(432 199.0 86.9)"/><ellipse cx="197.0" cy="91.1" rx="4.2" ry="1.5" fill="#1f3a2a" transform="rotate(416 197.0 91.1)"/><ellipse cx="200.4" cy="92.3" rx="4.2" ry="1.5" fill="#23402f" transform="rotate(436 200.4 92.3)"/><ellipse cx="197.4" cy="95.7" rx="4.2" ry="1.5" fill="#2f5242" transform="rotate(420 197.4 95.7)"/><ellipse cx="200.4" cy="97.5" rx="4.2" ry="1.5" fill="#28483a" transform="rotate(440 200.4 97.5)"/><circle cx="197.4" cy="102.1" r="1.4" fill="#7f9384" opacity=".55"/><circle cx="200.5" cy="111.5" r="1.4" fill="#7f9384" opacity=".55"/><circle cx="192.7" cy="116.1" r="1.4" fill="#7f9384" opacity=".55"/><circle cx="184.8" cy="116.8" r="1.4" fill="#7f9384" opacity=".55"/><circle cx="177.2" cy="123.3" r="1.4" fill="#7f9384" opacity=".55"/><circle cx="170.0" cy="117.9" r="1.4" fill="#7f9384" opacity=".55"/><circle cx="166.3" cy="110.8" r="1.4" fill="#7f9384" opacity=".55"/><circle cx="157.4" cy="106.4" r="1.4" fill="#7f9384" opacity=".55"/><circle cx="159.6" cy="97.6" r="1.4" fill="#7f9384" opacity=".55"/><circle cx="164.7" cy="91.4" r="1.4" fill="#7f9384" opacity=".55"/><circle cx="165.5" cy="81.5" r="1.4" fill="#7f9384" opacity=".55"/><circle cx="174.4" cy="80.3" r="1.4" fill="#7f9384" opacity=".55"/><circle cx="182.1" cy="82.6" r="1.4" fill="#7f9384" opacity=".55"/><circle cx="191.5" cy="79.5" r="1.4" fill="#7f9384" opacity=".55"/><circle cx="196.1" cy="87.3" r="1.4" fill="#7f9384" opacity=".55"/><circle cx="196.8" cy="95.2" r="1.4" fill="#7f9384" opacity=".55"/><circle cx="162.0" cy="88.2" r="1" fill="#7a2632"/><circle cx="164.3" cy="88.7" r="1" fill="#7a2632"/><circle cx="163.2" cy="87.0" r="1" fill="#7a2632"/><circle cx="196.6" cy="89.7" r="1" fill="#7a2632"/><circle cx="198.9" cy="90.2" r="1" fill="#7a2632"/><circle cx="197.8" cy="88.5" r="1" fill="#7a2632"/><circle cx="177.0" cy="120.4" r="1" fill="#7a2632"/><circle cx="179.3" cy="120.9" r="1" fill="#7a2632"/><circle cx="178.2" cy="119.2" r="1" fill="#7a2632"/><circle class="wl" style="animation-delay:-0.00s" cx="196.2" cy="106.6" r=".8" fill="#ffe3a8"/><circle class="wl" style="animation-delay:-0.37s" cx="186.8" cy="116.1" r=".8" fill="#ffe3a8"/><circle class="wl" style="animation-delay:-0.74s" cx="173.4" cy="116.2" r=".8" fill="#ffe3a8"/><circle class="wl" style="animation-delay:-1.11s" cx="163.9" cy="106.8" r=".8" fill="#ffe3a8"/><circle class="wl" style="animation-delay:-1.48s" cx="163.8" cy="93.4" r=".8" fill="#ffe3a8"/><circle class="wl" style="animation-delay:-1.85s" cx="173.2" cy="83.9" r=".8" fill="#ffe3a8"/><circle class="wl" style="animation-delay:-2.22s" cx="186.6" cy="83.8" r=".8" fill="#ffe3a8"/><circle class="wl" style="animation-delay:-2.59s" cx="196.1" cy="93.2" r=".8" fill="#ffe3a8"/><path d="M180 121.5C173 115.5 169 120.0 171 124.0C173.5 125.5 177.5 123.1 180 121.5Z" fill="#5e1f29" stroke="#c8b07a" stroke-width=".35"/><path d="M180 121.5C187 115.5 191 120.0 189 124.0C186.5 125.5 182.5 123.1 180 121.5Z" fill="#5e1f29" stroke="#c8b07a" stroke-width=".35"/><path d="M179 122.5Q177 129.5 174.5 135.5M181 122.5Q183.5 129.5 186 134.5" stroke="#5e1f29" stroke-width="1.6" fill="none" stroke-linecap="round"/><rect x="178.2" y="119.7" width="3.6" height="3.6" rx="1" fill="#6e2430" stroke="#c8b07a" stroke-width=".35"/></g>
   <rect x="138" y="152" width="84" height="88" fill="url(#marble)"/>
   <path d="M142 168Q154 178 150 196M214 158Q206 178 218 196" fill="none" stroke="#a99c86" stroke-opacity=".55" stroke-width=".7"/>
@@ -1186,22 +1809,24 @@ function roomSVG(h){
   <path d="M134 143Q157 137 180 143T226 143" fill="none" stroke="#5f6a42" stroke-width="2"/>
   <g><path d="M140 144V130M220 144V130" stroke="#c8b07a" stroke-width="2"/><circle class="chalo" cx="140" cy="125" r="7.5" fill="#ffd98f" opacity=".16"/><path class="cfl" d="M140 130.2C137.6 128.6 137.8 125.2 140 120.6C142.2 125.2 142.4 128.6 140 130.2Z" fill="url(#flameg)"/><path class="cfl in" d="M140 130C139 129 139 127 140 125C141 127 141 129 140 130Z" fill="#fff3d6"/><circle class="chalo c2" cx="220" cy="125" r="7.5" fill="#ffd98f" opacity=".16"/><path class="cfl c2" d="M220 130.2C217.6 128.6 217.8 125.2 220 120.6C222.2 125.2 222.4 128.6 220 130.2Z" fill="url(#flameg)"/><path class="cfl in c2" d="M220 130C219 129 219 127 220 125C221 127 221 129 220 130Z" fill="#fff3d6"/></g>
   ${giftsSVG(h)}
+  ${mugSVG(h)}
   <g>
     <ellipse cx="66" cy="334" rx="62" ry="5" fill="#000" opacity=".3"/>
     <path d="M14 282Q12 244 42 242H92Q122 244 120 282Z" fill="var(--chair)"/><rect x="20" y="276" width="94" height="14" fill="var(--chair)"/>
     <rect x="22" y="250" width="44" height="38" rx="14" fill="var(--chair-2)"/><rect x="68" y="250" width="44" height="38" rx="14" fill="var(--chair-2)"/>
     <path d="M30 256Q44 252 58 256M76 256Q90 252 104 256" stroke="#fff" stroke-opacity=".1" stroke-width="2" fill="none" stroke-linecap="round"/>
     <g fill="#000" opacity=".22">${[[34,262],[44,268],[54,262],[80,262],[90,268],[100,262],[34,276],[54,276],[80,276],[100,276],[44,282],[90,282]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r=".8"/>`).join('')}</g>
+    ${sofaSVG(h)}
     <rect x="16" y="286" width="102" height="34" rx="12" fill="var(--chair)"/>
     <rect x="24" y="284" width="42" height="16" rx="8" fill="var(--chair-2)"/><rect x="68" y="284" width="42" height="16" rx="8" fill="var(--chair-2)"/>
     <path d="M28 287Q45 284 62 287M72 287Q89 284 106 287" stroke="#fff" stroke-opacity=".12" stroke-width="1.4" fill="none" stroke-linecap="round"/>
     <path d="M18 318H116" stroke="#c8b07a" stroke-opacity=".55" stroke-width=".6"/>
     <rect x="4" y="268" width="26" height="54" rx="13" fill="var(--chair)"/><ellipse cx="17" cy="272" rx="12" ry="7" fill="var(--chair-2)"/><ellipse cx="17" cy="272" rx="12" ry="7" fill="none" stroke="#c8b07a" stroke-opacity=".45" stroke-width=".5"/>
     <rect x="104" y="268" width="26" height="54" rx="13" fill="var(--chair)"/><ellipse cx="117" cy="272" rx="12" ry="7" fill="var(--chair-2)"/><ellipse cx="117" cy="272" rx="12" ry="7" fill="none" stroke="#c8b07a" stroke-opacity=".45" stroke-width=".5"/>
-    <g transform="rotate(-10 44 270)"><rect x="34" y="259" width="21" height="21" rx="5" fill="#6a2330"/><rect x="34" y="259" width="21" height="21" rx="5" fill="none" stroke="#c8b07a" stroke-opacity=".7" stroke-width=".6"/><path d="M37 263Q44 260 52 263" stroke="#fff" stroke-opacity=".14" stroke-width="1.2" fill="none" stroke-linecap="round"/><circle cx="44.5" cy="269.5" r=".9" fill="#c8b07a" opacity=".8"/></g>
     <path d="M102 266Q118 264 125 273L127 299Q119 296 107 297Z" fill="#e9e1cf"/><path d="M103 270Q117 268 125.5 276" stroke="#d8ceb8" stroke-width="2.4" fill="none"/><path d="M104.5 290Q117 287.5 126.6 293.5" stroke="#c8b07a" stroke-width=".7" fill="none"/><path d="M107 297L106 300M110 296.7L109.4 300M113 296.6L112.8 300M116 296.8L116 300M119 297.2L119.4 300M122 297.8L122.8 300.5" stroke="#d8ceb8" stroke-width=".6"/>
     <path d="M20 320L18.5 333M114 320L115.5 333M66 321V332" stroke="#c8b07a" stroke-width="2" stroke-linecap="round"/>
   </g>
+  ${fx==="cat"?fxSVG(fx):""}
   <g>
     <ellipse cx="300" cy="348" rx="54" ry="5" fill="#000" opacity=".32"/>
     <rect x="250" y="296" width="100" height="48" rx="2" fill="#3a2516" stroke="#c8b07a" stroke-width=".7"/>
@@ -1216,7 +1841,7 @@ function roomSVG(h){
       <circle r="6.5" fill="#6a2330"/><circle r="6.5" fill="none" stroke="#c8b07a" stroke-width=".6"/><circle r="1.2" fill="#e8dcc0"/></g></g>
     <circle cx="299" cy="279" r="2.4" fill="#2a1b12" stroke="#c8b07a" stroke-width=".8"/><path d="M299 279L291 271.5L285 278" stroke="#c8b07a" stroke-width="1" fill="none" stroke-linejoin="round" stroke-linecap="round"/><rect x="283.4" y="276.8" width="3.2" height="2" rx=".5" fill="#c8b07a" transform="rotate(-40 285 278)"/></g>
   </g>
-  <rect width="360" height="380" fill="url(#warm)"/>
+  ${fx==="warm"?fxSVG(fx):""}<rect width="360" height="380" fill="url(#warm)"/>
   </svg>`;
 }
 const STOCK_BODY=[
@@ -1363,7 +1988,14 @@ function envelope(m){
     <div class="pic"><img src="${m.mos||''}" alt=""><div class="over"><span class="seal">V</span><span class="hint">${esc(m.hint)}</span></div></div><div class="lock">25일에 열려요</div></div>
     <span class="mat-date ${m.special?'sp':''}">${short(m.day)}${m.special?' ✦':''}</span></div>`;
 }
+/* things that move every frame get their own little layer, so the whole room is not repainted each frame */
+function liftLive(){const sv=document.querySelector('.room>svg');if(!sv)return;
+  const live=document.createElementNS('http://www.w3.org/2000/svg','svg');live.setAttribute('viewBox','125 70 110 180');live.setAttribute('class','room-live');live.setAttribute('aria-hidden','true');
+  const fl=sv.querySelector('.flame');const pick=[sv.querySelector('.glow'),fl&&fl.parentNode,sv.querySelector('rect[x="166"][y="236"]'),...sv.querySelectorAll('.chalo'),...sv.querySelectorAll('.wreath .wl')];
+  pick.forEach(n=>{if(n&&n!==sv)live.appendChild(n);});sv.after(live);}
+function optRow(label,act,map,cur,name=v=>v,sw=()=>''){return `<div class="opt-row"><span class="opt-l">${label}</span><div class="themes">${Object.entries(map).map(([k,v])=>{const c=sw(v);return `<button data-act="${act}" data-v="${k}" aria-pressed="${cur===k}">${c?`<i style="background:${c}"></i>`:''}${name(v)}</button>`;}).join('')}</div></div>`;}
 function renderHouse(){
+  {const hh=H();if(hh){cocoaDemoFill(hh);if(!CLOUD&&hh._demoHere==null)Object.defineProperty(hh,'_demoHere',{value:!hh.pending,writable:true,enumerable:false});}}
   const tips=(S.winTips||0)<3;
   setTimeout(()=>{if(S.winHint&&S.screen==='house'){S.winHint=false;save();}},50);
   const h=H();const d=S.day;const i=S.houses.indexOf(h);const unhung=h.recv.filter(m=>!m.hung).length,unopened=h.sent.filter(m=>!m.opened&&!m._pending).length;
@@ -1379,32 +2011,44 @@ function renderHouse(){
   const addCard=canAdd?`<div><button class="mat add-mat" data-act="add" aria-label="오늘의 추억 넣기"><div class="pic"><span class="plus">+</span></div><div class="cap">${nToday?'하나 더 넣기':'오늘의 moment'}</div></button><span class="mat-date">TODAY · ${nToday}/${PER_DAY}</span></div>`:'';
   const sent=[...h.sent].sort((a,b)=>a.day-b.day),recv=[...h.recv].sort((a,b)=>a.day-b.day);
   $('#app').innerHTML=`${S.screen==='house'?'':`<button class="amb-sound" data-act="sound" aria-label="배경음악 ${S.sound===false?'켜기':'끄기'}">${S.sound===false?'♪ Off':'♪ On'}</button>`}
-  <div class="house-screen theme-${h.theme}">
+  <div class="house-screen theme-${h.theme}" style="${sofaStyle(h)}">
     <div class="topbar"><button class="link-btn" data-act="home">← Village</button>
       <div class="title"><p class="tag">${REL[h.rel].en}</p><h2>${withN(h.name)}</h2></div>
       <span style="min-width:64px"></span></div>
     <p class="sub-date">${dayLine()}</p>
+    ${(()=>{const fx=cocoaFx(h,d);return fx?`<p class="fx-line">✦ ${fxNote(fx)}</p>`:'';})()}
     ${CLOUD&&h.pending?`<div class="pending-note"><span>${esc(h.name)}${batchim(h.name)?'이':''}는 아직 마을에 오지 않았어요</span><button class="btn gold" data-act="invite">초대장 보내기</button></div>`:''}
-    <div class="room">${roomSVG(h)}
+    <div class="room">${roomSVG(h)}${(()=>{const fx=cocoaFx(h,d);return winSnowHTML('l',fx==='snow')+winSnowHTML('r',fx==='snow');})()}
       <button class="wall-btn" data-act="wall" aria-label="벽에 걸린 추억 보기"></button>
       <button class="stocking s-to" id="stk-to" data-act="scroll" data-v="sent-list" aria-label="${esc(h.name)}에게 보낸 추억 ${h.sent.length}개">${stockingSVG(REL[h.rel].stock,'to',false,unopened)}<span class="tag">${esc(h.name)}에게</span></button>
       <button class="stocking s-me" id="stk-me" data-act="open-stocking" aria-label="나에게 온 추억${unhung?`, 새 추억 ${unhung}개가 양말 속에 있어요`:''}">${stockingSVG('','me',true,unhung)}${unhung?`<span class="badge new">+${unhung}</span>`:''}<span class="tag me">나에게</span></button>
       <button class="win-btn l${tips?' tip':''}" data-act="home" aria-label="왼쪽 창문, 마을로 돌아가기"><span class="win-lbl"><i>←</i>Village</span>${tips?'<span class="win-tip"><small>TAP</small><b>마을로</b></span>':''}</button><button class="win-btn r${S.winHint?' hint':''}${tips?' tip':''}" data-act="go-sky" aria-label="오른쪽 창문, 밤하늘 보러 가기"><span class="win-lbl">Night Sky<i>→</i></span>${tips?'<span class="win-tip"><small>TAP</small><b>밤하늘로</b></span>':''}</button>
       <button class="lp-btn" data-act="playlist" aria-label="레코드 플레이어, 함께 듣는 플레이리스트 열기"></button>
       <button class="sound-btn" data-act="sound" aria-label="배경음악 ${S.sound===false?'켜기':'끄기'}">${S.sound===false?'♪ Off':'♪ On'}</button>
+      <button class="tree-btn" data-act="tree" aria-label="트리, 모은 쪽지 다시 보기"></button>
+      <button class="mug-btn${d>=1&&d<=24&&!cocoaOpened(h,d).me?' ready':''}" data-act="cocoa" aria-label="머그잔, 오늘의 코코아볼 열기"></button>
       <button class="globe-btn" data-act="globe" aria-label="스노우볼, 서로의 위시리스트 열기">${globeSVG('rg',REL[h.rel].body)}</button>
     </div>
-    <div class="legend">${unhung?`<span class="lg-new">니트 양말이 부풀었어요 · 눌러서 ${unhung}개를 벽에 걸어요</span>`:''}<span>벨벳 양말 · 내가 ${esc(h.name)}에게<b>${h.sent.length}</b>${unopened?` (${ga(h.name)} 아직 안 연 것 ${unopened})`:''}</span><span>벽 · ${ga(h.name)} 보낸 추억<b>${hungOf(h).length}</b></span><span>레코드 · 함께 듣는 플레이리스트</span><span>스노우볼 · 서로 갖고 싶은 선물</span>${S.day===25?`<span>선물 · 산타가 두고 간 것<b>${S.wishMine.filter(w=>w.c&&w.by===h.id).length}</b></span>`:''}</div>
+    <div class="legend">${unhung?`<span class="lg-new">니트 양말이 부풀었어요 · 눌러서 ${unhung}개를 벽에 걸어요</span>`:''}<span>벨벳 양말 · 내가 ${esc(h.name)}에게<b>${h.sent.length}</b>${unopened?` (${ga(h.name)} 아직 안 연 것 ${unopened})`:''}</span><span>벽 · ${ga(h.name)} 보낸 추억<b>${hungOf(h).length}</b></span><span>레코드 · 함께 듣는 플레이리스트</span><span>스노우볼 · 서로 갖고 싶은 선물</span><span>머그잔 · 오늘의 코코아볼</span><span>트리 · 모은 쪽지<b>${Object.keys(cocoaOf(h).mine).length}</b></span>${S.day===25?`<span>선물 · 산타가 두고 간 것<b>${S.wishMine.filter(w=>w.c&&w.by===h.id).length}</b></span>`:''}</div>
+    ${hereLine(h)}
+    ${teleCard(h)}
     <div class="actbar" role="group" aria-label="주요 행동">${btn}</div>
-    ${birthdaySection(h)}
+    ${d===0?`<p class="prep-note">지금은 집을 짓고 초대장을 보내는 시간이에요.<br>12월 1일 0시, 이 집의 첫 하루가 시작돼요.</p>`:birthdaySection(h)}
     <section class="sect" id="sent-list"><div class="sect-head"><p class="caps">Sent</p><h3>${esc(h.name)}에게 보낸 추억</h3><p>${esc(h.name)}에겐 25일까지 힌트 한 단어만 보여요</p></div>
       ${sent.length||canAdd?`<div class="grid3">${addCard}${sent.map(m=>matCard(m,'sent')).join('')}</div>`:''}${sent.length?'':`<p class="empty">아직 보낸 추억이 없어요. 첫 추억을 양말에 넣어 보세요.</p>`}</section>
     <section class="sect" id="recv-list"><div class="sect-head"><p class="caps">Received</p><h3>나에게 온 추억</h3><p>${un?'모든 추억이 열렸어요':'12월 25일 0시에 열려요. 그 전엔 힌트만 보여요'}</p></div>
       ${unhung?`<p class="hint-text" style="margin:-6px 0 14px">양말 속에 새 추억 ${unhung}개가 기다리고 있어요</p>`:''}${hungOf(h).length?`<div class="grid3">${hungOf(h).map(m=>un?matCard(m,'recv'):envelope(m)).join('')}</div>`:`<p class="empty">아직 도착한 추억이 없어요.</p>`}</section>
-    <section class="sect"><div class="sect-head"><p class="caps">Interior</p><h3>집 분위기</h3><p>가구 배치는 다음 버전에서 만나요</p></div>
-      <div class="themes">${Object.entries(THEMES).map(([k,v])=>`<button data-act="theme" data-v="${k}" aria-pressed="${h.theme===k}"><i style="background:${v[1]}"></i>${v[0]}</button>`).join('')}</div>
-      <p class="caps" style="text-align:center;margin:18px 0 10px">Exterior</p><div class="themes">${Object.entries(TEX).map(([k,v])=>`<button data-act="tex" data-v="${k}" aria-pressed="${texOf(h)===k}">${v}</button>`).join('')}</div></section>
+    <section class="sect"><div class="sect-head"><p class="caps">Interior</p><h3>집 안 꾸미기</h3><p>집 안은 나만 보는 모습이에요. ${esc(h.name)}도 자기 집 안을 따로 꾸며요</p></div>
+      ${optRow('벽 색','theme',THEMES,h.theme,v=>v[0],v=>v[1])}
+      ${optRow('벽지','paper',PAPER,decoOf(h).paper||'damask')}
+      ${optRow('바닥','floor',FLOOR,decoOf(h).floor||'plank')}
+      ${optRow('소파','sofa',SOFA,decoOf(h).sofa||'auto',v=>v[0],v=>v[1]||'')}
+      <p class="caps" style="text-align:center;margin:22px 0 4px">Exterior</p><p class="hint-text" style="text-align:center;margin:0 0 6px">마을에서 모두에게 보여요${CLOUD&&!h.owner?` · 집을 지은 ${ga(h.name)} 바꿀 수 있어요`:''}</p>
+      ${optRow('외벽','tex',TEX,texOf(h))}
+      ${optRow('지붕','roof',ROOF,roofOf(h),v=>v[0],v=>v[1])}
+      ${optRow('지붕 장식','crown',CROWN,crownOf(h))}</section>
   </div>`;
+  liftLive();hereWatch(h);
 }
 /* ---------- birthday constellations ---------- */
 const ZODIAC=[
@@ -1545,8 +2189,8 @@ function renderSky(){
   <p class="sky-note">${note}</p>
   ${(()=>{if(!on)return '';const A=signOf(S.myBirthday),B=signOf(h.theirBirthday);return A&&B?matchCard(h,A,B):'';})()}
   ${on?`<section class="sect end-cta"><p class="caps">The Last Page</p><p class="ob-p">마을을 모두 둘러보셨다면,</p><button class="primary" data-act="ending">마을의 마지막 페이지 열기</button></section>`:''}
-  ${birthdaySection(h)}
-  ${on?'':`<section class="sect letter-box"><div class="sect-head"><p class="caps">The Last Letter</p><h3>${esc(h.name)}에게 쓰는 마지막 편지</h3><p>25일 0시, ${esc(h.name)}의 하늘에서 가장 큰 별로 열려요</p></div>
+  ${d===0?'':birthdaySection(h)}
+  ${on||d===0?'':`<section class="sect letter-box"><div class="sect-head"><p class="caps">The Last Letter</p><h3>${esc(h.name)}에게 쓰는 마지막 편지</h3><p>25일 0시, ${esc(h.name)}의 하늘에서 가장 큰 별로 열려요</p></div>
     <label for="letterIn" class="caps" style="display:block;text-align:center;margin-bottom:8px">Your words</label>
     <textarea id="letterIn" maxlength="800" placeholder="한 달 동안 하고 싶었던 말을 적어 보세요">${esc(h.letter)}</textarea>
     <button class="primary" data-act="save-letter">별에 맡기기</button></section>`}`;
@@ -1720,7 +2364,7 @@ function renderEnding(){
   clearTimeout(enTimer);if(!p.last)enTimer=setTimeout(()=>{if(S.screen==='ending'&&EN<P.length-1){EN++;renderEnding();}},7000);
 }
 /* ---------- launch lock (teaser before opening day) ---------- */
-const LAUNCH=new Date('2026-11-30T00:00:00+09:00').getTime();
+const LAUNCH=new Date('2026-11-20T00:00:00+09:00').getTime();
 function previewOn(){try{if(/[?&]nopreview\b/.test(location.search)){localStorage.removeItem('xvill-preview');return false;}if(/[?&]preview\b/.test(location.search)){localStorage.setItem('xvill-preview','1');return true;}return localStorage.getItem('xvill-preview')==='1';}catch(e){return /[?&]preview\b/.test(location.search);}}
 function isLocked(){return Date.now()<LAUNCH&&!previewOn();}
 let lockTimer=0;
@@ -1737,6 +2381,7 @@ function render(){
   document.body.classList.remove('locked');
   if(!S.onboarded){document.body.classList.add('on-ob');renderOnboard();skyActive=true;fg.style.display='block';ambient();return;}
   document.body.classList.remove('on-ob');
+  if(S.screen!=='house')hereStop();
   if(S.screen==='village')backToMe();
   const sw=$('#swapBtn');if(sw){sw.hidden=S.screen==='village'||!H();if(!sw.hidden)sw.textContent=S.as==='them'?'나로 돌아가기':`${H().name}${batchim(H().name)?'으로':'로'} 써보기`;}
   const dl=$('.demo label');if(dl)dl.textContent=S.as==='them'?`${S.myName} 시점`:'Demo';
@@ -1751,7 +2396,7 @@ function render(){
 
 /* ---------- entering a house ---------- */
 let busy=false;
-function goHouse(id){S.winTips=(S.winTips||0)+(S.winTips>=3?0:1);S.houseId=id;S.screen='house';save();render();window.scrollTo(0,0);if(S.sound!==false)houseMusic();}
+function goHouse(id){S.winTips=(S.winTips||0)+(S.winTips>=3?0:1);S.houseId=id;S.screen='house';save();render();window.scrollTo(0,0);if(S.sound!==false)houseMusic();{const h=H();if(h)setTimeout(()=>teleReveal(h),reduce?0:650);}}
 function enterHouse(id){
   audioUnlock();
   const i=S.houses.findIndex(h=>h.id===id);
@@ -2056,7 +2701,7 @@ function lpAct(a,t,h){
     L.push({t:tt,a:aa||'아티스트 미상',l:ll,tune:TUNE_KEYS[hash(tt)%TUNE_KEYS.length],by:'나'});save();toast('선반에 LP를 꽂았어요');}
   renderHouseKeepModal();
 }
-function renderHouseKeepModal(){const y=window.scrollY;renderHouse();window.scrollTo(0,y);if(AUD.playing){const r=$('.room');if(r)r.classList.add('playing');}if(!$('#modal').hidden)openPlaylist();}
+function renderHouseKeepModal(){if(CS)return;const y=window.scrollY;renderHouse();window.scrollTo(0,y);if(AUD.playing){const r=$('.room');if(r)r.classList.add('playing');}if(!$('#modal').hidden)openPlaylist();}
 
 /* sleigh past the window, then down the chimney */
 function playRoomSleigh(target,special,done){
@@ -2200,7 +2845,7 @@ function audioKick(){audioUnlock();if(S.sound===false)return;
   const go=()=>{if(S.screen!=='house')sceneMusic();if(AUD.ctx&&AUD.ctx.state==='running'&&AUD.playing){AUDIO_EVENTS.forEach(ev=>document.removeEventListener(ev,audioKick,true));}};
   if(AUD.ctx&&AUD.ctx.state!=='running'&&AUD.ctx.resume)AUD.ctx.resume().then(go).catch(()=>{});else setTimeout(go,30);}
 AUDIO_EVENTS.forEach(ev=>document.addEventListener(ev,audioKick,true));
-const CLOUD_ACTS=new Set(['ob-mail','ob-mail-back','ob-mail-send','ob-mail-verify','account','logout','del-acct','del-acct-ok','ob-login','ob-name','ob-done','ob-install','ob-home','build','invite','inv-share','inv-copy','tex','claim','wdel','wadd','save-bday','save-letter','reset','demo-claim','swap-view']);
+const CLOUD_ACTS=new Set(['roof','crown','ob-mail','ob-mail-back','ob-mail-send','ob-mail-verify','account','logout','del-acct','del-acct-ok','ob-login','ob-name','ob-done','ob-install','ob-home','build','invite','inv-share','inv-copy','tex','claim','wdel','wadd','save-bday','save-letter','reset','demo-claim','swap-view']);
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-act]');if(!t)return;const a=t.dataset.act;const h=H();
   if(CLOUD&&CLOUD_ACTS.has(a)){(a==='ob-home'&&!CFG.kakao?cloudAct('ob-done',t,h,e):cloudAct(a,t,h,e)).then(done=>{if(!done)act(a,t,h,e);}).catch(err=>toast(errKo(err)));return;}
@@ -2241,8 +2886,17 @@ function act(a,t,h,e){
     case 'mat':ED.mat=t.dataset.v;$('#cframe').style.setProperty('--mat',MATS[ED.mat]);document.querySelectorAll('[data-act="mat"]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===ED.mat)));break;
     case 'sample-photo':samplePhoto();break;
     case 'send':sendMemory();break;
-    case 'theme':h.theme=t.dataset.v;save();renderHouse();break;
-    case 'globe':openGlobe();break;
+    case 'theme':h.theme=t.dataset.v;save();renderHouseKeepModal();break;
+    case 'globe':if(S.day===0){toast('스노우볼 위시리스트는 12월 1일에 열려요');break;}openGlobe();break;
+    case 'cocoa':openCocoa();break;
+    case 'cocoa-pour':cocoaPour(t);break;
+    case 'cocoa-close':closeCocoa();break;
+    case 'tree':if(S.day===0){toast('트리는 12월 1일부터 쪽지로 하나씩 채워져요');break;}openTreeNotes();break;
+    case 'tele':openTele();break;
+    case 'tele-pick':telePick(Number(t.dataset.i));break;
+    case 'paper':case 'floor':case 'sofa':decoOf(h)[a]=t.dataset.v;save();renderHouseKeepModal();break;
+    case 'roof':h.roof=t.dataset.v;save();renderHouseKeepModal();toast(`지붕을 ${ROOF[h.roof][0]}${batchim(ROOF[h.roof][0])?'으로':'로'} 바꿨어요`);break;
+    case 'crown':h.crown=t.dataset.v;save();renderHouseKeepModal();break;
     case 'open-stocking':openStocking();break;
     case 'playlist':audioUnlock();if(!AUD.playing&&S.sound!==false)houseMusic();openPlaylist();break;
     case 'sound':audioUnlock();if(S.sound!==false&&!AUD.playing){if(S.screen==='house')houseMusic();else{AUD.kind='';sceneMusic();}t.textContent='♪ On';toast('배경음악을 켰어요');break;}S.sound=S.sound===false;save();if(S.sound===false)musicStop();else if(S.screen==='house')houseMusic();else sceneMusic();t.textContent=S.sound===false?'♪ Off':'♪ On';toast(S.sound===false?'배경음악을 껐어요':'배경음악을 켰어요');break;
