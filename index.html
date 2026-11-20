@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>별과 마을 · Star n Vill'</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#070c1f">
@@ -34,8 +34,11 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box}
-html,body{height:100%;margin:0}
-body{overflow-x:hidden;background:var(--midnight);color:var(--ivory);font-family:var(--font-body);font-weight:300;font-size:14.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+html,body{height:100%;margin:0;overflow-x:hidden;overscroll-behavior-x:none}
+html{touch-action:pan-y;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+#ed{touch-action:none}
+@media (hover:none) and (pointer:coarse){input,textarea,select{font-size:16px!important}}
+body{position:relative;width:100%;background:var(--midnight);color:var(--ivory);font-family:var(--font-body);font-weight:300;font-size:14.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:1px solid var(--champagne);outline-offset:4px;border-radius:2px}
@@ -223,6 +226,12 @@ h2,h3{font-family:var(--font-serif-ko)}
 .toast{position:fixed;left:50%;top:calc(18px + env(safe-area-inset-top));transform:translate(-50%,-160%);z-index:40;background:rgba(16,26,54,.96);color:var(--ivory);border:1px solid var(--line);padding:11px 18px;font-family:var(--font-serif-ko);font-size:13.5px;box-shadow:0 12px 30px rgba(0,0,0,.45);transition:transform .45s cubic-bezier(.2,.7,.2,1);max-width:calc(100% - 32px);text-align:center}
 .toast.show{transform:translate(-50%,0)}
 .smoke circle{fill:rgba(239,232,218,.35);animation:smoke 4s ease-in-out infinite}
+.scene .smoke{display:none}.scene .smoke circle{animation:none}.scene .win-glow{animation:none;opacity:1}
+.scene-fx{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.fx-smoke{position:absolute;aspect-ratio:1;border-radius:50%;background:rgba(239,232,218,.35);transform:translate(-50%,-50%);animation:fxsmoke 4s ease-in-out infinite;will-change:transform,opacity}
+@keyframes fxsmoke{0%{opacity:0;transform:translate(-50%,-50%) translateY(4px)}40%{opacity:.7}100%{opacity:0;transform:translate(-50%,-50%) translateY(-10px)}}
+.fx-glow{position:absolute;aspect-ratio:1.3;border-radius:50%;background:radial-gradient(closest-side,rgba(255,217,143,.32),rgba(255,217,143,0));transform:translate(-50%,-50%);animation:fxglow 2.4s ease-in-out infinite alternate;will-change:opacity}
+@keyframes fxglow{from{opacity:.35}to{opacity:1}}
 .smoke circle:nth-child(2){animation-delay:1.8s}
 @keyframes smoke{0%{opacity:0;transform:translateY(4px)}40%{opacity:.7}100%{opacity:0;transform:translateY(-10px)}}
 .win-glow{animation:winglow 2.4s ease-in-out infinite alternate}
@@ -428,7 +437,9 @@ a.btn.buy{text-decoration:none;display:inline-block}
 .glide.lit circle.bloom{transform-box:fill-box;transform-origin:center;opacity:0;animation:bloom 1.4s ease-out both}
 @keyframes bloom{0%{opacity:.9;transform:scale(.6)}100%{opacity:0;transform:scale(4.2)}}
 @keyframes spk{0%,100%{opacity:1}50%{opacity:.55}}
-.sparktree .bulb{animation:blink 1.5s steps(1,end) infinite}
+.sparktree .bulb{opacity:.12}
+[data-ph="0"] .sparktree .bulb.b0,[data-ph="1"] .sparktree .bulb.b1,[data-ph="2"] .sparktree .bulb.b2{opacity:1}
+.reduce-motion .sparktree .bulb{opacity:1}
 @keyframes blink{0%{opacity:1}33%{opacity:.12}100%{opacity:.12}}
 .add-mat{background:transparent;border:1px dashed rgba(200,176,122,.55);box-shadow:none;color:var(--champagne);cursor:pointer;transition:border-color .2s,background .2s}
 .add-mat:hover{border-color:var(--champagne);background:rgba(200,176,122,.06)}
@@ -542,6 +553,16 @@ a.btn.buy{text-decoration:none;display:inline-block}
 .shoot.rtl{background:linear-gradient(270deg,rgba(255,244,220,0),rgba(255,244,220,.95));transform-origin:0 50%}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.cline{stroke-dashoffset:0}.lbl-in{opacity:1}}
 @media (max-width:360px){.v-head h1{font-size:34px}.dcount .n{font-size:54px}.grid3{gap:12px 8px}}
+@media (min-width:640px){
+  #app{max-width:600px}
+  .scene{-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+  .room{margin-left:0;margin-right:0;border-radius:3px;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+}
+@media (min-width:1100px) and (min-height:820px){#app{max-width:660px}}
+.cloud .demo,.cloud #swapBtn{display:none!important}
+.pending-note{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 4px;padding:10px 12px;border:1px solid var(--line);background:rgba(8,14,32,.6);font-size:12.5px;color:var(--muted);font-family:var(--font-serif-ko)}
+.pending-note .btn{white-space:nowrap}
+.invite-link{margin:14px 0 6px;padding:12px;border:1px solid var(--line);font-size:12.5px;word-break:break-all;color:var(--champagne);-webkit-user-select:all;user-select:all}
 </style>
 </head>
 <body>
@@ -558,6 +579,7 @@ a.btn.buy{text-decoration:none;display:inline-block}
 </div>
 <div id="toast" class="toast" role="status"></div>
 
+<script src="supabase.js"></script><script src="supabase-config.js"></script>
 <script>
 (function(){
 'use strict';
@@ -580,7 +602,163 @@ const STK={
   sprig:{d:'M50 56C36 40 18 40 8 50C22 52 36 62 50 56ZM50 56C64 40 82 40 92 50C78 52 64 62 50 56ZM50 56C44 40 46 22 50 12C54 22 56 40 50 56Z',c:'#6f7a4c'},
   candle:{d:'M41 42H59V92H41ZM50 10C59 22 59 32 50 36C41 32 41 22 50 10Z',c:'#efe8da'}
 };
-const KEY='xvill-proto-v5';
+/* =====================================================================
+   CLOUD — the real, shared village (Supabase). Off in the prototype/demo.
+   ===================================================================== */
+const CFG=window.SNV_SUPABASE||null;
+const CLOUD=!!(CFG&&window.supabase&&/^https?:$/.test(location.protocol)&&!/[?&]demo\b/.test(location.search));
+let sb=null,ME=null,cloudReady=false,cloudErr='';
+const REL_DB={love:'lovers',friend:'friends',family:'family'},REL_APP={lovers:'love',friends:'friend',family:'family'};
+const THEME_OF={love:'brick',friend:'olive',family:'blue'};
+function kstParts(ms){const d=new Date((ms||window.__SNV_NOW||Date.now())+9*36e5);return {y:d.getUTCFullYear(),m:d.getUTCMonth()+1,d:d.getUTCDate()};}
+function realDay(){const k=kstParts();if(k.y>2026||(k.m===12&&k.d>=25))return 25;if(k.m===12)return k.d;return previewOn()?1:0;}
+const dayOfDate=s=>{const [y,m,d]=String(s).split('-').map(Number);return m===12?Math.min(d,25):1;};
+const bdOf=s=>{if(!s)return null;const [,m,d]=String(s).split('-').map(Number);return {m,d};};
+const errKo=e=>{const m=(e&&(e.message||e.error_description))||String(e||'');
+  if(/two memories/.test(m))return '하루에 두 개까지 넣을 수 있어요.';
+  if(/box is already open/.test(m))return '추억 상자가 이미 열렸어요.';
+  if(/5 houses/.test(m))return '집은 최대 다섯 채까지 지을 수 있어요.';
+  if(/house is full/.test(m))return '이 집에는 이미 두 사람이 살고 있어요.';
+  if(/own house/.test(m))return '내가 지은 집의 초대 링크예요. 친구에게 보내 주세요.';
+  if(/invite not found/.test(m))return '초대 링크가 올바르지 않아요.';
+  if(/birthday is already/.test(m))return '생일은 이미 저장되어 있어요.';
+  if(/duplicate key|wish_claims_pkey/.test(m))return '이미 다른 산타가 이 선물을 맡았어요.';
+  if(/Anonymous sign-ins are disabled/i.test(m))return '로그인이 아직 열려 있지 않아요. (관리자: Supabase에서 Anonymous sign-ins를 켜 주세요)';
+  if(/Failed to fetch|NetworkError|Load failed/i.test(m))return '인터넷 연결을 확인해 주세요.';
+  return '잠시 문제가 생겼어요. 다시 시도해 주세요.';};
+function stashJoin(){const q=new URLSearchParams(location.search),c=q.get('join');
+  if(c){try{localStorage.setItem('snv-join',c);}catch(e){}q.delete('join');const rest=q.toString().replace(/=(?=&|$)/g,'');history.replaceState(null,'',location.pathname+(rest?'?'+rest:'')+location.hash);}}
+const pendingJoin=()=>{try{return localStorage.getItem('snv-join');}catch(e){return null;}};
+async function cloudInit(){
+  stashJoin();
+  sb=window.supabase.createClient(CFG.url,CFG.anonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'snv-auth'}});
+  try{const {data}=await sb.auth.getSession();ME=data.session?data.session.user:null;
+    if(ME){const {data:p,error}=await sb.from('profiles').select('name,birthday').eq('id',ME.id).maybeSingle();if(error)throw error;
+      if(p){S.myName=p.name;S.myBirthday=bdOf(p.birthday);S.onboarded=true;await tryJoin();await cloudPull();}
+      else{S.onboarded=false;OB=2;}}
+    else{S.onboarded=false;OB=0;}
+  }catch(e){cloudErr=errKo(e);}
+  cloudReady=true;save();render();
+  if(cloudErr)toast(cloudErr);
+}
+async function cloudSignIn(){
+  if(CFG.kakao){const {error}=await sb.auth.signInWithOAuth({provider:'kakao',options:{redirectTo:location.origin+location.pathname+location.search}});if(error)throw error;return false;}
+  const {data,error}=await sb.auth.signInAnonymously();if(error)throw error;ME=data.user;return true;
+}
+async function tryJoin(){const code=pendingJoin();if(!code||!ME)return;
+  try{const {error}=await sb.rpc('join_house',{code});if(error)throw error;toast('새 집에 들어왔어요. 마을에 집이 하나 생겼어요 ✦');}
+  catch(e){toast(errKo(e));}
+  try{localStorage.removeItem('snv-join');}catch(e){}
+}
+let pulling=null;
+function cloudPull(){if(!sb||!ME)return Promise.resolve(false);if(pulling)return pulling;
+  pulling=(async()=>{
+    const q=t=>sb.from(t).select('*');
+    const [hs,ps,ms,ss,ls,ws,cs]=await Promise.all([q('houses'),sb.from('profiles').select('id,name,birthday'),
+      sb.from('memories').select('id,house_id,author,day,hint,mat,mosaic,opened,created_at').order('created_at'),q('memory_secrets'),q('letters'),q('wishes').order('created_at'),q('wish_claims')]);
+    for(const r of [hs,ps,ms,ss,ls,ws,cs])if(r.error)throw r.error;
+    const unlocked=realDay()===25;
+    let santas=[];if(unlocked){const r=await sb.rpc('my_santas');if(!r.error)santas=r.data||[];}
+    const prof=Object.fromEntries(ps.data.map(p=>[p.id,p])),cap=Object.fromEntries(ss.data.map(s=>[s.memory_id,s.caption||'']));
+    // signed links for the photos I am allowed to see: my own, and everyone's from the 25th
+    const visible=ms.data.filter(m=>m.author===ME.id||unlocked),paths=visible.map(m=>`${m.house_id}/${m.id}.jpg`);let url={};
+    if(paths.length){const r=await sb.storage.from('originals').createSignedUrls(paths,60*60*6);if(!r.error)r.data.forEach((x,i)=>{if(x.signedUrl)url[visible[i].id]=x.signedUrl;});}
+    const old=Object.fromEntries((S.houses||[]).map(h=>[h.id,h]));
+    const oldImg={};(S.houses||[]).forEach(h=>[...h.sent,...h.recv].forEach(m=>{if(m.img&&m.img.startsWith('data:'))oldImg[m.id]=m.img;}));
+    const houseOfPerson={};
+    const houses=hs.data.sort((a,b)=>a.created_at<b.created_at?-1:1).map(r=>{
+      const mine=r.owner===ME.id,other=mine?r.guest:r.owner,op=other?prof[other]:null,rel=REL_APP[r.rel]||'friend',o=old[r.id]||{};
+      if(other)houseOfPerson[other]=r.id;
+      const toM=m=>({id:m.id,day:dayOfDate(m.day),img:url[m.id]||oldImg[m.id]||'',mos:m.mosaic||'',msg:cap[m.id]||'',hint:m.hint||'비밀',special:SPECIAL.has(dayOfDate(m.day)),mat:m.mat||'ivory'});
+      const sent=ms.data.filter(m=>m.house_id===r.id&&m.author===ME.id).map(m=>({...toM(m),opened:m.opened}));
+      const recv=ms.data.filter(m=>m.house_id===r.id&&m.author!==ME.id).map(m=>({...toM(m),hung:m.opened}));
+      const myL=ls.data.find(l=>l.house_id===r.id&&l.author===ME.id),thL=ls.data.find(l=>l.house_id===r.id&&l.author!==ME.id);
+      const name=op?op.name:r.guest_name;
+      const wishTheirs=other?ws.data.filter(w=>w.owner===other).map(w=>{const cl=cs.data.find(c=>c.wish_id===w.id);const ow=(o.wishTheirs||[]).find(x=>x.id===w.id)||{};
+        return {id:w.id,n:w.title,l:w.link||'',c:!!cl,mineClaim:!!(cl&&cl.santa===ME.id),by:cl?(cl.santa===ME.id?r.id:'_'):null,v:ow.v||false};}):[];
+      return {id:r.id,name,rel,tex:r.texture||'brick',theme:o.theme||THEME_OF[rel],owner:mine,pending:!other,invite:mine?r.invite_code:null,
+        sent,recv,wishTheirs,wishMine:[],letter:myL?myL.body:(o.letter||''),
+        theirLetter:thL?thL.body:(unlocked?`${name}의 편지는 비어 있어요.`:`${name}의 편지는 25일에 열려요.`),
+        theirBirthday:op?bdOf(op.birthday):null,playlist:o.playlist||defaultPlaylist(name),now:o.now||0};});
+    const oldW=Object.fromEntries((S.wishMine||[]).map(w=>[w.id,w]));
+    S.wishMine=ws.data.filter(w=>w.owner===ME.id).map(w=>{const s=santas.find(x=>x.wish_id===w.id);const cl=cs.data.find(c=>c.wish_id===w.id);
+      const by=cl&&houseOfPerson[cl.santa]||null;return {id:w.id,n:w.title,l:w.link||'',c:!!s,by,santa:s?s.santa_name:'',v:(oldW[w.id]||{}).v||false};});
+    if(prof[ME.id]){S.myName=prof[ME.id].name;S.myBirthday=bdOf(prof[ME.id].birthday);}
+    const sig=JSON.stringify(houses.map(h=>[h.id,h.name,h.pending,h.sent.map(m=>[m.id,m.opened,!!m.img]),h.recv.map(m=>[m.id,m.hung,!!m.img]),h.wishTheirs.map(w=>[w.id,w.c]),h.theirLetter,h.theirBirthday]))+JSON.stringify(S.wishMine.map(w=>[w.id,w.c]));
+    const changed=sig!==S._sig;S._sig=sig;S.houses=houses;S.day=realDay();
+    if(S.houseId&&!H()){S.houseId=null;S.screen='village';}
+    save();return changed;
+  })().catch(e=>{toast(errKo(e));return false;}).finally(()=>{pulling=null;});
+  return pulling;
+}
+async function cloudRefresh(force){const ch=await cloudPull();if(!(ch||force))return;
+  if(!$('#modal').hidden||busy)return;
+  if(S.screen==='house'&&H())renderHouseKeepModal();else if(S.screen==='village')render();}
+document.addEventListener('visibilitychange',()=>{if(CLOUD&&ME&&document.visibilityState==='visible')cloudRefresh();});
+if(CLOUD)setInterval(()=>{if(ME&&document.visibilityState==='visible')cloudRefresh();},60000);
+function inviteURL(h){const u=new URL(location.origin+location.pathname);u.searchParams.set('join',h.invite);if(Date.now()<LAUNCH&&previewOn())u.searchParams.set('preview','');return u.toString().replace('preview=','preview');}
+function openInvite(h){if(!h||!h.invite)return;const url=inviteURL(h);
+  const text=`${S.myName||''}${S.myName?'이(가) ':''}별과 마을에 우리 집을 지었어요 ✦ 12월 한 달, 같이 추억을 기록해요.`;
+  openModal(`${sheetHead('Invitation',`${esc(h.name)}에게 초대장 보내기`)}<p class="hint-text" style="margin-top:-4px">이 링크로 들어오면 ${esc(h.name)}도 같은 집에 살게 돼요.<br>한 집에는 두 사람만 들어올 수 있어요.</p>
+    <div class="invite-link" id="invLink">${esc(url)}</div><p class="err" id="invErr"></p>
+    ${navigator.share?'<button class="primary" data-act="inv-share">초대장 보내기</button>':''}<button class="${navigator.share?'ghost':'primary'}" data-act="inv-copy">링크 복사하기</button>`);
+  const m=$('#modal');m.dataset.inv=h.id;
+}
+async function cloudAct(a,t,h,e){
+  switch(a){
+    case 'ob-login':{if(t.disabled)return true;t.disabled=true;try{if(await cloudSignIn()){OB=2;render();}}catch(err){t.disabled=false;toast(errKo(err));}return true;}
+    case 'ob-name':{const n=$('#obName').value.trim();if(!n){$('#obErr').textContent='이름을 적어 주세요.';return true;}
+      t.disabled=true;const {error}=await sb.from('profiles').upsert({id:ME.id,name:n});if(error){t.disabled=false;$('#obErr').textContent=errKo(error);return true;}
+      S.myName=n;save();OB=3;render();return true;}
+    case 'ob-done':case 'ob-install':{if(a==='ob-install'&&installEvt){installEvt.prompt();installEvt.userChoice.finally(()=>{installEvt=null;});}
+      S.onboarded=true;OB=0;S.screen='village';save();await tryJoin();await cloudPull();render();window.scrollTo(0,0);toast(`${S.myName||''}${S.myName?'님, ':''}마을에 오신 걸 환영해요`);return true;}
+    case 'build':{const n=$('#nhName').value.trim();if(!n){$('#nhErr').textContent='이름을 적어 주세요.';return true;}
+      if(S.houses.length>=5){$('#nhErr').textContent='집은 최대 다섯 채까지 지을 수 있어요.';return true;}
+      t.disabled=true;const rel=$('#nhRel').value,tex=$('#nhTex').value;
+      const {data,error}=await sb.from('houses').insert({owner:ME.id,guest_name:n,rel:REL_DB[rel]||'friends',texture:tex}).select('id').single();
+      if(error){t.disabled=false;$('#nhErr').textContent=errKo(error);return true;}
+      await cloudPull();closeModal();render();const nh=S.houses.find(x=>x.id===data.id);toast(`${n}의 집을 지었어요`);setTimeout(()=>openInvite(nh),500);return true;}
+    case 'invite':openInvite(h);return true;
+    case 'inv-share':{const hh=S.houses.find(x=>x.id===$('#modal').dataset.inv);if(!hh)return true;
+      try{await navigator.share({title:'별과 마을 · Star n Vill\'',text:`${S.myName||''}${S.myName?'이(가) ':''}별과 마을에 우리 집을 지었어요 ✦`,url:inviteURL(hh)});}catch(err){}return true;}
+    case 'inv-copy':{const hh=S.houses.find(x=>x.id===$('#modal').dataset.inv);if(!hh)return true;
+      try{await navigator.clipboard.writeText(inviteURL(hh));toast('초대 링크를 복사했어요');}catch(err){const r=document.createRange();r.selectNodeContents($('#invLink'));const s=getSelection();s.removeAllRanges();s.addRange(r);$('#invErr').textContent='링크를 길게 눌러 복사해 주세요.';}return true;}
+    case 'tex':if(!h.owner){toast('외벽은 집을 지은 사람이 바꿀 수 있어요');return true;}
+      {const v=t.dataset.v;const {error}=await sb.from('houses').update({texture:v}).eq('id',h.id);if(error){toast(errKo(error));return true;}h.tex=v;save();renderHouseKeepModal();toast(`외벽을 ${TEX[v]}${batchim(TEX[v])?'으로':'로'} 바꿨어요`);}return true;
+    case 'claim':{const w=h.wishTheirs[Number(t.dataset.i)];if(!w||w.c)return true;t.disabled=true;
+      const {error}=await sb.from('wish_claims').insert({wish_id:w.id});if(error){toast(errKo(error));await cloudPull();renderWish();return true;}
+      w.c=true;w.mineClaim=true;w.by=h.id;save();renderWish();toast(`산타가 선물을 가지고 출발했어요. ${h.name}에겐 비밀이에요`);return true;}
+    case 'wdel':{const w=S.wishMine[Number(t.dataset.i)];if(!w)return true;const {error}=await sb.from('wishes').delete().eq('id',w.id);if(error){toast(errKo(error));return true;}
+      S.wishMine.splice(Number(t.dataset.i),1);save();renderWish();return true;}
+    case 'wadd':{const n=$('#wName').value.trim(),l=$('#wLink').value.trim();
+      if(!n){$('#wErr').textContent='갖고 싶은 선물 이름을 적어 주세요.';return true;}
+      if(l&&!/^https?:\/\//.test(l)){$('#wErr').textContent='링크는 https:// 로 시작해야 해요.';return true;}
+      t.disabled=true;const {data,error}=await sb.from('wishes').insert({title:n,link:l||null}).select('id').single();
+      if(error){t.disabled=false;$('#wErr').textContent=errKo(error);return true;}
+      S.wishMine.push({id:data.id,n,l,c:false,by:null});save();renderWish();toast('스노우볼에 소원을 빌었어요');return true;}
+    case 'save-bday':{if(S.myBirthday||!bdConfirm||t.textContent.indexOf('한 번 더')<0)return false;  // first tap: let the normal confirm step run
+      const {m,d}=bdConfirm;const {error}=await sb.from('profiles').update({birthday:`2000-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`}).eq('id',ME.id);
+      if(error){$('#bdErr').textContent=errKo(error);return true;}return false;}
+    case 'save-letter':{const body=$('#letterIn').value;t.disabled=true;
+      const {error}=await sb.from('letters').upsert({house_id:h.id,author:ME.id,body,updated_at:new Date().toISOString()});t.disabled=false;
+      if(error){toast(errKo(error));return true;}h.letter=body;save();toast(`편지를 별에 맡겼어요. 25일에 ${h.name}에게 열려요`);return true;}
+    case 'reset':case 'demo-claim':case 'swap-view':return true;
+  }
+  return false;
+}
+async function cloudSend(m,canvas){
+  const blob=await new Promise(r=>canvas.toBlob(r,'image/jpeg',.88));if(!blob)throw new Error('photo');
+  const id=(crypto.randomUUID?crypto.randomUUID():'10000000-1000-4000-8000-100000000000'.replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16)));
+  const h=H();
+  let r=await sb.from('memories').insert({id,house_id:h.id,hint:m.hint.slice(0,20),mat:m.mat,mosaic:m.mos});if(r.error)throw r.error;
+  r=await sb.storage.from('originals').upload(`${h.id}/${id}.jpg`,blob,{contentType:'image/jpeg',upsert:false});
+  if(r.error){await sb.from('memories').delete().eq('id',id);throw r.error;}
+  r=await sb.from('memory_secrets').insert({memory_id:id,caption:m.msg.slice(0,300)});if(r.error)throw r.error;
+  m.id=id;return m;
+}
+function cloudOpened(h){const ids=h.recv.filter(m=>m.hung).map(m=>m.id);if(ids.length)sb.rpc('mark_opened',{ids}).then(()=>{});}
+
+const KEY=CLOUD?'snv-cloud-v1':'xvill-proto-v5';
 const PER_DAY=2;
 const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $=s=>document.querySelector(s);
@@ -654,7 +832,7 @@ function swapSides(h){
   S.as=S.as==='them'?'me':'them';S.asHouse=S.as==='them'?h.id:null;
 }
 function backToMe(){if(S.as!=='them')return;const h=S.houses.find(x=>x.id===S.asHouse);if(h)swapSides(h);else{S.as='me';S.asHouse=null;}try{save();}catch(e){}}
-function load(){try{const raw=localStorage.getItem(KEY);if(raw){S=seedFix(JSON.parse(raw));backToMe();S.screen='village';return;}}catch(e){}S=seedFix(seed());}
+function load(){try{const raw=localStorage.getItem(KEY);if(raw){S=seedFix(JSON.parse(raw));backToMe();S.screen='village';return;}}catch(e){}S=seedFix(CLOUD?{day:0,screen:'village',houses:[],wishMine:[],tracksV2:true}:seed());}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 const H=()=>S.houses.find(h=>h.id===S.houseId);
 
@@ -690,6 +868,24 @@ const BULB=['#ffd04d','#5fa8ff','#ff5d5d'];
 const LEAF=['#2f4a3a','#3b5a46','#4a6b53','#5b7a62','#6f8d74','#28423a','#557560'];
 const LEAF_FAR=['#6f9a7e','#83ab90','#97bba2','#7a9f86','#a7c4b0'];
 const leafDefs=()=>[...LEAF.map((c,i)=>['lf'+i,c]),...LEAF_FAR.map((c,i)=>['lff'+i,c])].map(([id,c])=>`<radialGradient id="${id}"><stop offset="0" stop-color="${c}" stop-opacity="1"/><stop offset=".45" stop-color="${c}" stop-opacity=".75"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></radialGradient>`).join('');
+/* tree foliage is drawn once to a bitmap: thousands of soft dots as live SVG made phones crawl */
+const TREE_IMG=new Map(),TREE_SRC=new Map(),TREE_PX=4;
+function leafImage(key,x0,y0,w0,h0,inner){
+  if(!TREE_SRC.has(key)){const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${x0} ${y0} ${w0} ${h0}" width="${Math.ceil(w0*TREE_PX)}" height="${Math.ceil(h0*TREE_PX)}"><defs>${leafDefs()}</defs>${inner}</svg>`;
+    TREE_SRC.set(key,{url:'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg),w:Math.ceil(w0*TREE_PX),h:Math.ceil(h0*TREE_PX)});queueTreeRaster();}
+  return `<image data-tk="${key}" x="${x0}" y="${y0}" width="${w0}" height="${h0}" preserveAspectRatio="none" href="${TREE_IMG.get(key)||TREE_SRC.get(key).url}"/>`;
+}
+let treeQ=0;
+function queueTreeRaster(){if(treeQ)return;treeQ=setTimeout(rasterTrees,60);}
+async function rasterTrees(){
+  for(const [key,src] of TREE_SRC){if(TREE_IMG.has(key))continue;
+    try{const im=new Image();im.src=src.url;await im.decode();const c=document.createElement('canvas');c.width=src.w;c.height=src.h;c.getContext('2d').drawImage(im,0,0,src.w,src.h);
+      const png=await new Promise(r=>c.toBlob(b=>r(b?URL.createObjectURL(b):''),'image/png'));if(!png)continue;TREE_IMG.set(key,png);
+      document.querySelectorAll(`image[data-tk="${key}"]`).forEach(el=>el.setAttribute('href',png));}
+    catch(e){TREE_IMG.set(key,src.url);}
+    await new Promise(r=>setTimeout(r,0));}
+  treeQ=0;
+}
 function sparkTree(x,y,h,depth,bulbs){
   const R=rng(Math.round(x*131+y*977+h*7)),w=h*.62,near=1-depth;
   const n=Math.round(h*(3.0+near*1.3)),groups=['','',''];
@@ -706,10 +902,11 @@ function sparkTree(x,y,h,depth,bulbs){
   let b='';const nb=bulbs===false?0:Math.round(h*(.1+near*.06));
   for(let i=0;i<nb;i++){const t=.15+Math.pow(R(),.7)*.82,yy=y-h+t*h*.95,half=w*.46*t,off=(R()*2-1)*half;
     const ci=i%3,c=BULB[ci],rr=(.7+R()*.5)*(.6+near*.6)*(h/70+.5);
-    b+=`<g class="bulb b${ci}" style="animation-delay:${(ci*.5+Math.floor(R()*3)*1.5).toFixed(2)}s"><circle cx="${(x+off).toFixed(1)}" cy="${yy.toFixed(1)}" r="${(rr*2.6).toFixed(2)}" fill="${c}" opacity=".2"/><circle cx="${(x+off).toFixed(1)}" cy="${yy.toFixed(1)}" r="${rr.toFixed(2)}" fill="${c}"/><circle cx="${(x+off).toFixed(1)}" cy="${yy.toFixed(1)}" r="${(rr*.4).toFixed(2)}" fill="#fff" opacity=".8"/></g>`;}
+    b+=`<g class="bulb b${ci}">${R()<0?"":""}<circle cx="${(x+off).toFixed(1)}" cy="${yy.toFixed(1)}" r="${(rr*2.6).toFixed(2)}" fill="${c}" opacity=".2"/><circle cx="${(x+off).toFixed(1)}" cy="${yy.toFixed(1)}" r="${rr.toFixed(2)}" fill="${c}"/><circle cx="${(x+off).toFixed(1)}" cy="${yy.toFixed(1)}" r="${(rr*.4).toFixed(2)}" fill="#fff" opacity=".8"/></g>`;}
   const body=`<path d="M${x} ${(y-h).toFixed(1)}Q${(x+w*.2).toFixed(1)} ${(y-h*.55).toFixed(1)} ${(x+w*.5).toFixed(1)} ${(y-h*.04).toFixed(1)}Q${x} ${(y+h*.03).toFixed(1)} ${(x-w*.5).toFixed(1)} ${(y-h*.04).toFixed(1)}Q${(x-w*.2).toFixed(1)} ${(y-h*.55).toFixed(1)} ${x} ${(y-h).toFixed(1)}Z" fill="url(#${depth>.6?'tbF':'tb'})"/><path d="M${x} ${(y-h).toFixed(1)}Q${(x+w*.2).toFixed(1)} ${(y-h*.55).toFixed(1)} ${(x+w*.5).toFixed(1)} ${(y-h*.04).toFixed(1)}Q${x} ${(y+h*.03).toFixed(1)} ${(x-w*.5).toFixed(1)} ${(y-h*.04).toFixed(1)}Q${(x-w*.2).toFixed(1)} ${(y-h*.55).toFixed(1)} ${x} ${(y-h).toFixed(1)}Z" fill="url(#tShade)"/>`;
   const glow=`<ellipse cx="${x}" cy="${(y-h*.42).toFixed(1)}" rx="${(w*.5).toFixed(1)}" ry="${(h*.58).toFixed(1)}" fill="url(#treeGlow)" opacity="${(.4*near+.15).toFixed(2)}"/>`;
-  return `<g class="sparktree">${glow}${body}<g class="sp1">${groups[0]}</g><g class="sp2">${groups[1]}</g><g class="sp3">${groups[2]}</g>${b}</g>`;
+  const pad=2.4*(.55+near*.5)*(h/70+.55)*2.6+1,x0=+(x-w*.5-pad).toFixed(1),y0=+(y-h-pad).toFixed(1),w0=+(w+pad*2).toFixed(1),h0=+(h+pad*2).toFixed(1);
+  return `<g class="sparktree">${glow}${body}${leafImage(`${x}|${y}|${h}|${depth}`,x0,y0,w0,h0,groups.join(''))}${b}</g>`;
 }
 function treeLights(x,y,h,n,cls){
   const w=h*.62;let s='';
@@ -790,6 +987,16 @@ function snowman(x,y,k,scarf,hat,face){
       ?`<rect x="${x-6.4*k}" y="${hd-4.6*k}" width="${12.8*k}" height="${1.4*k}" rx="${.6*k}" fill="#141a2e"/><rect x="${x-4*k}" y="${hd-11*k}" width="${8*k}" height="${6.6*k}" fill="#141a2e"/><rect x="${x-4*k}" y="${hd-6.6*k}" width="${8*k}" height="${1.3*k}" fill="#c8b07a"/>`
       :`<path d="M${x-5*k} ${hd-2.6*k}Q${x} ${hd-12*k} ${x+5*k} ${hd-2.6*k}Z" fill="${hat}"/><rect x="${x-5.4*k}" y="${hd-3.6*k}" width="${10.8*k}" height="${2*k}" rx="${1*k}" fill="#cfc8b8"/><circle cx="${x+.6*k}" cy="${hd-9.6*k}" r="${1.8*k}" fill="#cfc8b8"/>`}
   </g>`;
+}
+/* moving bits of the village (chimney smoke, glowing windows) float above the drawing as their own layers,
+   so the big SVG never has to be repainted every frame */
+function sceneFx(d){
+  const X=v=>(v/360*100).toFixed(2)+'%',Y=v=>((v-120)/420*100).toFixed(2)+'%';
+  return '<div class="scene-fx" aria-hidden="true">'+PLOTS.map((p,i)=>{const h=S.houses[i];if(!h)return '';
+    const tx=p.x-70*p.s,ty=p.y-108*p.s,glow=h.recv.some(m=>m.day===d)&&d>0&&d<25;
+    let o='';[[99,18,3.4,0],[103,11,2.4,1.8]].forEach(([cx,cy,r,dl])=>{o+=`<i class="fx-smoke" style="left:${X(tx+cx*p.s)};top:${Y(ty+cy*p.s)};width:${(r*2*p.s/360*100).toFixed(2)}%;animation-delay:${dl}s"></i>`;});
+    if(glow)o+=`<i class="fx-glow" style="left:${X(tx+70*p.s)};top:${Y(ty+70*p.s)};width:${(120*p.s/360*100).toFixed(2)}%"></i>`;
+    return o;}).join('')+'</div>';
 }
 function sceneSVG(){
   const items=[];
@@ -1108,7 +1315,7 @@ function renderVillage(){
     <header class="v-head"><p class="caps">The Winter Village · MMXXVI</p>
       <h1>Star n Vill<em>'</em></h1><p class="ko-name">별과 마을</p>
       <p class="v-date">${dayLine()}</p>${count}${S.sound===false?'':'<p class="tap-hint">♪ 화면을 한 번 누르면 음악이 시작돼요</p>'}</header>
-    <div class="scene">${sceneSVG()}${pills}</div>
+    <div class="scene">${sceneSVG()}${sceneFx(d)}${pills}</div>
     <section class="residents" aria-label="마을 주민"><div class="sect-head"><p class="caps">Residents</p><h3>내 마을의 집들</h3><p>집 한 채에 한 사람, 최대 다섯 채</p></div>${rows}</section>
     <p class="v-foot">지금은 예시로 채운 프로토타입이에요.<br>실제로 친구와 연결되는 건 다음 단계에서 만들어요.</p>`;
 }
@@ -1144,6 +1351,7 @@ function renderHouse(){
       <div class="title"><p class="tag">${REL[h.rel].en}</p><h2>${withN(h.name)}</h2></div>
       <span style="min-width:64px"></span></div>
     <p class="sub-date">${dayLine()}</p>
+    ${CLOUD&&h.pending?`<div class="pending-note"><span>${esc(h.name)}${batchim(h.name)?'이':''}는 아직 마을에 오지 않았어요</span><button class="btn gold" data-act="invite">초대장 보내기</button></div>`:''}
     <div class="room">${roomSVG(h)}
       <button class="wall-btn" data-act="wall" aria-label="벽에 걸린 추억 보기"></button>
       <button class="stocking s-to" id="stk-to" data-act="scroll" data-v="sent-list" aria-label="${esc(h.name)}에게 보낸 추억 ${h.sent.length}개">${stockingSVG(REL[h.rel].stock,'to',false,unopened)}<span class="tag">${esc(h.name)}에게</span></button>
@@ -1360,6 +1568,7 @@ function renderOnboard(){
     <p class="ob-tag">그 자체로 선물이 되어주는 소중한 곳.<br>연인, 가족, 친구, 누구든지<br>함께 추억을 기록해요.</p>
     <p class="ob-q">당신의 <i>loved 5</i>는 누구인가요?</p>
     <button class="primary" data-act="ob-next">시작하기</button><p class="ob-fine">이미 마을이 있나요? <button class="link-btn" data-act="ob-next">로그인</button></p></div>`;
+  else if(OB===1&&CLOUD)body=`<div class="ob-card"><p class="caps">Sign in</p><h2>마을에 들어가기</h2>${CFG.kakao?`<p class="ob-p">로그인하면 어느 기기에서든<br>내 마을과 추억이 그대로 있어요.</p><div class="ob-login"><button class="ob-kakao" data-act="ob-login"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3C5.6 3 2 5.8 2 9.2c0 2.2 1.5 4.1 3.7 5.2l-.8 3 3.3-2.2c.6.1 1.2.1 1.8.1 4.4 0 8-2.8 8-6.1S14.4 3 10 3Z" fill="#191600"/></svg>카카오로 시작하기</button></div>`:`<p class="ob-p">지금은 이 브라우저에 내 마을이 저장돼요.<br>카카오 로그인은 곧 열려요.</p><div class="ob-login"><button class="primary" data-act="ob-login">마을에 들어가기</button></div><p class="ob-fine">브라우저 기록을 지우면 마을을 찾을 수 없으니 주의해 주세요.</p>`}</div>`;
   else if(OB===1)body=`<div class="ob-card"><p class="caps">Sign in</p><h2>마을에 들어가기</h2><p class="ob-p">로그인하면 어느 기기에서든<br>내 마을과 추억이 그대로 있어요.</p>
     <div class="ob-login"><button class="ob-kakao" data-act="ob-login"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3C5.6 3 2 5.8 2 9.2c0 2.2 1.5 4.1 3.7 5.2l-.8 3 3.3-2.2c.6.1 1.2.1 1.8.1 4.4 0 8-2.8 8-6.1S14.4 3 10 3Z" fill="#191600"/></svg>카카오로 시작하기</button>
       <button class="ob-alt" data-act="ob-login">Google로 계속하기</button><button class="ob-alt" data-act="ob-login">Apple로 계속하기</button></div>
@@ -1466,7 +1675,7 @@ function renderEnding(){
 }
 /* ---------- launch lock (teaser before opening day) ---------- */
 const LAUNCH=new Date('2026-11-30T00:00:00+09:00').getTime();
-function previewOn(){try{if(/[?&]preview\b/.test(location.search)){localStorage.setItem('xvill-preview','1');return true;}return localStorage.getItem('xvill-preview')==='1';}catch(e){return /[?&]preview\b/.test(location.search);}}
+function previewOn(){try{if(/[?&]nopreview\b/.test(location.search)){localStorage.removeItem('xvill-preview');return false;}if(/[?&]preview\b/.test(location.search)){localStorage.setItem('xvill-preview','1');return true;}return localStorage.getItem('xvill-preview')==='1';}catch(e){return /[?&]preview\b/.test(location.search);}}
 function isLocked(){return Date.now()<LAUNCH&&!previewOn();}
 let lockTimer=0;
 function lockCount(){const ms=Math.max(0,LAUNCH-Date.now()),d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4);return `<b>${d}</b><i>일</i><b>${String(h).padStart(2,'0')}</b><i>시간</i><b>${String(m).padStart(2,'0')}</b><i>분</i>`;}
@@ -1477,6 +1686,7 @@ function renderLock(){
   clearInterval(lockTimer);lockTimer=setInterval(()=>{if(!isLocked()){clearInterval(lockTimer);document.body.classList.remove('locked');render();return;}const el=$('#lockCount');if(el)el.innerHTML=lockCount();},30000);
 }
 function render(){
+  if(CLOUD){S.day=realDay();document.body.classList.add('cloud');}
   if(isLocked()){renderLock();return;}
   document.body.classList.remove('locked');
   if(!S.onboarded){document.body.classList.add('on-ob');renderOnboard();skyActive=true;fg.style.display='block';ambient();return;}
@@ -1631,6 +1841,11 @@ function sendMemory(){
   const h=H();const d=S.day;
   if(h.sent.filter(x=>x.day===d).length>=PER_DAY){$('#edErr').textContent='하루에 두 개까지 넣을 수 있어요.';return;}
   const m={id:'m'+Date.now(),day:d,img:$('#ed').toDataURL('image/jpeg',.82),mos:mosaicFrom($('#ed')),msg:$('#msgIn').value.trim(),hint:$('#hintIn').value.trim()||'비밀',special:SPECIAL.has(d),mat:ED.mat};
+  if(CLOUD){const b=$('[data-act="send"]');if(b){if(b.disabled)return;b.disabled=true;b.dataset.t=b.textContent;b.textContent='산타에게 맡기는 중…';}
+    cloudSend(m,$('#ed')).then(()=>commitSent(h,m)).catch(err=>{if(b){b.disabled=false;b.textContent=b.dataset.t;}$('#edErr').textContent=errKo(err);});return;}
+  commitSent(h,m);
+}
+function commitSent(h,m){
   m.opened=false;m._pending=true;h.sent.push(m);save();closeModal();
   window.scrollTo(0,0);renderHouse();
   playRoomSleigh($('#stk-to'),m.special,()=>{delete m._pending;save();
@@ -1818,7 +2033,7 @@ function playRoomSleigh(target,special,done){
 function openStocking(){
   const h=H();const fresh=h.recv.filter(m=>!m.hung).sort((a,b)=>a.day-b.day);
   if(!fresh.length){const el=document.getElementById('recv-list');if(el)el.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});return;}
-  const finish=()=>{h.recv.forEach(m=>{if(!m.hung){m.hung=true;m.justHung=true;}});save();renderHouse();h.recv.forEach(m=>delete m.justHung);save();toast(`${ga(h.name)} 보낸 추억 ${fresh.length}개를 벽에 걸었어요`);
+  const finish=()=>{h.recv.forEach(m=>{if(!m.hung){m.hung=true;m.justHung=true;}});save();if(CLOUD)cloudOpened(h);renderHouse();h.recv.forEach(m=>delete m.justHung);save();toast(`${ga(h.name)} 보낸 추억 ${fresh.length}개를 벽에 걸었어요`);
     setTimeout(()=>{const el=document.getElementById('recv-list');if(el)el.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});},1100);};
   const room=$('.room'),st=$('#stk-me');if(reduce||!room||!room.animate){finish();return;}
   const rr=room.getBoundingClientRect(),sr=st.getBoundingClientRect(),base=hungOf(h).length;
@@ -1873,7 +2088,7 @@ function renderWish(){
     b.innerHTML=`<p class="wish-lead">${xmas?'메리 크리스마스!':'오늘 밤 산타에게 빌어봐요!'}</p><p class="tab-intro">${xmas?'양말 아래를 확인해 봐요. 산타가 다녀갔을지도 몰라요.':'이 소원은 내 마을의 모든 집에서 함께 보여요. 누가 산타가 되어줄지는 크리스마스 아침에 알 수 있어요.'}</p>`
       +(S.wishMine.length?S.wishMine.map((w,i)=>`<div class="wish"><span class="wn">${esc(w.n)}</span><span class="act"><button class="btn" data-act="wdel" data-i="${i}">지우기</button></span>
       ${w.l?`<a href="${esc(w.l)}" target="_blank" rel="noopener">링크</a>`:''}
-      ${xmas&&w.c?`<span class="status">${(S.houses.find(x=>x.id===w.by)||{}).name?ga(S.houses.find(x=>x.id===w.by).name)+' 산타였어요':'산타가 두고 갔어요'}</span>`:''}</div>`).join(''):`<p class="empty">아직 빈 소원이 없어요.</p>`)
+      ${xmas&&w.c?`<span class="status">${(()=>{const nm=w.santa||(S.houses.find(x=>x.id===w.by)||{}).name;return nm?esc(ga(nm))+' 산타였어요 🎁':'산타가 두고 갔어요';})()}</span>`:''}</div>`).join(''):`<p class="empty">아직 빈 소원이 없어요.</p>`)
       +`<div class="field"><label for="wName">갖고 싶은 선물</label><input id="wName" maxlength="30" placeholder="예: 캐시미어 장갑"></div>
        <div class="field"><label for="wLink">살 수 있는 링크<span>선택 · 쿠팡, 카카오톡 선물하기 등</span></label><input id="wLink" type="url" placeholder="https://"></div>
        <p class="err" id="wErr"></p><button class="primary" data-act="wadd">스노우볼에 빌기</button>`;
@@ -1906,7 +2121,7 @@ function shootingStar(){
 
 /* ---------- sky + snow ---------- */
 const cv=$('#sky-bg');const cx=cv.getContext('2d');const fg=$('#snow-fg');const fx=fg.getContext('2d');let W=0,Ht=0,stars=[],flakes=[],skyActive=true;
-function resize(){const dpr=Math.min(window.devicePixelRatio||1,2);W=window.innerWidth;Ht=window.innerHeight;
+function resize(){const dpr=Math.min(window.devicePixelRatio||1,1.5);W=window.innerWidth;Ht=window.innerHeight;
   for(const [c,x] of [[cv,cx],[fg,fx]]){c.width=W*dpr;c.height=Ht*dpr;x.setTransform(dpr,0,0,dpr,0,0);}
   stars=Array.from({length:Math.round(W*Ht/4200)},()=>({x:Math.random()*W,y:Math.random()*Ht*.6,r:Math.random()*.9+.2,p:Math.random()*6}));
   flakes=Array.from({length:Math.round(W/6)},()=>({x:Math.random()*W,y:Math.random()*Ht,r:Math.random()*1.3+.35,v:Math.random()*.75+.4,w:Math.random()*6}));drawSky(0);drawSnow(0);}
@@ -1916,7 +2131,7 @@ function drawSky(t){
   cx.globalAlpha=1;
 }
 function drawSnow(t){fx.clearRect(0,0,W,Ht);fx.fillStyle='rgba(255,255,255,.7)';for(const f of flakes){if(f.hid)continue;fx.beginPath();fx.arc(f.x+Math.sin(t/1800+f.w)*6,f.y,f.r,0,7);fx.fill();}}
-let blocks=[],blockT=0;
+let blocks=[],blockT=0,skyDrawT=0;
 function snowBlocks(){blocks=[];
   document.querySelectorAll('.scene [id^="hs-"], .plot .pill:not(.lot-pill), .sky-house').forEach(el=>{
     if(el.id&&el.id.startsWith('hs-')&&!S.houses[Number(el.id.slice(3))])return;
@@ -1924,7 +2139,7 @@ function snowBlocks(){blocks=[];
 function loop(t){if(skyActive){if(t-blockT>400){blockT=t;snowBlocks();}
   for(const f of flakes){f.y+=f.v;const x=f.x+Math.sin(t/1800+f.w)*6;
     f.hid=blocks.some(b=>x>b[0]&&x<b[2]&&f.y>b[1]&&f.y<b[3]);if(f.y>Ht+4){f.y=-4;f.x=Math.random()*W;}}
-  drawSky(t);drawSnow(t);}requestAnimationFrame(loop);}
+  if(t-skyDrawT>80){skyDrawT=t;drawSky(t);}drawSnow(t);}requestAnimationFrame(loop);}
 
 /* ---------- events ---------- */
 function fillDemo(){$('#demoDay').innerHTML=[0,...Array.from({length:25},(_,i)=>i+1)].map(d=>`<option value="${d}"${d===S.day?' selected':''}>${dayLabel(d)}${SPECIAL.has(d)?' ✦':''}</option>`).join('');}
@@ -1939,8 +2154,13 @@ function audioKick(){audioUnlock();if(S.sound===false)return;
   const go=()=>{if(S.screen!=='house')sceneMusic();if(AUD.ctx&&AUD.ctx.state==='running'&&AUD.playing){AUDIO_EVENTS.forEach(ev=>document.removeEventListener(ev,audioKick,true));}};
   if(AUD.ctx&&AUD.ctx.state!=='running'&&AUD.ctx.resume)AUD.ctx.resume().then(go).catch(()=>{});else setTimeout(go,30);}
 AUDIO_EVENTS.forEach(ev=>document.addEventListener(ev,audioKick,true));
+const CLOUD_ACTS=new Set(['ob-login','ob-name','ob-done','ob-install','ob-home','build','invite','inv-share','inv-copy','tex','claim','wdel','wadd','save-bday','save-letter','reset','demo-claim','swap-view']);
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-act]');if(!t)return;const a=t.dataset.act;const h=H();
+  if(CLOUD&&CLOUD_ACTS.has(a)){(a==='ob-home'&&!CFG.kakao?cloudAct('ob-done',t,h,e):cloudAct(a,t,h,e)).then(done=>{if(!done)act(a,t,h,e);}).catch(err=>toast(errKo(err)));return;}
+  act(a,t,h,e);
+});
+function act(a,t,h,e){
   switch(a){
     case 'open':enterHouse(t.dataset.id);break;
     case 'home':S.winTips=3;leaveHouse();break;
@@ -2000,7 +2220,7 @@ document.addEventListener('click',e=>{
       S.myBirthday={m:mm,d:md};bdConfirm=false;save();if(S.screen==='sky')renderSky();else renderHouseKeepModal();toast('생일을 저장했어요');break;}
     case 'save-letter':h.letter=$('#letterIn').value;save();toast(`편지를 별에 맡겼어요. 25일에 ${h.name}에게 열려요`);break;
     case 'bigstar':
-      if(S.day!==25){toast('12월 25일 0시에 열려요. 데모 날짜를 25일로 바꿔 보세요');break;}
+      if(S.day!==25){toast(CLOUD?'12월 25일 0시에 열려요':'12월 25일 0시에 열려요. 데모 날짜를 25일로 바꿔 보세요');break;}
       openModal(`${sheetHead('The Last Letter',`${esc(h.name)}의 마지막 편지`)}<div class="letter-paper"><span class="seal">V</span>${esc(h.theirLetter)}</div>`);break;
     case 'view':{
       const list=t.dataset.who==='recv'?h.recv:h.sent;const m=list.find(x=>x.id===t.dataset.id);if(!m)break;
@@ -2022,10 +2242,14 @@ document.addEventListener('click',e=>{
     case 'reset':if(t.dataset.confirm==='1'){S=seedFix(seed());save();fillDemo();render();closeModal();toast('예시 데이터로 되돌렸어요');}
       else openModal(`${sheetHead('Reset','예시로 초기화할까요?')}<p class="hint-text" style="margin:0">내가 넣은 추억과 위시리스트가 지워지고 처음 예시로 돌아가요.</p><button class="primary" data-act="reset" data-confirm="1">초기화하기</button>`);break;
   }
-});
+}
 window.addEventListener('resize',resize);
+/* one shared clock for the tree lights: a single cheap repaint every half second instead of 124 animations */
+if(!reduce){let ph=0;document.body.dataset.ph=0;setInterval(()=>{ph=(ph+1)%3;document.body.dataset.ph=ph;},500);}else document.body.dataset.ph=0;
+['gesturestart','gesturechange'].forEach(t=>document.addEventListener(t,e=>e.preventDefault(),{passive:false}));
 
 load();fillDemo();resize();render();
+if(CLOUD)cloudInit();
 if(!reduce)requestAnimationFrame(loop);
 })();
 </script>
