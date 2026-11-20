@@ -667,6 +667,13 @@ a.btn.buy{text-decoration:none;display:inline-block}
 .ob-stars button.on{background:rgba(233,210,154,.16);box-shadow:inset 0 0 0 1px var(--champagne)}
 .ob-stars .star-badge{display:block}
 .ob-starname{font-family:var(--font-scene);font-size:13px;color:var(--champagne);margin:6px 0 14px;min-height:18px}
+.house-screen.theme-red{--wall:#6e1a22;--wall-side:#56141a;--wall-deep:#33090e;--rug:#3d1a1a;--chair:#7a1f2a;--chair-2:#8c2a35}
+.house-screen.theme-pink{--wall:#8a4a5e;--wall-side:#6e3a4c;--wall-deep:#42202f;--rug:#4a2433;--chair:#a0546a;--chair-2:#b3677c}
+.house-screen.theme-green{--wall:#2f4a36;--wall-side:#243b2b;--wall-deep:#14241a;--rug:#5b1d25;--chair:#5a2e2e;--chair-2:#6c3a3a}
+.house-screen.theme-yellow{--wall:#7a6024;--wall-side:#5f4a1c;--wall-deep:#382b10;--rug:#5b1d25;--chair:#3e2a18;--chair-2:#4c3420}
+.house-screen.theme-beige{--wall:#8a7560;--wall-side:#6c5a47;--wall-deep:#41352a;--rug:#4a2e22;--chair:#5a3d2a;--chair-2:#6a4a34}
+.house-screen.theme-brown{--wall:#4a2f20;--wall-side:#3a2518;--wall-deep:#22150c;--rug:#5b1d25;--chair:#6b2d2a;--chair-2:#7a3a33}
+.house-screen.theme-ivory{--wall:#9a9280;--wall-side:#7a7364;--wall-deep:#4a4539;--rug:#5b1d25;--chair:#2e3a52;--chair-2:#3b4a66}
 </style>
 </head>
 <body>
@@ -693,7 +700,11 @@ const REL={
   friend:{label:'친구',en:'Friends',body:'#3d422d',stock:'#5f6644'},
   family:{label:'가족',en:'Family',body:'#1a2850',stock:'#2c3f72'}
 };
-const THEMES={brick:['보르도 벨벳','#4a1820'],olive:['올리브 서재','#3c412d'],blue:['미드나잇','#16224a']};
+const THEMES={brick:['보르도 벨벳','#4a1820'],olive:['올리브 서재','#3c412d'],blue:['미드나잇','#16224a'],
+  red:['루비 레드','#6e1a22'],pink:['로즈 핑크','#8a4a5e'],green:['포레스트 그린','#2f4a36'],yellow:['머스터드','#7a6024'],beige:['베이지 샌드','#8a7560'],brown:['초콜릿 브라운','#4a2f20'],ivory:['아이보리','#9a9280']};
+/* which wall colours each kind of house can pick */
+const REL_THEMES={love:['red','pink'],friend:['green','yellow','beige','brown','ivory'],family:['brick','olive','blue']};
+const themeNow=h=>REL_THEMES[h.rel].includes(h.theme)?h.theme:REL_THEMES[h.rel][0];
 const MATS={ivory:'#efe8da',champagne:'#d9c79c',olive:'#8a8f6c',midnight:'#1f2b52'};
 const PENS=['#efe8da','#c8b07a','#8c2f3a','#7b8457','#2c3f72','#1b1712'];
 const STK={
@@ -1246,7 +1257,7 @@ const CFG=window.SNV_SUPABASE||null;
 const CLOUD=!!(CFG&&window.supabase&&/^https?:$/.test(location.protocol)&&!/[?&]demo\b/.test(location.search));
 let sb=null,ME=null,cloudReady=false,cloudErr='';
 const REL_DB={love:'lovers',friend:'friends',family:'family'},REL_APP={lovers:'love',friends:'friend',family:'family'};
-const THEME_OF={love:'brick',friend:'olive',family:'blue'};
+const THEME_OF={love:'red',friend:'green',family:'blue'};
 function kstParts(ms){const d=new Date((ms||window.__SNV_NOW||Date.now())+9*36e5);return {y:d.getUTCFullYear(),m:d.getUTCMonth()+1,d:d.getUTCDate()};}
 let PRE=false;   // true while an early starter uses the app before December
 function realDay(){const k=kstParts();PRE=false;if(k.y>2026||(k.m===12&&k.d>=25))return 25;if(k.m===12)return k.d;const t=testerDay();if(t)return t;if(earlyOn()){PRE=true;return 1;}return 0;}
@@ -1382,7 +1393,7 @@ async function cloudAct(a,t,h,e){
       try{await navigator.share({title:'별과 마을 · Star n Vill\'',text:`${S.myName||''}${S.myName?'이(가) ':''}별과 마을에 우리 집을 지었어요 ✦`,url:inviteURL(hh)});}catch(err){}return true;}
     case 'inv-copy':{const hh=S.houses.find(x=>x.id===$('#modal').dataset.inv);if(!hh)return true;
       try{await navigator.clipboard.writeText(inviteURL(hh));toast('초대 링크를 복사했어요');}catch(err){const r=document.createRange();r.selectNodeContents($('#invLink'));const s=getSelection();s.removeAllRanges();s.addRange(r);$('#invErr').textContent='링크를 길게 눌러 복사해 주세요.';}return true;}
-    case 'theme':case 'paper':case 'floor':case 'sofa':{const v=t.dataset.v;const {error}=await sb.rpc('set_deco',{hid:h.id,k:a,v});
+    case 'theme':case 'paper':case 'floor':case 'sofa':{const v=t.dataset.v;if(a==='theme'&&!REL_THEMES[h.rel].includes(v))return true;const {error}=await sb.rpc('set_deco',{hid:h.id,k:a,v});
       if(error&&!/set_deco|function/i.test(error.message||'')){toast(errKo(error));return true;}
       if(!error&&hereCh&&hereCh.send)try{hereCh.send({type:'broadcast',event:'deco',payload:{k:a,v}});}catch(e){}return false;}
     case 'roof':case 'crown':if(!h.owner){toast('지붕은 집을 지은 사람이 바꿀 수 있어요');return true;}
@@ -2056,7 +2067,7 @@ function renderHouse(){
   const addCard=canAdd?`<div><button class="mat add-mat" data-act="add" aria-label="오늘의 추억 넣기"><div class="pic"><span class="plus">+</span></div><div class="cap">${nToday?'하나 더 넣기':'오늘의 moment'}</div></button><span class="mat-date">TODAY · ${nToday}/${PER_DAY}</span></div>`:'';
   const sent=[...h.sent].sort((a,b)=>a.day-b.day),recv=[...h.recv].sort((a,b)=>a.day-b.day);
   $('#app').innerHTML=`${S.screen==='house'?'':`<button class="amb-sound" data-act="sound" aria-label="배경음악 ${S.sound===false?'켜기':'끄기'}">${S.sound===false?'♪ Off':'♪ On'}</button>`}
-  <div class="house-screen theme-${h.theme}" style="${sofaStyle(h)}">
+  <div class="house-screen theme-${themeNow(h)}" style="${sofaStyle(h)}">
     <div class="topbar"><button class="link-btn" data-act="home">← Village</button>
       <div class="title"><p class="tag">${REL[h.rel].en}</p><h2>${withN(h.name)}</h2></div>
       <span style="min-width:64px"></span></div>
@@ -2084,7 +2095,7 @@ function renderHouse(){
     <section class="sect" id="recv-list"><div class="sect-head"><p class="caps">Received</p><h3>나에게 온 추억</h3><p>${un?'모든 추억이 열렸어요':'12월 25일 0시에 열려요. 그 전엔 힌트만 보여요'}</p></div>
       ${unhung?`<p class="hint-text" style="margin:-6px 0 14px">양말 속에 새 추억 ${unhung}개가 기다리고 있어요</p>`:''}${hungOf(h).length?`<div class="grid3">${hungOf(h).map(m=>un?matCard(m,'recv'):envelope(m)).join('')}</div>`:`<p class="empty">아직 도착한 추억이 없어요.</p>`}</section>
     <section class="sect"><div class="sect-head"><p class="caps">Interior</p><h3>집 안 꾸미기</h3><p>${wa(h.name)} 같은 집 안을 봐요. 둘 중 누구나 바꿀 수 있어요</p></div>
-      ${optRow('벽 색','theme',THEMES,h.theme,v=>v[0],v=>v[1])}
+      ${optRow('벽 색','theme',Object.fromEntries(REL_THEMES[h.rel].map(k=>[k,THEMES[k]])),themeNow(h),v=>v[0],v=>v[1])}
       ${optRow('벽지','paper',PAPER,decoOf(h).paper||'damask')}
       ${optRow('바닥','floor',FLOOR,decoOf(h).floor||'plank')}
       ${optRow('소파','sofa',SOFA,decoOf(h).sofa||'auto',v=>v[0],v=>v[1]||'')}
@@ -2936,7 +2947,7 @@ function act(a,t,h,e){
     case 'mat':ED.mat=t.dataset.v;$('#cframe').style.setProperty('--mat',MATS[ED.mat]);document.querySelectorAll('[data-act="mat"]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===ED.mat)));break;
     case 'sample-photo':samplePhoto();break;
     case 'send':sendMemory();break;
-    case 'theme':h.theme=t.dataset.v;save();renderHouseKeepModal();break;
+    case 'theme':if(!REL_THEMES[h.rel].includes(t.dataset.v))break;h.theme=t.dataset.v;save();renderHouseKeepModal();break;
     case 'globe':if(GLOBE_LOCKED){toast('스노우볼은 잠겨 있어요. 곧 열려요');break;}if(S.day===0){toast('스노우볼 위시리스트는 12월 1일에 열려요');break;}openGlobe();break;
     case 'cocoa':openCocoa();break;
     case 'cocoa-pour':cocoaPour(t);break;
