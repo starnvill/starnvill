@@ -1334,12 +1334,12 @@ function starFig(cx,idx,me,mug=true,cy=271){
   </g>`;
 }
 function starBadge(idx,size=28){return `<svg class="star-badge" viewBox="0 0 40 40" width="${size}" height="${size}" aria-hidden="true">${starFig(20,idx,true,false,20)}</svg>`;}
-/* sofa stars: one move every 4.3 seconds, at random, never the same twice in a row */
+/* sofa stars: one move every 5.5 seconds, at random, never the same twice in a row */
 const STAR_MOVES={both:['smile','talk','surprise','lean','wink','sip','sway','sparkle'],alone:['doze','sip','sway','look','yawn','sparkle']};
 let starLast='';
 setInterval(()=>{if(document.hidden)return;const g=document.querySelector('.room .sofa-people');if(!g)return;
   const pool=STAR_MOVES[g.classList.contains('both')?'both':'alone'].filter(x=>x!==starLast);const m=pool[Math.floor(Math.random()*pool.length)];starLast=m;
-  [...g.classList].filter(c=>c.startsWith('m-')).forEach(c=>g.classList.remove(c));void g.getBoundingClientRect();g.classList.add('m-'+m);},4300);
+  [...g.classList].filter(c=>c.startsWith('m-')).forEach(c=>g.classList.remove(c));void g.getBoundingClientRect();g.classList.add('m-'+m);},5500);
 function sofaSVG(h){
   const them=hereThem(h);
   return `<g class="sofa-people${them?' both':' alone'}">${starFig(45,myStar(),true)}${them?starFig(89,theirStar(h),false):`<g transform="translate(46 0)">${PILLOW}</g>`}</g>`;
@@ -1944,7 +1944,7 @@ function roomSVG(h){
   <path d="M358 40L292 62" stroke="#c8b07a" stroke-width="1.4"/>
   <path d="M354 44L296 66V214L354 244Z" fill="${fxWindowFill(fx)}"/>
   <g fill="#efe8da"><circle cx="312" cy="96" r=".8"/><circle cx="344" cy="124" r=".7"/><circle cx="306" cy="150" r=".8"/><circle cx="330" cy="176" r=".6"/><circle cx="338" cy="82" r=".9"/><circle cx="318" cy="120" r=".6"/></g>
-  <g clip-path="url(#winR)" aria-hidden="true"><g class="win-star"><circle cx="339.5" cy="88" r="13" fill="#fde3a3" opacity=".12"/><path d="${logoStar(339.5,88,12)}" fill="#fde3a3"/></g></g>
+  <g clip-path="url(#winR)" aria-hidden="true"><g class="win-star"><circle cx="339.5" cy="88" r="13" fill="#fde3a3" opacity=".12"/><path d="${star4(339.5,88,12)}" fill="#fde3a3"/><path d="${star4(339.5,88,6.6)}" transform="rotate(45 339.5 88)" fill="#fff3d2" opacity=".9"/></g></g>
   <g fill="#efe8da"><circle cx="304" cy="110" r=".7"/><circle cx="348" cy="160" r=".6"/><circle cx="310" cy="186" r=".7"/><circle cx="326" cy="104" r=".5"/><circle cx="342" cy="190" r=".6"/></g>
   <path d="M352 228Q336 214 320 216T296 204V214L354 244Z" fill="#c9d2e4" opacity=".75"/>
   ${fx==='meteor'||fx==='santa'?fxSVG(fx):''}
@@ -2357,7 +2357,8 @@ function renderSky(){
     ${body}
     <g class="bigstar ${on?'on':''}" data-act="bigstar" role="button" tabindex="0" aria-label="${on?'가장 큰 별을 눌러 편지 열기':'가장 큰 별, 12월 25일에 열려요'}">
       <circle class="halo" cx="${big.x}" cy="${big.y}" r="30" fill="#f3dfae" opacity="${on?.25:.05}"/>
-      <path d="${logoStar(big.x,big.y,21)}" fill="#fde3a3" opacity="${on?1:.55}"/>
+      <path d="${star4(big.x,big.y,20)}" fill="#fde3a3" opacity="${on?1:.6}"/>
+      <path d="${star4(big.x,big.y,11)}" transform="rotate(45 ${big.x} ${big.y})" fill="#fff3d2" opacity="${on?.9:.6}"/>
     </g>
     <path d="M0 400V378Q90 362 180 372T360 366V400Z" fill="#0b1122"/>
     <path d="M0 378Q90 362 180 372T360 366" fill="none" stroke="#c8b07a" stroke-opacity=".4"/>
