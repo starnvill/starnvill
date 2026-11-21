@@ -718,7 +718,11 @@ const canRecolor=h=>!!HCOL[h.rel]&&(!h.color||colorAdmin());
 /* front door colour that suits each house colour: [door, panel lines] */
 const DOORS={red:['#24402f','#1a3023'],pink:['#5e1f2e','#4a1723'],green:['#6a1f28','#52171f'],yellow:['#1f2c4a','#172138'],
   beige:['#3e4d36','#2f3b29'],brown:['#d9caa8','#bfae8a'],ivory:['#243352','#1a263f'],navy:['#5a1d27','#45161e']};
-const doorOf=h=>{const c=HCOL[h.rel]?colOf(h):'navy';return DOORS[c]||['#1a1410','#2b2119'];};
+const hexRgb=x=>{const n=parseInt(x.slice(1),16);return [n>>16,n>>8&255,n&255];};
+const rgbHex=a=>'#'+a.map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');
+const softDoor=(hex,wall)=>{const [r,g,b]=hexRgb(hex),l=.299*r+.587*g+.114*b;let c=[r,g,b].map(v=>l+(v-l)*.65);
+  const w=hexRgb(wall);c=c.map((v,i)=>v*.82+w[i]*.18);return rgbHex(c);};
+const doorOf=h=>{const c=HCOL[h.rel]?colOf(h):'navy';const d=DOORS[c]||['#1a1410','#2b2119'],w=bodyOf(h);return [softDoor(d[0],w),softDoor(d[1],w)];};
 const colOf=h=>{const m=HCOL[h.rel];return m&&m[h.color]?h.color:(m?Object.keys(m)[0]:null);};
 const MATS={ivory:'#efe8da',champagne:'#d9c79c',olive:'#8a8f6c',midnight:'#1f2b52'};
 const PENS=['#efe8da','#c8b07a','#8c2f3a','#7b8457','#2c3f72','#1b1712'];
@@ -1680,8 +1684,8 @@ function houseParts(h,glow,uid,ground){
   <circle cx="45" cy="80" r="13" fill="url(#g${id})" class="${gl}"/><circle cx="95" cy="80" r="13" fill="url(#g${id})" class="${gl}"/>
   <path d="M38 88V76A7 7 0 0 1 52 76V88Z" fill="url(#${id})" class="${gl}"/>
   <path d="M88 88V76A7 7 0 0 1 102 76V88Z" fill="url(#${id})" class="${gl}"/>
-  <path d="M45 69V88M38 79H52M95 69V88M88 79H102" stroke="#8a6a3e" stroke-width=".7"/>
-  <path d="M38 88V76A7 7 0 0 1 52 76V88ZM88 88V76A7 7 0 0 1 102 76V88Z" fill="none" stroke="#c8b07a" stroke-opacity=".8" stroke-width=".8"/>
+  <path d="M45 69V88M38 79H52M95 69V88M88 79H102" stroke="#5c4526" stroke-width=".75"/>
+  <path d="M38 88V76A7 7 0 0 1 52 76V88ZM88 88V76A7 7 0 0 1 102 76V88Z" fill="none" stroke="#6b5430" stroke-opacity=".95" stroke-width="1"/>
   <path d="M36.5 88.6H53.5M86.5 88.6H103.5" stroke="#e8eef6" stroke-width="1.8" stroke-linecap="round"/>
   <path d="M62 108V90A8 8 0 0 1 78 90V108Z" fill="#e8b46c"/><path d="M62 108V90A8 8 0 0 1 78 90V108Z" fill="#f6d59b" opacity=".55"/>
   <g class="door-leaf"><path d="M62 108V90A8 8 0 0 1 78 90V108Z" fill="${door[0]}" stroke="#c8b07a" stroke-opacity=".8" stroke-width=".8"/><path d="M65 93V106M70 90V106M75 93V106" stroke="${door[1]}" stroke-width=".6"/><circle cx="74.5" cy="99" r="1" fill="#c8b07a"/></g>
