@@ -717,7 +717,7 @@ const colorAdmin=()=>typeof ME!=='undefined'&&!!ME&&COLOR_ADMINS.includes(String
 const canRecolor=h=>!!HCOL[h.rel]&&(!h.color||colorAdmin());
 /* front door colour that suits each house colour: [door, panel lines] */
 const DOORS={red:['#24402f','#1a3023'],pink:['#5e1f2e','#4a1723'],green:['#6a1f28','#52171f'],yellow:['#1f2c4a','#172138'],
-  beige:['#3e4d36','#2f3b29'],brown:['#d9caa8','#bfae8a'],ivory:['#243352','#1a263f'],navy:['#5a1d27','#45161e']};
+  beige:['#3e4d36','#2f3b29'],brown:['#d9caa8','#bfae8a'],ivory:['#6a1f2c','#521722'],navy:['#5a1d27','#45161e']};
 const hexRgb=x=>{const n=parseInt(x.slice(1),16);return [n>>16,n>>8&255,n&255];};
 const rgbHex=a=>'#'+a.map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');
 const softDoor=(hex,wall)=>{const [r,g,b]=hexRgb(hex),l=.299*r+.587*g+.114*b;let c=[r,g,b].map(v=>l+(v-l)*.65);
