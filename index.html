@@ -715,6 +715,10 @@ const bodyOf=h=>{const m=HCOL[h.rel];if(!m)return REL[h.rel].body;return (m[h.co
 const COLOR_ADMINS=['hxrnag@gmail.com'];
 const colorAdmin=()=>typeof ME!=='undefined'&&!!ME&&COLOR_ADMINS.includes(String(ME.email||'').toLowerCase());
 const canRecolor=h=>!!HCOL[h.rel]&&(!h.color||colorAdmin());
+/* front door colour that suits each house colour: [door, panel lines] */
+const DOORS={red:['#24402f','#1a3023'],pink:['#5e1f2e','#4a1723'],green:['#6a1f28','#52171f'],yellow:['#1f2c4a','#172138'],
+  beige:['#3e4d36','#2f3b29'],brown:['#d9caa8','#bfae8a'],ivory:['#243352','#1a263f'],navy:['#5a1d27','#45161e']};
+const doorOf=h=>{const c=HCOL[h.rel]?colOf(h):'navy';return DOORS[c]||['#1a1410','#2b2119'];};
 const colOf=h=>{const m=HCOL[h.rel];return m&&m[h.color]?h.color:(m?Object.keys(m)[0]:null);};
 const MATS={ivory:'#efe8da',champagne:'#d9c79c',olive:'#8a8f6c',midnight:'#1f2b52'};
 const PENS=['#efe8da','#c8b07a','#8c2f3a','#7b8457','#2c3f72','#1b1712'];
@@ -1649,7 +1653,7 @@ function texPattern(id,tex,body){
   return `<pattern id="${id}" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="${shade(body,.06)}"/><circle cx="2" cy="3" r=".35" fill="${dk}" opacity=".35"/><circle cx="6" cy="6.5" r=".3" fill="${lt}" opacity=".5"/><circle cx="5.2" cy="1.4" r=".25" fill="${dk}" opacity=".3"/></pattern>`;
 }
 function houseParts(h,glow,uid,ground){
-  const r=REL[h.rel];const gl=glow?'win-glow':'';const id='w'+uid,tex=texOf(h),body=bodyOf(h),RP=roofParts(id,h);
+  const r=REL[h.rel];const gl=glow?'win-glow':'';const id='w'+uid,tex=texOf(h),body=bodyOf(h),door=doorOf(h),RP=roofParts(id,h);
   const beams=tex==='plaster'?`<g stroke="${shade(body,-.45)}" stroke-width="2.2" opacity=".85"><path d="M30 70H110M56 58V108M84 58V108M30 58L56 70M110 58L84 70"/></g>`:'';
   return `<defs><radialGradient id="${id}" cx="50%" cy="60%" r="70%"><stop offset="0" stop-color="#ffe2a6"/><stop offset="1" stop-color="#d9973f"/></radialGradient>
   <radialGradient id="g${id}"><stop offset="0" stop-color="#ffd98f" stop-opacity=".55"/><stop offset="1" stop-color="#ffd98f" stop-opacity="0"/></radialGradient>
@@ -1680,7 +1684,7 @@ function houseParts(h,glow,uid,ground){
   <path d="M38 88V76A7 7 0 0 1 52 76V88ZM88 88V76A7 7 0 0 1 102 76V88Z" fill="none" stroke="#c8b07a" stroke-opacity=".8" stroke-width=".8"/>
   <path d="M36.5 88.6H53.5M86.5 88.6H103.5" stroke="#e8eef6" stroke-width="1.8" stroke-linecap="round"/>
   <path d="M62 108V90A8 8 0 0 1 78 90V108Z" fill="#e8b46c"/><path d="M62 108V90A8 8 0 0 1 78 90V108Z" fill="#f6d59b" opacity=".55"/>
-  <g class="door-leaf"><path d="M62 108V90A8 8 0 0 1 78 90V108Z" fill="#1a1410" stroke="#c8b07a" stroke-opacity=".8" stroke-width=".8"/><path d="M65 93V106M70 90V106M75 93V106" stroke="#2b2119" stroke-width=".6"/><circle cx="74.5" cy="99" r="1" fill="#c8b07a"/></g>
+  <g class="door-leaf"><path d="M62 108V90A8 8 0 0 1 78 90V108Z" fill="${door[0]}" stroke="#c8b07a" stroke-opacity=".8" stroke-width=".8"/><path d="M65 93V106M70 90V106M75 93V106" stroke="${door[1]}" stroke-width=".6"/><circle cx="74.5" cy="99" r="1" fill="#c8b07a"/></g>
   ${ground?'':`<path d="M22 109Q46 103 70 107Q94 103 118 109Q96 113 70 112Q44 113 22 109Z" fill="url(#n${id})"/><ellipse class="door-spill" cx="70" cy="111" rx="16" ry="4" fill="#ffd98f"/>`}`;
 }
 function houseSVG(h,glow,uid){return `<svg viewBox="0 0 140 124" aria-hidden="true">${houseParts(h,glow,uid,true)}</svg>`;}
