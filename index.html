@@ -2217,6 +2217,14 @@ function skyLayout(h){
   const rank=[];order.forEach((si,r)=>rank[si]=r);
   return {stars,lines,labels,need,n,rank,A,B,formed:!!(A||B)};
 }
+/* the Star n Vill' logo star: a four-point sparkle, taller than it is wide */
+const logoStar=(x,y,v,w)=>{const k=.17;return `M${x} ${y-v}Q${x+w*k} ${y-w*k} ${x+w} ${y}Q${x+w*k} ${y+w*k} ${x} ${y+v}Q${x-w*k} ${y+w*k} ${x-w} ${y}Q${x-w*k} ${y-w*k} ${x} ${y-v}Z`;};
+/* a moon bigger than the star, with a faint moon rabbit now and then */
+function skyMoon(x,y,r){const k=r/11;
+  return `<defs><radialGradient id="skyMoonHalo"><stop offset="0" stop-color="#f6ecd4" stop-opacity=".3"/><stop offset="1" stop-color="#f6ecd4" stop-opacity="0"/></radialGradient></defs>
+  <g aria-hidden="true"><circle class="moon-halo" cx="${x}" cy="${y}" r="${r*2.6}" fill="url(#skyMoonHalo)"/><circle class="moon-face" cx="${x}" cy="${y}" r="${r}" fill="#f4ecd8"/>
+  <g transform="translate(${x} ${y}) scale(${k}) translate(-62 -146)"><circle cx="57.6" cy="142.4" r="2" fill="#e3d8bf" opacity=".55"/><circle cx="67" cy="141" r="1.2" fill="#e3d8bf" opacity=".45"/><circle cx="65.6" cy="151.4" r="1.5" fill="#e3d8bf" opacity=".45"/>
+  <g class="moon-rabbit" fill="#b8aa8c"><ellipse cx="63.4" cy="149.6" rx="3.6" ry="2.8"/><circle cx="59.9" cy="147" r="2"/><ellipse cx="59.2" cy="143.6" rx=".7" ry="2.3" transform="rotate(-14 59.2 143.6)"/><ellipse cx="60.8" cy="143.8" rx=".65" ry="2.1" transform="rotate(10 60.8 143.8)"/><circle cx="66.9" cy="149" r=".9"/><path d="M55.6 151.6h4.2v.8h-4.2z M57.3 148.4l.6 3.4" stroke="#b8aa8c" stroke-width=".5"/></g></g></g>`;}
 const star4=(x,y,r)=>`M${x} ${y-r}L${x+r*.22} ${y-r*.22}L${x+r} ${y}L${x+r*.22} ${y+r*.22}L${x} ${y+r}L${x-r*.22} ${y+r*.22}L${x-r} ${y}L${x-r*.22} ${y-r*.22}Z`;
 /* Christmas compatibility: shown only on the 25th, only when both birthdays exist. Always kind. */
 const ELEM={'양자리':'F','사자자리':'F','궁수자리':'F','황소자리':'E','처녀자리':'E','염소자리':'E','쌍둥이자리':'A','천칭자리':'A','물병자리':'A','게자리':'W','전갈자리':'W','물고기자리':'W'};
@@ -2263,7 +2271,7 @@ function birthdaySection(h){
 function renderSky(){
   const h=H();const d=S.day;const on=d===25;
   const recv=[...h.recv].sort((a,b)=>a.day-b.day);
-  const big={x:180,y:62};
+  const big={x:262,y:60};
   let body='',note='';
   if(!on){
     const L=skyLayout(h);
@@ -2292,10 +2300,11 @@ function renderSky(){
   <div class="sky-wrap"><svg class="sky-svg" viewBox="0 0 360 400" role="img" aria-label="${on?'두 사람의 별자리':'추억이 된 별들이 떠 있는 밤하늘'}">
     ${body}
     <g class="bigstar ${on?'on':''}" data-act="bigstar" role="button" tabindex="0" aria-label="${on?'가장 큰 별을 눌러 편지 열기':'가장 큰 별, 12월 25일에 열려요'}">
-      <circle class="halo" cx="${big.x}" cy="${big.y}" r="30" fill="#f3dfae" opacity="${on?.25:.05}"/>
-      <path d="${star4(big.x,big.y,20)}" fill="${on?'#f3dfae':'#7d879f'}" opacity="${on?1:.6}"/>
-      <path d="${star4(big.x,big.y,9)}" transform="rotate(45 ${big.x} ${big.y})" fill="${on?'#f3dfae':'#7d879f'}" opacity="${on?.8:.4}"/>
+      <circle class="halo" cx="${big.x}" cy="${big.y}" r="22" fill="#f3dfae" opacity="${on?.25:.08}"/>
+      <path d="${logoStar(big.x,big.y,17,12)}" fill="#ecd28c" opacity="${on?1:.62}"/>
+      <path d="${logoStar(big.x,big.y-1.2,6,4.2)}" fill="#fff6dc" opacity="${on?.55:.25}"/>
     </g>
+    ${skyMoon(86,66,25)}
     <path d="M0 400V378Q90 362 180 372T360 366V400Z" fill="#0b1122"/>
     <path d="M0 378Q90 362 180 372T360 366" fill="none" stroke="#c8b07a" stroke-opacity=".4"/>
     <g class="sky-house" data-act="back-house" role="button" tabindex="0" aria-label="${esc(h.name)}의 집으로 돌아가기"><rect x="250" y="318" width="70" height="62" fill="transparent"/><g transform="translate(262,327) scale(.4)">${houseParts(h,false,'sky',false)}</g><text x="290" y="392" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="8" letter-spacing="2" fill="#c8b07a">HOME</text></g>
