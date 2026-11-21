@@ -701,6 +701,9 @@ a.btn.buy{text-decoration:none;display:inline-block}
 .both .sitter{transform-box:fill-box;transform-origin:50% 100%;animation:sgiggle 9s ease-in-out infinite}
 @keyframes sgiggle{0%,68%,86%,100%{transform:translateY(0)}73%,81%{transform:translateY(-.7px)}77%{transform:translateY(0)}}
 @media (prefers-reduced-motion:reduce){.moon-halo,.moon-face,.moon-rabbit,.steam,.mallow,.both .sglow,.both .seyes,.both .sdots,.both .shappy,.both .sitter,.lp-idle{animation:none}}
+.win-star{transform-box:fill-box;transform-origin:center;animation:winStar 3.4s ease-in-out infinite}
+@keyframes winStar{0%,100%{opacity:.8;transform:scale(1)}50%{opacity:1;transform:scale(1.12)}}
+@media (prefers-reduced-motion:reduce){.win-star{animation:none}}
 </style>
 </head>
 <body>
@@ -1870,7 +1873,11 @@ function roomSVG(h){
   <path d="M2 40L68 62" stroke="#c8b07a" stroke-width="1.4"/>
   <path d="M6 44L64 66V214L6 244Z" fill="${fxWindowFill(fx)}"/>
   <g fill="#efe8da" opacity=".8"><circle cx="20" cy="80" r=".7"/><circle cx="50" cy="90" r=".6"/></g>
-  <g fill="#efe8da"><circle cx="48" cy="96" r=".8"/><circle cx="16" cy="130" r=".7"/><circle cx="54" cy="150" r=".8"/><circle cx="30" cy="180" r=".6"/><circle cx="44" cy="118" r=".6"/></g>
+  <g class="win-moon" aria-hidden="true"><circle class="moon-halo" cx="22.5" cy="90" r="12" fill="#f4ecd8" opacity=".07"/><circle class="moon-face" cx="22.5" cy="90" r="8.2" fill="#f4ecd8"/>
+    <g transform="translate(22.5 90) scale(.745) translate(-62 -146)"><circle cx="57.6" cy="142.4" r="2" fill="#e3d8bf" opacity=".55"/><circle cx="66" cy="151" r="1.4" fill="#e3d8bf" opacity=".45"/>
+    <g class="moon-rabbit" fill="#b8aa8c"><ellipse cx="63.4" cy="149.6" rx="3.6" ry="2.8"/><circle cx="59.9" cy="147" r="2"/><ellipse cx="59.2" cy="143.6" rx=".7" ry="2.3" transform="rotate(-14 59.2 143.6)"/><ellipse cx="60.8" cy="143.8" rx=".65" ry="2.1" transform="rotate(10 60.8 143.8)"/><circle cx="66.9" cy="149" r=".9"/><path d="M55.6 151.6h4.2v.8h-4.2z M57.3 148.4l.6 3.4" stroke="#b8aa8c" stroke-width=".5"/></g></g></g>
+  <g class="win-star" aria-hidden="true"><circle cx="50" cy="100" r="6" fill="#ecd28c" opacity=".1"/><path d="${logoStar(50,100,5.2,3.6)}" fill="#ecd28c"/></g>
+  <g fill="#efe8da"><circle cx="16" cy="130" r=".7"/><circle cx="54" cy="150" r=".8"/><circle cx="30" cy="180" r=".6"/><circle cx="44" cy="118" r=".6"/></g>
   <path d="M6 196Q22 182 36 188T64 176V214L6 244Z" fill="#1c2b57"/>
   <path d="M6 214Q24 202 40 206T64 196V214L6 244Z" fill="#c9d2e4" opacity=".85"/>
   <g fill="#141d3a" opacity=".9"><path d="M10 207L14 194L18 207Z"/><path d="M24 201L28 189L32 201Z"/><path d="M49 196L53 182L57 196Z"/><path d="M57 203L60 193L63 203Z"/><path d="M32 206V197.5L39 191.5L46 197.5V206Z"/><path d="M17 214V206.5L23 201.5L29 206.5V214Z"/></g>
@@ -2219,12 +2226,6 @@ function skyLayout(h){
 }
 /* the Star n Vill' logo star: a four-point sparkle, taller than it is wide */
 const logoStar=(x,y,v,w)=>{const k=.17;return `M${x} ${y-v}Q${x+w*k} ${y-w*k} ${x+w} ${y}Q${x+w*k} ${y+w*k} ${x} ${y+v}Q${x-w*k} ${y+w*k} ${x-w} ${y}Q${x-w*k} ${y-w*k} ${x} ${y-v}Z`;};
-/* a moon bigger than the star, with a faint moon rabbit now and then */
-function skyMoon(x,y,r){const k=r/11;
-  return `<defs><radialGradient id="skyMoonHalo"><stop offset="0" stop-color="#f6ecd4" stop-opacity=".3"/><stop offset="1" stop-color="#f6ecd4" stop-opacity="0"/></radialGradient></defs>
-  <g aria-hidden="true"><circle class="moon-halo" cx="${x}" cy="${y}" r="${r*2.6}" fill="url(#skyMoonHalo)"/><circle class="moon-face" cx="${x}" cy="${y}" r="${r}" fill="#f4ecd8"/>
-  <g transform="translate(${x} ${y}) scale(${k}) translate(-62 -146)"><circle cx="57.6" cy="142.4" r="2" fill="#e3d8bf" opacity=".55"/><circle cx="67" cy="141" r="1.2" fill="#e3d8bf" opacity=".45"/><circle cx="65.6" cy="151.4" r="1.5" fill="#e3d8bf" opacity=".45"/>
-  <g class="moon-rabbit" fill="#b8aa8c"><ellipse cx="63.4" cy="149.6" rx="3.6" ry="2.8"/><circle cx="59.9" cy="147" r="2"/><ellipse cx="59.2" cy="143.6" rx=".7" ry="2.3" transform="rotate(-14 59.2 143.6)"/><ellipse cx="60.8" cy="143.8" rx=".65" ry="2.1" transform="rotate(10 60.8 143.8)"/><circle cx="66.9" cy="149" r=".9"/><path d="M55.6 151.6h4.2v.8h-4.2z M57.3 148.4l.6 3.4" stroke="#b8aa8c" stroke-width=".5"/></g></g></g>`;}
 const star4=(x,y,r)=>`M${x} ${y-r}L${x+r*.22} ${y-r*.22}L${x+r} ${y}L${x+r*.22} ${y+r*.22}L${x} ${y+r}L${x-r*.22} ${y+r*.22}L${x-r} ${y}L${x-r*.22} ${y-r*.22}Z`;
 /* Christmas compatibility: shown only on the 25th, only when both birthdays exist. Always kind. */
 const ELEM={'양자리':'F','사자자리':'F','궁수자리':'F','황소자리':'E','처녀자리':'E','염소자리':'E','쌍둥이자리':'A','천칭자리':'A','물병자리':'A','게자리':'W','전갈자리':'W','물고기자리':'W'};
@@ -2271,7 +2272,7 @@ function birthdaySection(h){
 function renderSky(){
   const h=H();const d=S.day;const on=d===25;
   const recv=[...h.recv].sort((a,b)=>a.day-b.day);
-  const big={x:262,y:60};
+  const big={x:180,y:62};
   let body='',note='';
   if(!on){
     const L=skyLayout(h);
@@ -2300,11 +2301,10 @@ function renderSky(){
   <div class="sky-wrap"><svg class="sky-svg" viewBox="0 0 360 400" role="img" aria-label="${on?'두 사람의 별자리':'추억이 된 별들이 떠 있는 밤하늘'}">
     ${body}
     <g class="bigstar ${on?'on':''}" data-act="bigstar" role="button" tabindex="0" aria-label="${on?'가장 큰 별을 눌러 편지 열기':'가장 큰 별, 12월 25일에 열려요'}">
-      <circle class="halo" cx="${big.x}" cy="${big.y}" r="22" fill="#f3dfae" opacity="${on?.25:.08}"/>
-      <path d="${logoStar(big.x,big.y,17,12)}" fill="#ecd28c" opacity="${on?1:.62}"/>
-      <path d="${logoStar(big.x,big.y-1.2,6,4.2)}" fill="#fff6dc" opacity="${on?.55:.25}"/>
+      <circle class="halo" cx="${big.x}" cy="${big.y}" r="30" fill="#f3dfae" opacity="${on?.25:.05}"/>
+      <path d="${star4(big.x,big.y,20)}" fill="${on?'#f3dfae':'#7d879f'}" opacity="${on?1:.6}"/>
+      <path d="${star4(big.x,big.y,9)}" transform="rotate(45 ${big.x} ${big.y})" fill="${on?'#f3dfae':'#7d879f'}" opacity="${on?.8:.4}"/>
     </g>
-    ${skyMoon(86,66,25)}
     <path d="M0 400V378Q90 362 180 372T360 366V400Z" fill="#0b1122"/>
     <path d="M0 378Q90 362 180 372T360 366" fill="none" stroke="#c8b07a" stroke-opacity=".4"/>
     <g class="sky-house" data-act="back-house" role="button" tabindex="0" aria-label="${esc(h.name)}의 집으로 돌아가기"><rect x="250" y="318" width="70" height="62" fill="transparent"/><g transform="translate(262,327) scale(.4)">${houseParts(h,false,'sky',false)}</g><text x="290" y="392" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="8" letter-spacing="2" fill="#c8b07a">HOME</text></g>
