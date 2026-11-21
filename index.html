@@ -708,7 +708,7 @@ const THEMES={brick:['보르도 벨벳','#4a1820'],olive:['올리브 서재','#3
 const REL_THEMES={love:['red','pink'],friend:['brick','olive','blue'],family:['brick','olive','blue']};
 const themeNow=h=>REL_THEMES[h.rel].includes(h.theme)?h.theme:(REL_THEMES[h.rel].includes(THEME_OF[h.rel])?THEME_OF[h.rel]:REL_THEMES[h.rel][0]);
 /* outside colour of the house, by relationship (the builder picks; everyone sees it) */
-const HCOL={love:{red:['레드','#5e1c26'],pink:['핑크','#a8607a']},
+const HCOL={love:{red:['레드','#8e1c2e'],pink:['핑크','#d0849c']},
   friend:{green:['그린','#3d4a32'],yellow:['옐로','#a8842f'],beige:['베이지','#a8916f'],brown:['브라운','#56382a'],ivory:['아이보리','#cfc4a8']}};
 const bodyOf=h=>{const m=HCOL[h.rel];if(!m)return REL[h.rel].body;return (m[h.color]||Object.values(m)[0])[1];};
 const colOf=h=>{const m=HCOL[h.rel];return m&&m[h.color]?h.color:(m?Object.keys(m)[0]:null);};
@@ -1411,7 +1411,10 @@ async function cloudAct(a,t,h,e){
       if(error&&/set_look|function/i.test(error.message||'')){if(!h.owner){toast('지붕은 집을 지은 사람이 바꿀 수 있어요');return true;}({error}=await sb.from('houses').update({[a]:v}).eq('id',h.id));}
       if(error){toast(errKo(error));return true;}
       if(hereCh&&hereCh.send)try{hereCh.send({type:'broadcast',event:'deco',payload:{k:a,v}});}catch(e){}return false;}
-    case 'hcol':return true;/* the outside colour is chosen once, when the house is built */
+    case 'hcol':{/* chosen once: at build, or later for houses built before colours existed */
+      const v=t.dataset.v;if(h.color||!(HCOL[h.rel]||{})[v])return true;
+      const {error}=await sb.rpc('set_look',{hid:h.id,k:'color',v});if(error){toast(errKo(error));return true;}
+      h.color=v;save();renderHouseKeepModal();toast('집 색을 정했어요');return true;}
       {const v=t.dataset.v;if(!(HCOL[h.rel]||{})[v])return true;const {error}=await sb.from('houses').update({color:v}).eq('id',h.id);if(error){toast(errKo(error));return true;}h.color=v;save();renderHouseKeepModal();}return true;
     case 'tex':{const v=t.dataset.v;let {error}=await sb.rpc('set_look',{hid:h.id,k:'texture',v});
       if(error&&/set_look|function/i.test(error.message||'')){if(!h.owner){toast('외벽은 집을 지은 사람이 바꿀 수 있어요');return true;}({error}=await sb.from('houses').update({texture:v}).eq('id',h.id));}if(error){toast(errKo(error));return true;}h.tex=v;save();renderHouseKeepModal();toast(`외벽을 ${TEX[v]}${batchim(TEX[v])?'으로':'로'} 바꿨어요`);}return true;
@@ -2781,7 +2784,7 @@ function lpAct(a,t,h){
 function colOpts(rel){const m=HCOL[rel];return m?Object.entries(m).map(([k,v])=>`<option value="${k}">${v[0]}</option>`).join(''):'';}
 document.addEventListener('change',e=>{if(e.target&&e.target.id==='nhRel'){const c=$('#nhCol'),f=$('#nhColF');if(c)c.innerHTML=colOpts(e.target.value);if(f)f.hidden=!HCOL[e.target.value];}});
 function decoSheet(h){return `${sheetHead('Decorate','집 꾸미기')}<div class="deco-sheet">
-      <p class="caps" style="text-align:center;margin:4px 0 4px">Interior</p><p class="hint-text" style="text-align:center;margin:0 0 10px">${wa(h.name)} 같은 집 안을 봐요. 둘 중 누구나 바꿀 수 있어요</p>
+      ${HCOL[h.rel]&&!h.color?`<p class="caps" style="text-align:center;margin:4px 0 4px">House colour</p><p class="hint-text" style="text-align:center;margin:0 0 10px">한 번만 고를 수 있어요</p>${optRow('집 색','hcol',HCOL[h.rel],colOf(h),v=>v[0],v=>v[1])}`:''}<p class="caps" style="text-align:center;margin:4px 0 4px">Interior</p><p class="hint-text" style="text-align:center;margin:0 0 10px">${wa(h.name)} 같은 집 안을 봐요. 둘 중 누구나 바꿀 수 있어요</p>
       ${optRow('벽 색','theme',Object.fromEntries(REL_THEMES[h.rel].map(k=>[k,THEMES[k]])),themeNow(h),v=>v[0],v=>v[1])}
       ${optRow('벽지','paper',PAPER,decoOf(h).paper||'damask')}
       ${optRow('바닥','floor',FLOOR,decoOf(h).floor||'plank')}
@@ -2949,7 +2952,7 @@ function act(a,t,h,e){
     case 'home':S.winTips=3;leaveHouse();break;
     case 'deco-open':openModal(decoSheet(h));break;
     case 'santa-never':try{localStorage.setItem('snv-santa-note','never');}catch(e){}closeModal();toast('산타 공지를 더 보여 주지 않을게요');break;
-    case 'hcol':break;if((HCOL[h.rel]||{})[t.dataset.v]){h.color=t.dataset.v;save();renderHouseKeepModal();}break;
+    case 'hcol':if(!h.color&&(HCOL[h.rel]||{})[t.dataset.v]){h.color=t.dataset.v;save();renderHouseKeepModal();}break;
     case 'tex':h.tex=t.dataset.v;save();renderHouseKeepModal();toast(`외벽을 ${TEX[h.tex]}${batchim(TEX[h.tex])?'으로':'로'} 바꿨어요`);break;
     case 'ob-next':OB++;render();window.scrollTo(0,0);break;
     case 'ob-star':starPick(t);break;
