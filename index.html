@@ -2501,34 +2501,34 @@ function endPanels(){
   const hs=S.houses.length,mem=S.houses.reduce((a,h)=>a+h.sent.length+h.recv.length,0);
   return [
    {t:'추억이 담긴 사진들,<br>비밀스러운 메시지들,<br>서로의 궁합, 별이 가득한 하늘,<br>그리고 마지막 편지까지.',s:'마을을 모두 둘러보셨나요?'},
-   {t:`<b>${hs}</b>채의 집에서,<br><b>25</b>번의 밤 동안,<br><b>${mem}</b>개의 추억이 오갔어요.`,s:'그대들의 12월을 잘 되돌아보셨나요?'},
+   {t:`<b>${hs}</b>채의 집에서,<br><b>25</b>번의 밤 동안,<br><b>${mem}</b>개의 추억이 오갔어요.`,s:'그대의 12월을 잘 되돌아보셨나요?'},
    {t:'이제 마을은 잠시<br>열한 달의 휴식기에 들어갑니다.',s:''},
    {last:true}];
 }
 /* the developer's letter, in the developer's own voice */
-const DEV_LETTER=`추억이 담긴 사진들, 비밀스러운 메시지들, 서로의 궁합, 별이 가득한 하늘, the last message까지.
+const DEV_LETTER=`추억이 담긴 사진들, 비밀스러운 메시지들, 서로의 궁합, 별이 가득한 하늘,
+마지막으로 받은 상대의 마음을 담은 메시지까지.
 서로의 마음을 다 확인하셨나요?
-그대들의 12월을 다 되돌아보셨나요?
+그대의 12월을 다 되돌아보셨나요?
 
 바쁜 하루 끝에 사진 한 장을 고르던 그 짧은 순간마다,
-그대들은 누군가를 떠올리고 있었어요.
+그대는 누군가를 떠올리고 있었어요.
 그렇게 쌓인 추억들이, 이제는 하늘의 수많은 별들이 되었네요.
 
-많은 일이 있었던 2026, 모두 수고 많으셨습니다.
-웃었던 날도, 버거웠던 날도 다 지나 여기까지 와 준 그대들이 고마워요.
-행복한 연말 보내시고, 소중한 이들의 마음을 잊지 말고 사랑을 표현해 주세요.
+많은 일이 있었던 2026, 정말 수고 많으셨어요.
+웃었던 날도, 버거웠던 날도 다 지나 여기까지 와 준 그대에게 고마워요.
 
-이 추억 상자, 별과 마을은 잠시 11개월의 휴식기를 거치러 갑니다.
-그대들의 추억은 모두 저장해 둘게요.
+별과 마을은 잠시 11개월의 휴식기를 거치러 갑니다.
+그대의 추억은 모두 저장해 둘게요.
 삶이 힘들 때마다, 문득 누군가가 그리울 때마다 되돌아보세요.
 그 안에는 그대를 아끼는 누군가의 마음이 그대로 남아 있을 테니까요.
 
 서로를 소중하게 생각하는 마음은,
 아무리 세상이 차갑고, 매정하고, 너무 빠른 발전으로 인한 재해 속에서도,
-그대들을 지켜 주는 힘이 될 것입니다.
+그대를 지켜 주는 힘이 될 거예요.
 그러니 올해 서로에게 건넨 그 마음, 오래오래 간직해 주세요.
 
-메리 크리스마스, 모두!`;
+메리 크리스마스!`;
 function endScene(lit,force){
   // the village as quiet silhouettes; windows go dark one by one as the story ends
   const xs=[40,98,170,238,300],n=force||Math.max(1,Math.min(5,S.houses.length));
@@ -2569,7 +2569,7 @@ function renderEnding(){
   const lit=EN<2?houses:EN===2?Math.ceil(houses/2):0;
   let body;
   if(p.last)body=`<div class="end-text end-last"><p class="caps">A Letter from the Developer</p><h2>개발자의 편지</h2>
-     <div class="letter-paper dev-letter"><span class="seal">V</span>${esc(DEV_LETTER)}<p class="dev-sign">항상 이 세상 어딘가에서<br>그대를 응원하고 있을,<br>익명의 개발자가.</p><p class="dev-ps">P.S. 별과 마을이 당신의 크리스마스와 함께하게 되어서 정말 행복했습니다.<br>그대들도 그랬길 염원합니다.<br>그대들의 2026은 따뜻하고 반짝이는 한 해였길 바라며,<br>2027은 더욱 그러길 빌며,</p><p class="dev-final">Wish you a Merry Christmas</p></div>
+     <div class="letter-paper dev-letter"><span class="seal">V</span>${esc(DEV_LETTER)}<p class="dev-sign">항상 이 세상 어딘가에서<br>그대를 응원하고 있을,<br>익명의 개발자가.</p><p class="dev-ps">P.S. 별과 마을이 당신의 크리스마스와 함께하게 되어서 정말 행복했습니다.<br>그대도 그랬길 염원합니다.<br>그대의 2026은 따뜻하고 반짝이는 한 해였길 바라며,<br>2027은 더욱 그러길 빌며,</p><p class="dev-final">Wish you a Merry Christmas</p></div>
      <p class="end-see">See you next December</p>
      <div class="end-btns"><button class="primary" data-act="box-close">상자 닫기</button><button class="link-btn" data-act="end-close">마을 둘러보기</button></div></div>`;
   else body=`<div class="end-text" data-act="end-next"><p class="end-t">${p.t}</p>${p.s?`<p class="end-s">${p.s}</p>`:''}<p class="end-tap">화면을 누르면 다음으로</p></div>`;
