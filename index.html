@@ -1334,12 +1334,12 @@ function starFig(cx,idx,me,mug=true,cy=271){
   </g>`;
 }
 function starBadge(idx,size=28){return `<svg class="star-badge" viewBox="0 0 40 40" width="${size}" height="${size}" aria-hidden="true">${starFig(20,idx,true,false,20)}</svg>`;}
-/* sofa stars: one move every ~3 seconds, at random, never the same twice in a row */
+/* sofa stars: one move every 4.3 seconds, at random, never the same twice in a row */
 const STAR_MOVES={both:['smile','talk','surprise','lean','wink','sip','sway','sparkle'],alone:['doze','sip','sway','look','yawn','sparkle']};
 let starLast='';
 setInterval(()=>{if(document.hidden)return;const g=document.querySelector('.room .sofa-people');if(!g)return;
   const pool=STAR_MOVES[g.classList.contains('both')?'both':'alone'].filter(x=>x!==starLast);const m=pool[Math.floor(Math.random()*pool.length)];starLast=m;
-  [...g.classList].filter(c=>c.startsWith('m-')).forEach(c=>g.classList.remove(c));void g.getBoundingClientRect();g.classList.add('m-'+m);},3000);
+  [...g.classList].filter(c=>c.startsWith('m-')).forEach(c=>g.classList.remove(c));void g.getBoundingClientRect();g.classList.add('m-'+m);},4300);
 function sofaSVG(h){
   const them=hereThem(h);
   return `<g class="sofa-people${them?' both':' alone'}">${starFig(45,myStar(),true)}${them?starFig(89,theirStar(h),false):`<g transform="translate(46 0)">${PILLOW}</g>`}</g>`;
