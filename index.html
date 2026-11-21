@@ -682,25 +682,50 @@ a.btn.buy{text-decoration:none;display:inline-block}
 @keyframes moonHalo{0%,100%{opacity:.85;transform:scale(1)}50%{opacity:1;transform:scale(1.07)}}
 .moon-face{animation:moonFace 3.8s ease-in-out infinite}
 @keyframes moonFace{0%,100%{opacity:1}50%{opacity:.9}}
-.moon-rabbit{opacity:0;animation:moonRabbit 26s ease-in-out 6s infinite}
-@keyframes moonRabbit{0%,62%,100%{opacity:0}72%,86%{opacity:.26}}
-.steam{animation:steam 3.6s ease-in-out infinite}
-.steam.s2{animation-delay:-1.8s}
-@keyframes steam{0%{opacity:0;transform:translateY(1.5px)}35%{opacity:1}100%{opacity:0;transform:translateY(-3.5px)}}
-.mallow{transform-box:fill-box;transform-origin:center;animation:mallow 4.4s ease-in-out infinite}
-.mallow.m2{animation-duration:5.2s;animation-delay:-2s}
-@keyframes mallow{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(.3px,-.25px) rotate(4deg)}}
+.moon-rabbit{opacity:0;animation:moonRabbit 4s ease-in-out infinite}
+@keyframes moonRabbit{0%,100%{opacity:0}35%,70%{opacity:.5}}
+.steam{animation:steamA 3.6s ease-in-out infinite}
+.steam.s2{animation:steamB 4.6s ease-in-out -1.7s infinite}
+.steam.s3{animation:steamC 5.8s ease-in-out -3.1s infinite}
+@keyframes steamA{0%{opacity:0;transform:translateY(1.5px)}35%{opacity:1}100%{opacity:0;transform:translateY(-3.5px)}}
+@keyframes steamB{0%{opacity:0;transform:translate(0,1.2px)}40%{opacity:.9}100%{opacity:0;transform:translate(1.6px,-4px)}}
+@keyframes steamC{0%{opacity:0;transform:translate(0,2px)}30%{opacity:.8;transform:translate(-.6px,0)}60%{transform:translate(.6px,-3px)}100%{opacity:0;transform:translate(-.3px,-6px)}}
+.mallow{transform-box:fill-box;transform-origin:center;animation:mallow 3.6s ease-in-out infinite}
+.mallow.m2{animation:mallow2 4.3s ease-in-out -1.6s infinite}
+@keyframes mallow{0%,100%{transform:translate(0,0) rotate(0)}30%{transform:translate(.7px,-.6px) rotate(9deg)}65%{transform:translate(-.4px,-.2px) rotate(-5deg)}}
+@keyframes mallow2{0%,100%{transform:translate(0,0) rotate(0)}40%{transform:translate(-.7px,-.5px) rotate(-10deg)}75%{transform:translate(.4px,-.3px) rotate(6deg)}}
 .both .sglow{animation:sglow 4.8s ease-in-out infinite}
 @keyframes sglow{0%,100%{opacity:.12}50%{opacity:.3}}
-.both .seyes{animation:slook 9s ease-in-out infinite}
-@keyframes slook{0%,52%,94%,100%{transform:translate(0,0)}60%,88%{transform:translate(var(--dx),0)}}
-.both .sdots{animation:sdots 9s step-end infinite}
-@keyframes sdots{0%,68%,86%{opacity:1}70%{opacity:0}}
-.both .shappy{animation:shappy 9s step-end infinite}
-@keyframes shappy{0%,86%{opacity:0}70%{opacity:1}}
-.both .sitter{transform-box:fill-box;transform-origin:50% 100%;animation:sgiggle 9s ease-in-out infinite}
-@keyframes sgiggle{0%,68%,86%,100%{transform:translateY(0)}73%,81%{transform:translateY(-.7px)}77%{transform:translateY(0)}}
-@media (prefers-reduced-motion:reduce){.moon-halo,.moon-face,.moon-rabbit,.steam,.mallow,.both .sglow,.both .seyes,.both .sdots,.both .shappy,.both .sitter,.lp-idle{animation:none}}
+/* two stars together, one 30s loop: smile at each other, chat (me first, then them), be surprised */
+.both .seyes{animation:slook 30s ease-in-out infinite}
+@keyframes slook{0%,8%,25%,36%,59%,100%{transform:translate(0,0)}11%,22%,39%,56%{transform:translate(var(--dx),0)}}
+.both .sdots{animation:sdotsB 30s step-end infinite}
+@keyframes sdotsB{0%{opacity:1}13%{opacity:0}22%{opacity:1}72%{opacity:0}82%{opacity:1}}
+.both .shappy{animation:shappyB 30s step-end infinite}
+@keyframes shappyB{0%{opacity:0}13%{opacity:1}22%{opacity:0}}
+.both .sbig,.both .soh{animation:surpB 30s step-end infinite}
+@keyframes surpB{0%{opacity:0}72%{opacity:1}82%{opacity:0}}
+.both .me .stalk{animation:talkMe 30s step-end infinite}
+.both .sitter:not(.me) .stalk{animation:talkThem 30s step-end infinite}
+@keyframes talkMe{0%{opacity:0}40%{opacity:1}41%{opacity:0}42%{opacity:1}43%{opacity:0}44%{opacity:1}45.5%{opacity:0}46.5%{opacity:1}47.5%{opacity:0}}
+@keyframes talkThem{0%{opacity:0}48%{opacity:1}49%{opacity:0}50%{opacity:1}51.5%{opacity:0}52.5%{opacity:1}53.5%{opacity:0}54.5%{opacity:1}55.5%{opacity:0}}
+.both .sitter{transform-box:fill-box;transform-origin:50% 100%}
+.both .sitter.me{animation:bobMe 30s ease-in-out infinite}
+.both .sitter:not(.me){animation:bobThem 30s ease-in-out infinite}
+@keyframes bobMe{0%,14%,22%,39%,48%,71%,78%,100%{transform:translateY(0)}16%,20%{transform:translateY(-.7px)}18%{transform:translateY(0)}42%,46%{transform:translateY(-.4px)}44%{transform:translateY(0)}73.5%{transform:translateY(-2px)}76%{transform:translateY(0)}}
+@keyframes bobThem{0%,14%,22%,47%,56%,71%,78%,100%{transform:translateY(0)}16%,20%{transform:translateY(-.7px)}18%{transform:translateY(0)}50%,54%{transform:translateY(-.4px)}52%{transform:translateY(0)}73.5%{transform:translateY(-2px)}76%{transform:translateY(0)}}
+/* alone: now and then the star dozes off */
+.alone .sitter{transform-box:fill-box;transform-origin:50% 100%;animation:doze 18s ease-in-out 4s infinite}
+@keyframes doze{0%,33%,80%,100%{transform:rotate(0)}40%{transform:rotate(-5deg) translateY(.4px)}48%{transform:rotate(-2deg)}55%{transform:rotate(-6deg) translateY(.5px)}62%{transform:rotate(-3deg)}70%{transform:rotate(-6deg) translateY(.5px)}77%{transform:rotate(0)}}
+.alone .sdots{animation:sleepDots 18s step-end 4s infinite}
+@keyframes sleepDots{0%{opacity:1}36%{opacity:0}77%{opacity:1}}
+.alone .ssleep{animation:sleepEyes 18s step-end 4s infinite}
+@keyframes sleepEyes{0%{opacity:0}36%{opacity:1}77%{opacity:0}}
+.alone .szz .z1{animation:zz1 18s ease-out 4s infinite}
+.alone .szz .z2{animation:zz2 18s ease-out 4s infinite}
+@keyframes zz1{0%,40%{opacity:0;transform:translate(0,0)}47%{opacity:.85}62%,100%{opacity:0;transform:translate(2px,-5px)}}
+@keyframes zz2{0%,52%{opacity:0;transform:translate(0,0)}59%{opacity:.75}75%,100%{opacity:0;transform:translate(2px,-5px)}}
+@media (prefers-reduced-motion:reduce){.moon-halo,.moon-face,.moon-rabbit,.steam,.mallow,.both .sglow,.both .seyes,.both .sdots,.both .shappy,.both .sbig,.both .soh,.both .stalk,.both .sitter,.alone .sitter,.alone .sdots,.alone .ssleep,.alone .szz text,.lp-idle{animation:none}.moon-rabbit{opacity:.4}}
 .win-star{transform-box:fill-box;transform-origin:center;animation:winStar 3.4s ease-in-out infinite}
 @keyframes winStar{0%,100%{opacity:.8;transform:scale(1)}50%{opacity:1;transform:scale(1.12)}}
 @media (prefers-reduced-motion:reduce){.win-star{animation:none}}
@@ -1034,8 +1059,8 @@ function mugSVG(h){
     <path d="M171.5 309H188.5" stroke="#8c2f3a" stroke-width="1.6" opacity=".85"/>
     <path d="M189 308.5Q195 309 194 313.5Q193 317.5 188 316.8" fill="none" stroke="#efe6d4" stroke-width="2.2"/>
     <ellipse cx="180" cy="305" rx="9" ry="1.8" fill="${ball?'#2a1810':'#5a3220'}"/>
-    ${ball?`<circle cx="180" cy="300.2" r="5.4" fill="#4a2a18"/><path d="M175.3 299Q178 297.4 180 299.4T184.8 298.6" fill="none" stroke="#efe6d4" stroke-width=".7" stroke-linecap="round"/><circle cx="178" cy="298" r="1.1" fill="#fff" opacity=".18"/><g class="steam"><path d="M176.5 295Q175 291.5 177 288.5" fill="none" stroke="#efe8da" stroke-opacity=".28" stroke-width=".8" stroke-linecap="round"/></g><g class="steam s2"><path d="M183 295Q184.5 291.5 182.5 288" fill="none" stroke="#efe8da" stroke-opacity=".28" stroke-width=".8" stroke-linecap="round"/></g>`
-      :`<g fill="#f4ede0"><rect class="mallow" x="175" y="302.6" width="3.2" height="2.6" rx=".9"/><g transform="rotate(14 181.6 303.5)"><rect class="mallow m2" x="180" y="302.2" width="3.2" height="2.6" rx=".9"/></g></g><g class="steam"><path d="M177 299Q175.5 295 177.5 292" fill="none" stroke="#efe8da" stroke-opacity=".35" stroke-width=".8" stroke-linecap="round"/></g><g class="steam s2"><path d="M182.5 299Q184 295 182 291.5" fill="none" stroke="#efe8da" stroke-opacity=".35" stroke-width=".8" stroke-linecap="round"/></g>`}
+    ${ball?`<circle cx="180" cy="300.2" r="5.4" fill="#4a2a18"/><path d="M175.3 299Q178 297.4 180 299.4T184.8 298.6" fill="none" stroke="#efe6d4" stroke-width=".7" stroke-linecap="round"/><circle cx="178" cy="298" r="1.1" fill="#fff" opacity=".18"/><g class="steam"><path d="M176.5 295Q175 291.5 177 288.5" fill="none" stroke="#efe8da" stroke-opacity=".28" stroke-width=".8" stroke-linecap="round"/></g><g class="steam s2"><path d="M183 295Q184.5 291.5 182.5 288" fill="none" stroke="#efe8da" stroke-opacity=".28" stroke-width=".8" stroke-linecap="round"/></g><g class="steam s3"><path d="M179.8 295Q178.6 291.5 180.4 288.5T179.6 283" fill="none" stroke="#efe8da" stroke-opacity=".28" stroke-width=".8" stroke-linecap="round"/></g>`
+      :`<g fill="#f4ede0"><rect class="mallow" x="175" y="302.6" width="3.2" height="2.6" rx=".9"/><g transform="rotate(14 181.6 303.5)"><rect class="mallow m2" x="180" y="302.2" width="3.2" height="2.6" rx=".9"/></g></g><g class="steam"><path d="M177 299Q175.5 295 177.5 292" fill="none" stroke="#efe8da" stroke-opacity=".35" stroke-width=".8" stroke-linecap="round"/></g><g class="steam s2"><path d="M182.5 299Q184 295 182 291.5" fill="none" stroke="#efe8da" stroke-opacity=".35" stroke-width=".8" stroke-linecap="round"/></g><g class="steam s3"><path d="M179.8 299Q178.6 295.5 180.4 292.5T179.6 287" fill="none" stroke="#efe8da" stroke-opacity=".35" stroke-width=".8" stroke-linecap="round"/></g>`}
   </g>`;
 }
 /* lucky things that happen the day after a lucky note */
@@ -1275,7 +1300,12 @@ function starFig(cx,idx,me,mug=true,cy=271){
     <path d="${starD(cx,cy,15,7.8)}" fill="${col}" stroke="${col}" stroke-width="4.6" stroke-linejoin="round"/>
     <ellipse cx="${cx-4.6}" cy="${cy-6.4}" rx="2.6" ry="1.4" fill="#fff" opacity=".35" transform="rotate(-30 ${cx-4.6} ${cy-6.4})"/>
     <g class="seyes"><g class="sdots"><circle cx="${cx-2.7}" cy="${cy+1}" r=".62" fill="${eye}"/><circle cx="${cx+2.7}" cy="${cy+1}" r=".62" fill="${eye}"/></g>
-      <path class="shappy" d="M${cx-3.5} ${cy+1.4}q.8 -1.1 1.6 0M${cx+1.9} ${cy+1.4}q.8 -1.1 1.6 0" fill="none" stroke="${eye}" stroke-width=".55" stroke-linecap="round" opacity="0"/></g>
+      <path class="shappy" d="M${cx-3.5} ${cy+1.4}q.8 -1.1 1.6 0M${cx+1.9} ${cy+1.4}q.8 -1.1 1.6 0" fill="none" stroke="${eye}" stroke-width=".55" stroke-linecap="round" opacity="0"/>
+      <g class="sbig" opacity="0"><circle cx="${cx-2.7}" cy="${cy+.8}" r="1" fill="${eye}"/><circle cx="${cx+2.7}" cy="${cy+.8}" r="1" fill="${eye}"/></g>
+      <path class="ssleep" d="M${cx-3.5} ${cy+1}q.8 .7 1.6 0M${cx+1.9} ${cy+1}q.8 .7 1.6 0" fill="none" stroke="${eye}" stroke-width=".55" stroke-linecap="round" opacity="0"/>
+      <ellipse class="stalk" cx="${cx}" cy="${cy+3.7}" rx=".75" ry=".5" fill="${eye}" opacity="0"/>
+      <ellipse class="soh" cx="${cx}" cy="${cy+3.9}" rx=".55" ry=".8" fill="${eye}" opacity="0"/></g>
+    <g class="szz" fill="#f4ecd8" font-family="Georgia,serif" font-style="italic" font-weight="700" aria-hidden="true"><text class="z1" x="${cx+8.5}" y="${cy-8.5}" font-size="5.4" opacity="0">z</text><text class="z2" x="${cx+12}" y="${cy-13}" font-size="4.2" opacity="0">z</text></g>
     <circle cx="${cx-5.2}" cy="${cy+3}" r="1.5" fill="#ff8f8f" opacity="${dark?.25:.32}"/><circle cx="${cx+5.2}" cy="${cy+3}" r="1.5" fill="#ff8f8f" opacity="${dark?.25:.32}"/>
     ${mug?`<g transform="translate(${cx+s*11.5} ${cy+9})"><rect x="-2.8" y="-3.6" width="5.6" height="5.8" rx="1.3" fill="#efe6d4"/><path d="M-2.8 -2H2.8" stroke="#8c2f3a" stroke-width=".9"/><path d="M${s*2.8} -2.4q${s*2.2} .4 ${s*2} 2.2q-.2 1.6 ${-s*2} 1.4" fill="none" stroke="#efe6d4" stroke-width=".8"/></g>`:''}
   </g>`;
@@ -1283,7 +1313,7 @@ function starFig(cx,idx,me,mug=true,cy=271){
 function starBadge(idx,size=28){return `<svg class="star-badge" viewBox="0 0 40 40" width="${size}" height="${size}" aria-hidden="true">${starFig(20,idx,true,false,20)}</svg>`;}
 function sofaSVG(h){
   const them=hereThem(h);
-  return `<g class="sofa-people${them?' both':''}">${starFig(45,myStar(),true)}${them?starFig(89,theirStar(h),false):`<g transform="translate(46 0)">${PILLOW}</g>`}</g>`;
+  return `<g class="sofa-people${them?' both':' alone'}">${starFig(45,myStar(),true)}${them?starFig(89,theirStar(h),false):`<g transform="translate(46 0)">${PILLOW}</g>`}</g>`;
 }
 function starGrid(act){const cur=myStar();return `<div class="ob-stars" role="radiogroup" aria-label="별 색">${STARS.map(([n],i)=>`<button type="button" role="radio" aria-checked="${i===cur}" aria-label="${n} 별" class="${i===cur?'on':''}" data-act="${act}" data-v="${i}">${starBadge(i,30)}</button>`).join('')}</div><p class="ob-starname">${starOf(cur)[0]} 별</p>`;}
 function starPick(t){const v=+t.dataset.v;S.myStar=v;save();
