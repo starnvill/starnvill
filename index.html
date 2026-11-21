@@ -2931,9 +2931,12 @@ document.addEventListener('keydown',e=>{
 $('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();});
 const AUDIO_EVENTS=['pointerup','touchend','click','keydown'];
 function audioKick(){audioUnlock();if(S.sound===false)return;
-  const go=()=>{if(S.screen!=='house')sceneMusic();if(AUD.ctx&&AUD.ctx.state==='running'&&AUD.playing){AUDIO_EVENTS.forEach(ev=>document.removeEventListener(ev,audioKick,true));}};
+  /* keep listening: iPhone pauses sound when the screen locks or the app is switched, and the next tap should bring it back */
+  const go=()=>{if(S.screen!=='house')sceneMusic();};
   if(AUD.ctx&&AUD.ctx.state!=='running'&&AUD.ctx.resume)AUD.ctx.resume().then(go).catch(()=>{});else setTimeout(go,30);}
 AUDIO_EVENTS.forEach(ev=>document.addEventListener(ev,audioKick,true));
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState!=='visible'||!AUD.ctx||S.sound===false)return;
+  if(AUD.ctx.state!=='running'&&AUD.ctx.resume)AUD.ctx.resume().catch(()=>{});});
 const CLOUD_ACTS=new Set(['hcol','theme','paper','floor','sofa','roof','crown','ob-mail','ob-mail-back','ob-mail-send','ob-mail-verify','account','logout','del-acct','del-acct-ok','ob-login','ob-name','ob-done','ob-install','ob-home','build','invite','inv-share','inv-copy','tex','claim','wdel','wadd','save-bday','save-letter','reset','demo-claim','swap-view']);
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-act]');if(!t)return;const a=t.dataset.act;const h=H();
