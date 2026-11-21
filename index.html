@@ -716,7 +716,7 @@ const COLOR_ADMINS=['hxrnag@gmail.com'];
 const colorAdmin=()=>typeof ME!=='undefined'&&!!ME&&COLOR_ADMINS.includes(String(ME.email||'').toLowerCase());
 const canRecolor=h=>!!HCOL[h.rel]&&(!h.color||colorAdmin());
 /* front door colour that suits each house colour: [door, panel lines] */
-const DOORS={red:['#24402f','#1a3023'],pink:['#5e1f2e','#4a1723'],green:['#6a1f28','#52171f'],yellow:['#1f2c4a','#172138'],
+const DOORS={red:['#58573a','#47462e'],pink:['#5e1f2e','#4a1723'],green:['#6a1f28','#52171f'],yellow:['#1f2c4a','#172138'],
   beige:['#3e4d36','#2f3b29'],brown:['#d9caa8','#bfae8a'],ivory:['#6a1f2c','#521722'],navy:['#5a1d27','#45161e']};
 const hexRgb=x=>{const n=parseInt(x.slice(1),16);return [n>>16,n>>8&255,n&255];};
 const rgbHex=a=>'#'+a.map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');
@@ -1653,7 +1653,7 @@ function texPattern(id,tex,body){
   const dk=shade(body,-.28),lt=shade(body,.12);
   if(tex==='brick')return `<pattern id="${id}" width="12" height="6" patternUnits="userSpaceOnUse"><rect width="12" height="6" fill="${body}"/><path d="M0 .3H12M0 3.3H12M3 .3V3.3M9 3.3V6.3" stroke="${dk}" stroke-width=".55" opacity=".7"/><path d="M.5 1.2H2.4M6.6 4.2H8.4" stroke="${lt}" stroke-width=".5" opacity=".5"/></pattern>`;
   if(tex==='timber')return `<pattern id="${id}" width="20" height="5" patternUnits="userSpaceOnUse"><rect width="20" height="5" fill="${body}"/><path d="M0 4.6H20" stroke="${dk}" stroke-width=".7" opacity=".75"/><path d="M0 .4H20" stroke="${lt}" stroke-width=".5" opacity=".45"/><path d="M13 .6V4.4" stroke="${dk}" stroke-width=".35" opacity=".35"/></pattern>`;
-  if(tex==='stone')return `<pattern id="${id}" width="16" height="11" patternUnits="userSpaceOnUse"><rect width="16" height="11" fill="${dk}"/><rect x=".6" y=".6" width="7" height="4.4" rx="1.6" fill="${body}"/><rect x="8.4" y=".4" width="7" height="4.8" rx="1.8" fill="${shade(body,.05)}"/><rect x="-3.4" y="5.8" width="8.6" height="4.6" rx="1.7" fill="${shade(body,.04)}"/><rect x="6" y="5.9" width="6.4" height="4.5" rx="1.6" fill="${body}"/><rect x="13.2" y="5.7" width="6" height="4.7" rx="1.6" fill="${shade(body,-.04)}"/></pattern>`;
+  if(tex==='stone'){const [R,G,B]=hexRgb(body),sdk=(.299*R+.587*G+.114*B)>150?shade(body,-.2):dk;return `<pattern id="${id}" width="16" height="11" patternUnits="userSpaceOnUse"><rect width="16" height="11" fill="${sdk}"/><rect x=".6" y=".6" width="7" height="4.4" rx="1.6" fill="${body}"/><rect x="8.4" y=".4" width="7" height="4.8" rx="1.8" fill="${shade(body,.05)}"/><rect x="-3.4" y="5.8" width="8.6" height="4.6" rx="1.7" fill="${shade(body,.04)}"/><rect x="6" y="5.9" width="6.4" height="4.5" rx="1.6" fill="${body}"/><rect x="13.2" y="5.7" width="6" height="4.7" rx="1.6" fill="${shade(body,-.04)}"/></pattern>`;}
   return `<pattern id="${id}" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="${shade(body,.06)}"/><circle cx="2" cy="3" r=".35" fill="${dk}" opacity=".35"/><circle cx="6" cy="6.5" r=".3" fill="${lt}" opacity=".5"/><circle cx="5.2" cy="1.4" r=".25" fill="${dk}" opacity=".3"/></pattern>`;
 }
 function houseParts(h,glow,uid,ground){
