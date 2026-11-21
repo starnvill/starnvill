@@ -1069,7 +1069,7 @@ function cocoaDemoFill(h){if(CLOUD)return;const c=cocoaOf(h),t=teleOf(h);for(let
 const TREE_SLOTS=[[262,166],[256,178],[268,180],[250,191],[262,193],[274,190],[246,204],[257,206],[268,205],[279,203],[243,217],[253,219],[264,220],[275,218],[284,215],[240,229],[249,231],[259,232],[270,232],[280,230],[288,227],[262,153],[247,224],[277,211]];
 // one ornament per opened cocoa ball: glossy silver, gold or red baubles, a simple bow, a bell, now and then a star
 function ornSVG(x,y,kind,g){
-  if(kind==='star')return `<circle cx="${x}" cy="${y}" r="4.6" fill="#ffd98f" opacity=".16"/><path d="${star4(x,y,3.6)}" fill="url(#ornGold)"/><path d="${star4(x,y,1.5)}" transform="rotate(45 ${x} ${y})" fill="#fff6dc" opacity=".9"/>`;
+  if(kind==='star')return `<path d="${star4(x,y,3.6)}" fill="url(#ornGold)"/><path d="${star4(x,y,1.5)}" transform="rotate(45 ${x} ${y})" fill="#fff6dc" opacity=".9"/>`;
   if(kind==='bow')return `<path d="M${x} ${y}C${x-1.4} ${y-2.7} ${x-4.1} ${y-2} ${x-3.5} ${y-.1}C${x-3.1} ${y+1.4} ${x-1.2} ${y+.7} ${x} ${y}ZM${x} ${y}C${x+1.4} ${y-2.7} ${x+4.1} ${y-2} ${x+3.5} ${y-.1}C${x+3.1} ${y+1.4} ${x+1.2} ${y+.7} ${x} ${y}Z" fill="url(#ornRibbon)"/>
     <path d="M${x-.4} ${y+.2}L${x-1.9} ${y+3.9}L${x-1} ${y+3.5}L${x-.3} ${y+4.1}ZM${x+.4} ${y+.2}L${x+1.9} ${y+3.9}L${x+1} ${y+3.5}L${x+.3} ${y+4.1}Z" fill="#9c1f2e"/>
     <circle cx="${x}" cy="${y}" r=".95" fill="#d9374a"/><path d="M${x-3} ${y-.9}Q${x-2.4} ${y-2} ${x-1.4} ${y-1.7}M${x+1.4} ${y-1.7}Q${x+2.4} ${y-2} ${x+3} ${y-.9}" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width=".35" stroke-linecap="round"/>`;
@@ -1089,7 +1089,7 @@ const ORN_DEFS=`<defs>
 function treeSVG(h){
   const d=S.day,c=cocoaOf(h);let orn='';
   for(let k=1;k<=24;k++){const me=!!c.mine[k],th=!!c.theirs[k];if(!me&&!th)continue;const [x,y]=TREE_SLOTS[k-1],both=me&&th,[kind,g]=ornKind(h,k);
-    orn+=`<g class="orn${h._newOrn===k?' orn-new':''}">${both&&kind!=='star'?`<circle cx="${x}" cy="${y}" r="5.2" fill="#ffd98f" opacity=".14"/>`:''}${ornSVG(x,y,kind,g)}</g>`;}
+    orn+=`<g class="orn${h._newOrn===k?' orn-new':''}">${ornSVG(x,y,kind,g)}</g>`;}
   const lit=d===25;
   const star=`<path d="M262 139L263.6 145.4L270 147L263.6 148.6L262 155L260.4 148.6L254 147L260.4 145.4Z" fill="${lit?'#ffe3a3':'none'}" stroke="#c8b07a" stroke-width="${lit?.6:.8}" stroke-opacity="${lit?1:.55}"/>${lit?'<circle cx="262" cy="147" r="13" fill="#ffd98f" opacity=".18"/>':''}`;
   return `<g class="room-tree">${ORN_DEFS}
@@ -1195,7 +1195,7 @@ function closeCocoa(){if(!CS)return;const {el}=CS;el.classList.remove('in');el.c
   setTimeout(()=>{el.remove();renderHouseKeepModal();const h=H();if(h&&h._newOrn){setTimeout(()=>{h._newOrn=null;},1600);}},reduce?0:520);}
 function openTreeNotes(){
   const h=H(),c=cocoaOf(h);const days=[];for(let k=1;k<=Math.min(24,S.day);k++)if(c.mine[k])days.push(k);
-  openModal(`${sheetHead('The Tree','트리에 걸린 쪽지')}<p class="hint-text" style="margin-top:-4px">코코아볼에서 나온 쪽지가 오너먼트가 되어 걸려요.<br>둘 다 연 날의 오너먼트는 은은하게 빛나요.</p>
+  openModal(`${sheetHead('The Tree','트리에 걸린 쪽지')}<p class="hint-text" style="margin-top:-4px">코코아볼에서 나온 쪽지가 오너먼트가 되어 걸려요.<br>둘 다 연 날에는 쪽지에 ✦ 표시가 붙어요.</p>
     ${days.length?`<div class="tree-notes">${days.reverse().map(k=>{const n=cocoaNote(h,k),o=cocoaOpened(h,k),tp=n.kind==='t'?teleOf(h):null,extra=tp&&tp.mine[k]!=null?`<p class="tn-x">나: ${esc(n.choices[tp.mine[k]])}${tp.theirs[k]!=null&&tp.theirs[k]>=0&&k<S.day?` · ${esc(h.name)}: ${esc(n.choices[tp.theirs[k]])}${tp.theirs[k]===tp.mine[k]?' ✦':''}`:''}</p>`:'';
       return `<div class="tn"><p class="tn-d">12월 ${k}일 · ${COCOA_KO[n.kind]}${o.them?' · 함께 ✦':''}</p><p>${esc(n.text)}</p>${extra}</div>`;}).join('')}</div>`
       :`<p class="empty">아직 걸린 오너먼트가 없어요. 머그잔의 코코아볼을 열어 보세요.</p>`}`);
