@@ -1643,8 +1643,8 @@ function treeLights(x,y,h,n,cls){
 }
 function starPath(x,y,r){return `M${x} ${y-r}L${x+r*.22} ${y-r*.22}L${x+r} ${y}L${x+r*.22} ${y+r*.22}L${x} ${y+r}L${x-r*.22} ${y+r*.22}L${x-r} ${y}L${x-r*.22} ${y-r*.22}Z`;}
 /* exterior materials, chosen when the house is built */
-const TEX={brick:'벽돌',timber:'나무 판자',stone:'돌',plaster:'회벽'};
-const texOf=h=>h.tex||({love:'brick',friend:'timber',family:'stone'}[h.rel]||'brick');
+const TEX={brick:'벽돌',timber:'나무 판자',stone:'돌'};
+const texOf=h=>(h.tex==='plaster'?'stone':h.tex)||({love:'brick',friend:'timber',family:'stone'}[h.rel]||'brick');
 function texPattern(id,tex,body){
   const dk=shade(body,-.28),lt=shade(body,.12);
   if(tex==='brick')return `<pattern id="${id}" width="12" height="6" patternUnits="userSpaceOnUse"><rect width="12" height="6" fill="${body}"/><path d="M0 .3H12M0 3.3H12M3 .3V3.3M9 3.3V6.3" stroke="${dk}" stroke-width=".55" opacity=".7"/><path d="M.5 1.2H2.4M6.6 4.2H8.4" stroke="${lt}" stroke-width=".5" opacity=".5"/></pattern>`;
