@@ -711,8 +711,8 @@ const themeNow=h=>REL_THEMES[h.rel].includes(h.theme)?h.theme:(REL_THEMES[h.rel]
 const HCOL={love:{red:['레드','#8e1c2e'],pink:['핑크','#d0849c']},
   friend:{green:['그린','#3d4a32'],yellow:['옐로','#a8842f'],beige:['베이지','#a8916f'],brown:['브라운','#56382a'],ivory:['아이보리','#cfc4a8']}};
 const bodyOf=h=>{const m=HCOL[h.rel];if(!m)return REL[h.rel].body;return (m[h.color]||Object.values(m)[0])[1];};
-/* these accounts may change a house colour any time (the database checks this too) */
-const COLOR_ADMINS=['hxrnag@gmail.com','harang14@gmail.com'];
+/* this account may change a house colour any time (the database checks this too) */
+const COLOR_ADMINS=['hxrnag@gmail.com'];
 const colorAdmin=()=>typeof ME!=='undefined'&&!!ME&&COLOR_ADMINS.includes(String(ME.email||'').toLowerCase());
 const canRecolor=h=>!!HCOL[h.rel]&&(!h.color||colorAdmin());
 const colOf=h=>{const m=HCOL[h.rel];return m&&m[h.color]?h.color:(m?Object.keys(m)[0]:null);};
