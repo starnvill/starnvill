@@ -480,6 +480,7 @@ a.btn.buy{text-decoration:none;display:inline-block}
 .ob-dots{display:flex;gap:8px;justify-content:center;margin:22px 0 24px}
 .ob-dots i{width:6px;height:6px;border-radius:50%;background:var(--line)}.ob-dots i.on{background:var(--champagne);width:18px;border-radius:3px}
 .ob-skip{display:block;margin:14px auto 0;font-size:12px;color:var(--muted)}
+.house-set{text-align:center;margin:6px 0 30px}.house-set .link-btn{font-size:12px;color:var(--muted)}
 .on-ob .amb-sound{display:none}
 .win-btn{position:absolute}
 .win-tip{position:absolute;top:44%;left:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:1px;background:rgba(8,14,32,.72);border:1px solid rgba(200,176,122,.7);color:var(--ivory);font-size:10px;line-height:1.3;padding:4px 7px 5px;border-radius:3px;white-space:nowrap;text-align:center;pointer-events:none;animation:tipfloat 2.4s ease-in-out infinite}
@@ -1368,7 +1369,11 @@ const REL_DB={love:'lovers',friend:'friends',family:'family'},REL_APP={lovers:'l
 const THEME_OF={love:'red',friend:'olive',family:'blue'};
 function kstParts(ms){const d=new Date((ms||window.__SNV_NOW||Date.now())+9*36e5);return {y:d.getUTCFullYear(),m:d.getUTCMonth()+1,d:d.getUTCDate()};}
 let PRE=false;   // true while an early starter uses the app before December
-function realDay(){const k=kstParts();PRE=false;if(k.y>2026||(k.m===12&&k.d>=25))return 25;if(k.m===12)return k.d;const t=testerDay();if(t)return t;if(earlyOn()){PRE=true;return 1;}return 0;}
+// early-start and walk-through powers (?early, ?tester) work only for harang14@gmail.com and the people sharing a house with that account; the server decides (demo_ok)
+let DEMO_OK=false,demoKey='';
+async function checkDemo(){if(!sb||!ME){DEMO_OK=false;demoKey='';return;}const key=ME.id+':'+S.houses.map(h=>h.id).join(',');if(key===demoKey)return;
+  try{const r=await sb.rpc('demo_ok');DEMO_OK=!r.error&&r.data===true;demoKey=key;}catch(e){DEMO_OK=false;}}
+function realDay(){const k=kstParts();PRE=false;if(k.y>2026||(k.m===12&&k.d>=25))return 25;if(k.m===12)return k.d;if(!DEMO_OK)return 0;const t=testerDay();if(t)return t;if(earlyOn()){PRE=true;return 1;}return 0;}
 // ?early lets one person start for real before December (memories, birthdays, wishes, letters); ?noearly turns it off
 function earlyOn(){try{if(/[?&]noearly\b/.test(location.search))localStorage.removeItem('snv-early');else if(/[?&]early\b/.test(location.search))localStorage.setItem('snv-early','1');return localStorage.getItem('snv-early')==='1';}catch(e){return false;}}
 // cocoa and telepathy are played together, so they wait for December
@@ -1403,7 +1408,7 @@ async function cloudInit(){
     const keep=new URLSearchParams(location.search);['error','error_code','error_description','sb'].forEach(k=>keep.delete(k));const rest=keep.toString().replace(/=(?=&|$)/g,'');
     history.replaceState(null,'',location.pathname+(rest?'?'+rest:''));}
   sb=window.supabase.createClient(CFG.url,CFG.anonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'snv-auth'}});
-  try{const {data}=await sb.auth.getSession();ME=data.session?data.session.user:null;
+  try{const {data}=await sb.auth.getSession();ME=data.session?data.session.user:null;await checkDemo();
     if(ME){const {data:p,error}=await profSel('name,birthday,star',ME.id);if(error)throw error;
       if(p){S.myName=p.name;S.myBirthday=bdOf(p.birthday);if(p.star!=null)S.myStar=p.star;S.onboarded=true;await tryJoin();await cloudPull();}
       else{const md=ME.user_metadata||{};S.myName=(md.name||md.full_name||md.nickname||md.preferred_username||md.user_name||'').slice(0,10);S.onboarded=false;OB=2;}}
@@ -1428,6 +1433,7 @@ async function tryJoin(){const code=pendingJoin();if(!code||!ME)return;
 let pulling=null;
 function cloudPull(){if(!sb||!ME)return Promise.resolve(false);if(pulling)return pulling;
   pulling=(async()=>{
+    await checkDemo();
     const q=t=>sb.from(t).select('*');
     const [hs,ps,ms,ss,ls,ws,cs]=await Promise.all([q('houses'),profSel('id,name,birthday,star'),
       sb.from('memories').select('id,house_id,author,day,hint,mat,mosaic,opened,created_at').order('created_at'),q('memory_secrets'),q('letters'),q('wishes').order('created_at'),q('wish_claims')]);
@@ -1536,17 +1542,36 @@ async function cloudAct(a,t,h,e){
       if(error){toast(errKo(error));return true;}h.letter=body;save();toast(`편지를 별에 맡겼어요. 25일에 ${h.name}에게 열려요`);return true;}
     case 'ob-mail':OBM={step:'email',email:''};render();setTimeout(()=>{const i=$('#obMail');if(i)i.focus();},60);return true;
     case 'ob-mail-back':OBM=null;render();return true;
-    case 'ob-mail-send':{const em=(t.dataset.again?OBM.email:($('#obMail')||{}).value||'').trim();
+    case 'del-house-ok':{if(!h||!h.owner)return true;t.disabled=true;
+      try{const {data:mine}=await sb.from('memories').select('id').eq('house_id',h.id).eq('author',ME.id);
+        if(mine&&mine.length)await sb.storage.from('originals').remove(mine.map(m=>`${h.id}/${m.id}.jpg`));
+        let {error}=await sb.rpc('delete_house',{hid:h.id});
+        if(error&&/delete_house|function/i.test(error.message||''))({error}=await sb.from('houses').delete().eq('id',h.id));
+        if(error)throw error;
+        S.houseId=null;S.screen='village';closeModal();await cloudPull();render();window.scrollTo(0,0);toast('집을 지웠어요');}
+      catch(err){t.disabled=false;const el=$('#delErr');if(el)el.textContent=errKo(err);else toast(errKo(err));}return true;}
+    case 'ob-mail-edit':OBM={step:'email',email:(OBM&&OBM.email)||''};render();setTimeout(()=>{const i=$('#obMail');if(i)i.focus();},60);return true;
+    case 'ob-back':{if(OB===2&&ME){try{await sb.auth.signOut();}catch(e){}ME=null;S.myName='';S.onboarded=false;OBM=null;OB=1;render();window.scrollTo(0,0);return true;}return false;}
+    case 'ob-mail-send':{const em=(t.dataset.again?OBM.email:($('#obMail')||{}).value||'').trim().toLowerCase();
       if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){$('#obErr').textContent='이메일 주소를 확인해 주세요.';return true;}
-      t.disabled=true;const {error}=await sb.auth.signInWithOtp({email:em,options:{shouldCreateUser:true}});t.disabled=false;
-      if(error){$('#obErr').textContent=/rate|seconds/i.test(error.message)?'잠시 뒤에 다시 시도해 주세요.':errKo(error);return true;}
+      t.disabled=true;let r;try{r=await sb.auth.signInWithOtp({email:em,options:{shouldCreateUser:true}});}catch(err){r={error:err};}t.disabled=false;const {error}=r;
+      if(error){const el=$('#obErr');if(el)el.textContent=/rate|seconds|too many/i.test(error.message||'')?'코드를 너무 자주 보냈어요. 1분쯤 뒤에 다시 시도해 주세요.':errKo(error);return true;}
       OBM={step:'code',email:em};render();setTimeout(()=>{const i=$('#obCode');if(i)i.focus();},60);if(t.dataset.again)toast('코드를 다시 보냈어요');return true;}
     case 'ob-mail-verify':{const code=($('#obCode').value||'').replace(/\D/g,'');if(code.length<6||code.length>8){$('#obErr').textContent='이메일로 받은 코드를 입력해 주세요.';return true;}
-      t.disabled=true;const {data,error}=await sb.auth.verifyOtp({email:OBM.email,token:code,type:'email'});t.disabled=false;
-      if(error){$('#obErr').textContent=/expired|invalid/i.test(error.message)?'코드가 맞지 않거나 시간이 지났어요. 다시 받아 주세요.':errKo(error);return true;}
-      ME=data.user;OBM=null;const {data:p}=await profSel('name,birthday,star',ME.id);
-      if(p){S.myName=p.name;S.myBirthday=bdOf(p.birthday);if(p.star!=null)S.myStar=p.star;S.onboarded=true;save();await tryJoin();await cloudPull();render();toast(`${p.name}님, 다시 오셨네요`);}
-      else{OB=2;render();}return true;}
+      const say=m=>{const el=$('#obErr');if(el)el.textContent=m;};
+      t.disabled=true;
+      try{
+        let {data,error}=await sb.auth.verifyOtp({email:OBM.email,token:code,type:'email'});
+        if(error&&/invalid|expired/i.test(error.message||''))({data,error}=await sb.auth.verifyOtp({email:OBM.email,token:code,type:'signup'}).then(r=>r.error?{data,error}:r));
+        if(error){t.disabled=false;say(/expired|invalid/i.test(error.message||'')?'코드가 맞지 않거나 시간이 지났어요. 다시 받아 주세요.':errKo(error));return true;}
+        ME=data.user;OBM=null;S.myName='';S.myBirthday=null;S.houses=[];
+        const {data:p,error:pe}=await profSel('name,birthday,star',ME.id);if(pe)throw pe;
+        if(p){S.myName=p.name;S.myBirthday=bdOf(p.birthday);if(p.star!=null)S.myStar=p.star;S.onboarded=true;save();
+          try{await tryJoin();await cloudPull();}catch(err){toast(errKo(err));}
+          render();window.scrollTo(0,0);toast(`${p.name}님, 다시 오셨네요`);}
+        else{OB=2;render();}
+      }catch(err){t.disabled=false;if(ME&&!OBM){OBM=null;}const m=errKo(err);if($('#obErr'))say(m);else toast(m);}
+      return true;}
     case 'account':{const how=ME&&ME.app_metadata&&ME.app_metadata.provider==='kakao'?'카카오':(ME&&ME.email?esc(ME.email):'이 기기');
       openModal(`${sheetHead('Account','내 계정')}<div class="my-star">${starBadge(myStar(),56)}<p><span class="caps">My star</span><b>${starOf(myStar())[0]} 별</b><button class="link-btn" data-act="star-pick" style="align-self:flex-start;font-size:12px">색 바꾸기</button></p></div><p class="hint-text" style="margin-top:4px">${esc(S.myName||'')} · ${how}(으)로 로그인했어요</p>
         <button class="ghost" data-act="logout">로그아웃</button>
@@ -2224,6 +2249,7 @@ function renderHouse(){
     <section class="sect" id="recv-list"><div class="sect-head"><p class="caps">Received</p><h3>나에게 온 추억</h3><p>${un?'모든 추억이 열렸어요':'12월 25일 0시에 열려요. 그 전엔 힌트만 보여요'}</p></div>
       ${unhung?`<p class="hint-text" style="margin:-6px 0 14px">양말 속에 새 추억 ${unhung}개가 기다리고 있어요</p>`:''}${hungOf(h).length?`<div class="grid3">${hungOf(h).map(m=>un?matCard(m,'recv'):envelope(m)).join('')}</div>`:`<p class="empty">아직 도착한 추억이 없어요.</p>`}</section>
     <section class="sect deco-entry"><button class="deco-open" data-act="deco-open">✦ 집 꾸미기</button><p>집 안과 바깥을 바꿀 수 있어요</p></section>
+    <p class="house-set"><button class="link-btn" data-act="house-set">⚙ 집 설정</button></p>
   </div>`;
   liftLive();hereWatch(h);
 }
@@ -2424,10 +2450,10 @@ function obLoginCard(){
     <button class="primary" data-act="ob-mail-send">코드 받기</button><button class="link-btn ob-skip" data-act="ob-mail-back">← 다른 방법으로</button></div>`;
   if(OBM&&OBM.step==='code')return `<div class="ob-card"><p class="caps">Check your inbox</p><h2>메일로 온 코드를 적어 주세요</h2><p class="ob-p"><b>${esc(OBM.email)}</b>(으)로 코드를 보냈어요.<br>메일이 안 보이면 스팸함도 확인해 주세요.</p>
     <div class="field" style="max-width:220px;margin:22px auto 6px"><input id="obCode" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="이메일로 받은 코드를 입력" style="text-align:center;letter-spacing:.3em;font-size:20px"></div><p class="err" id="obErr"></p>
-    <button class="primary" data-act="ob-mail-verify">들어가기</button><button class="link-btn ob-skip" data-act="ob-mail-send" data-again="1">코드 다시 받기</button></div>`;
+    <button class="primary" data-act="ob-mail-verify">들어가기</button><button class="link-btn ob-skip" data-act="ob-mail-send" data-again="1">코드 다시 받기</button><button class="link-btn ob-skip" data-act="ob-mail-edit">← 이메일 다시 입력</button></div>`;
   return `<div class="ob-card"><p class="caps">Sign in</p><h2>마을에 들어가기</h2><p class="ob-p">로그인하면 어느 기기에서든<br>내 마을과 추억이 그대로 있어요.</p>
     <div class="ob-login">${CFG.kakao&&KAKAO_OPEN?`<button class="ob-kakao" data-act="ob-login">${kakao}카카오로 시작하기</button>`:''}
-    <button class="ob-alt" data-act="ob-mail">이메일로 시작하기</button>${CFG.kakao?'':'<button class="ob-alt" data-act="ob-login">로그인 없이 둘러보기</button>'}</div></div>`;
+    <button class="ob-alt" data-act="ob-mail">이메일로 시작하기</button>${CFG.kakao?'':'<button class="ob-alt" data-act="ob-login">로그인 없이 둘러보기</button>'}</div><button class="link-btn ob-skip" data-act="ob-back">← 처음으로</button></div>`;
 }
 function renderOnboard(){
   const dots=n=>`<div class="ob-dots">${[0,1,2].map(i=>`<i class="${i===n?'on':''}"></i>`).join('')}</div>`;
@@ -2445,20 +2471,20 @@ function renderOnboard(){
   else if(OB===2&&(S.myStar!=null||(S.myStar=Math.floor(Math.random()*30))>=0))body=`<div class="ob-card"><p class="caps">Your name</p><h2>마을에서 어떻게 불러 드릴까요?</h2><p class="ob-p">집 이름표와 편지에 이 이름이 쓰여요.</p>
     <div class="field" style="max-width:260px;margin:22px auto 6px"><input id="obName" maxlength="10" placeholder="예: 하랑" value="${esc(S.myName||'')}" style="text-align:center"></div><p class="err" id="obErr"></p>
     <p class="caps" style="margin:14px 0 0">Your star</p><p class="ob-p" style="margin:4px 0 0">마을에서 나를 나타낼 별의 색을 골라요.</p>${starGrid('ob-star')}
-    <button class="primary" data-act="ob-name">다음</button></div>`;
+    <button class="primary" data-act="ob-name">다음</button><button class="link-btn ob-skip" data-act="ob-back">← ${CLOUD?'다른 방법으로 로그인':'이전'}</button></div>`;
   else if(OB===6){
     const ua=navigator.userAgent||'',ios=/iPhone|iPad|iPod/.test(ua),android=/Android/.test(ua),standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
     const steps=ios?[['공유','하단의 공유 버튼 <span class="ob-ico"><svg viewBox="0 0 12 14" width="10" height="12"><path d="M6 1V9M3 4L6 1L9 4M2.5 6.5H1.5V13H10.5V6.5H9.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>을 눌러요'],['홈 화면에 추가','목록에서 <b>홈 화면에 추가</b>를 골라요'],['추가','오른쪽 위 <b>추가</b>를 누르면 끝']]
       :android?[['메뉴','오른쪽 위 <span class="ob-ico">⋮</span> 메뉴를 열어요'],['홈 화면에 추가','<b>홈 화면에 추가</b> 또는 <b>앱 설치</b>를 눌러요'],['설치','<b>설치</b>를 누르면 끝']]
       :[['iPhone','Safari 공유 버튼 → <b>홈 화면에 추가</b>'],['Android','Chrome 메뉴 ⋮ → <b>홈 화면에 추가</b>'],['컴퓨터','주소창 오른쪽 설치 아이콘을 눌러요']];
-    body=`<div class="ob-card"><div class="ob-artwrap"><div class="ob-phone"><img src="icon-192.png" alt=""><span>별과 마을</span></div></div><p class="caps">Keep it close</p><h2>홈 화면에 마을을 두세요</h2>
+    body=`<div class="ob-card"><div class="ob-artwrap"><div class="ob-phone"><img src="icons/icon-192.png" alt=""><span>별과 마을</span></div></div><p class="caps">Keep it close</p><h2>홈 화면에 마을을 두세요</h2>
       <p class="ob-p">앱처럼 한 번에 열리고, 전체 화면으로 볼 수 있어요.<br>매일 추억을 넣기도 훨씬 쉬워져요.</p>
       ${standalone?'<p class="ob-done-note">이미 홈 화면에서 열었어요 ✦</p>':`<ol class="ob-steps">${steps.map(([a,b],i)=>`<li><i>${i+1}</i><div><b>${a}</b><span>${b}</span></div></li>`).join('')}</ol>`}
       ${installEvt?'<button class="primary" data-act="ob-install">앱으로 설치하기</button>':'<button class="primary" data-act="ob-done">추가했어요</button>'}
-      <button class="link-btn ob-skip" data-act="ob-done">나중에 할게요</button></div>`;
+      <button class="link-btn ob-skip" data-act="ob-done">나중에 할게요</button><button class="link-btn ob-skip" data-act="ob-back">← 이전</button></div>`;
   }
   else{const c=OB_CARDS[OB-3];body=`<div class="ob-card ob-intro"><div class="ob-artwrap">${obArt(c.art)}</div><p class="caps">${c.cap}</p><h2>${c.t}</h2><p class="ob-p">${c.p}</p>${dots(OB-3)}
-    <button class="primary" data-act="ob-next">${OB<5?'다음':'좋아요'}</button>${OB<5?'<button class="link-btn ob-skip" data-act="ob-home">건너뛰기</button>':''}</div>`;}
+    <button class="primary" data-act="ob-next">${OB<5?'다음':'좋아요'}</button>${OB<5?'<button class="link-btn ob-skip" data-act="ob-home">건너뛰기</button>':''}<button class="link-btn ob-skip" data-act="ob-back">← 이전</button></div>`;}
   $('#app').innerHTML=`<div class="onboard step-${OB}">${body}</div>`;
   const inp=$('#obName');if(inp)setTimeout(()=>inp.focus(),300);
 }
@@ -2769,9 +2795,9 @@ const TUNES={
 };
 /* the record player's real songs (royalty-free, served as the artifact's own files) */
 const TRACKS={
- t1:{src:'track-1.mp3',by:'zephiramusic'},t2:{src:'track-2.mp3',by:'SigmaMusicArt'},t3:{src:'track-3.mp3',by:'Pulsebox'},
- t4:{src:'track-4.mp3',by:'Tunetank'},t5:{src:'track-5.mp3',by:'Clavier Music'},t6:{src:'track-6.mp3',by:'Aventure'},
- bg:{src:'village.mp3',by:'alba_mac'}};   // bg: heard only outside — the village and the night sky
+ t1:{src:'audio/track-1.mp3',by:'zephiramusic'},t2:{src:'audio/track-2.mp3',by:'SigmaMusicArt'},t3:{src:'audio/track-3.mp3',by:'Pulsebox'},
+ t4:{src:'audio/track-4.mp3',by:'Tunetank'},t5:{src:'audio/track-5.mp3',by:'Clavier Music'},t6:{src:'audio/track-6.mp3',by:'Aventure'},
+ bg:{src:'audio/village.mp3',by:'alba_mac'}};   // bg: heard only outside — the village and the night sky
 const TRACK_KEYS=Object.keys(TRACKS).filter(k=>k!=='bg');
 const TUNE_KEYS=TRACK_KEYS;
 function defaultPlaylist(other){return TRACK_KEYS.map((k,i)=>({t:`Track ${i+1}`,a:TRACKS[k].by,tune:k,by:i%2?'나':other}));}
@@ -3053,7 +3079,7 @@ function audioKick(){audioUnlock();if(S.sound===false)return;
 AUDIO_EVENTS.forEach(ev=>document.addEventListener(ev,audioKick,true));
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState!=='visible'||!AUD.ctx||S.sound===false)return;
   if(AUD.ctx.state!=='running'&&AUD.ctx.resume)AUD.ctx.resume().catch(()=>{});});
-const CLOUD_ACTS=new Set(['hcol','theme','paper','floor','sofa','roof','crown','ob-mail','ob-mail-back','ob-mail-send','ob-mail-verify','account','logout','del-acct','del-acct-ok','ob-login','ob-name','ob-done','ob-install','ob-home','build','invite','inv-share','inv-copy','tex','claim','wdel','wadd','save-bday','save-letter','reset','demo-claim','swap-view']);
+const CLOUD_ACTS=new Set(['hcol','theme','paper','floor','sofa','roof','crown','ob-mail','ob-mail-back','ob-mail-edit','ob-back','del-house','del-house-ok','ob-mail-send','ob-mail-verify','account','logout','del-acct','del-acct-ok','ob-login','ob-name','ob-done','ob-install','ob-home','build','invite','inv-share','inv-copy','tex','claim','wdel','wadd','save-bday','save-letter','reset','demo-claim','swap-view']);
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-act]');if(!t)return;const a=t.dataset.act;const h=H();
   if(CLOUD&&CLOUD_ACTS.has(a)){(a==='ob-home'&&!CFG.kakao?cloudAct('ob-done',t,h,e):cloudAct(a,t,h,e)).then(done=>{if(!done)act(a,t,h,e);}).catch(err=>toast(errKo(err)));return;}
@@ -3068,6 +3094,15 @@ function act(a,t,h,e){
     case 'hcol':if(!h.color&&(HCOL[h.rel]||{})[t.dataset.v]){h.color=t.dataset.v;save();renderHouseKeepModal();}break;
     case 'tex':h.tex=t.dataset.v;save();renderHouseKeepModal();toast(`외벽을 ${TEX[h.tex]}${batchim(TEX[h.tex])?'으로':'로'} 바꿨어요`);break;
     case 'ob-next':OB++;render();window.scrollTo(0,0);break;
+    case 'ob-back':OBM=null;OB=Math.max(0,OB-1);render();window.scrollTo(0,0);break;
+    case 'house-set':{if(!h)break;
+      openModal(`${sheetHead('House settings',`${esc(h.name)}${batchim(h.name)?'이':''}의 집`)}
+        ${(!CLOUD||h.owner)?`<button class="ghost" data-act="del-house">집 삭제</button><p class="hint-text" style="margin-top:8px">지은 사람만 지울 수 있어요</p>`:`<p class="hint-text">이 집은 상대가 지은 집이라, 지은 사람만 지울 수 있어요.</p>`}
+        <button class="link-btn ob-skip" data-act="close">닫기</button>`);break;}
+    case 'del-house':{if(!h||(CLOUD&&!h.owner))break;
+      openModal(`${sheetHead('Delete house','정말 이 집을 지울까요?')}<p class="hint-text" style="margin-top:-4px"><b>${esc(h.name)}</b>의 집과 그 안의 추억, 사진, 편지가 모두 지워지고 되돌릴 수 없어요.${CLOUD&&!h.pending?`<br>${esc(h.name)}에게서도 이 집이 사라져요.`:''}</p>
+        <p class="err" id="delErr"></p><button class="primary danger" data-act="del-house-ok">네, 집을 지울게요</button><button class="ghost" data-act="close">취소</button>`);break;}
+    case 'del-house-ok':{if(!h)break;S.houses=S.houses.filter(x=>x.id!==h.id);S.houseId=null;S.screen='village';save();closeModal();render();window.scrollTo(0,0);toast('집을 지웠어요');break;}
     case 'ob-star':starPick(t);break;
     case 'star-pick':openModal(`${sheetHead('My star','내 별 색')}${starGrid('star-set')}`);break;
     case 'star-set':{starPick(t);const v=S.myStar;if(CLOUD&&typeof ME!=='undefined'&&ME)sb.from('profiles').update({star:v}).eq('id',ME.id).then(({error})=>{if(error)toast(errKo(error));});
