@@ -1873,11 +1873,7 @@ function roomSVG(h){
   <path d="M2 40L68 62" stroke="#c8b07a" stroke-width="1.4"/>
   <path d="M6 44L64 66V214L6 244Z" fill="${fxWindowFill(fx)}"/>
   <g fill="#efe8da" opacity=".8"><circle cx="20" cy="80" r=".7"/><circle cx="50" cy="90" r=".6"/></g>
-  <g class="win-moon" aria-hidden="true"><circle class="moon-halo" cx="22.5" cy="90" r="12" fill="#f4ecd8" opacity=".07"/><circle class="moon-face" cx="22.5" cy="90" r="8.2" fill="#f4ecd8"/>
-    <g transform="translate(22.5 90) scale(.745) translate(-62 -146)"><circle cx="57.6" cy="142.4" r="2" fill="#e3d8bf" opacity=".55"/><circle cx="66" cy="151" r="1.4" fill="#e3d8bf" opacity=".45"/>
-    <g class="moon-rabbit" fill="#b8aa8c"><ellipse cx="63.4" cy="149.6" rx="3.6" ry="2.8"/><circle cx="59.9" cy="147" r="2"/><ellipse cx="59.2" cy="143.6" rx=".7" ry="2.3" transform="rotate(-14 59.2 143.6)"/><ellipse cx="60.8" cy="143.8" rx=".65" ry="2.1" transform="rotate(10 60.8 143.8)"/><circle cx="66.9" cy="149" r=".9"/><path d="M55.6 151.6h4.2v.8h-4.2z M57.3 148.4l.6 3.4" stroke="#b8aa8c" stroke-width=".5"/></g></g></g>
-  <g class="win-star" aria-hidden="true"><circle cx="50" cy="100" r="6" fill="#ecd28c" opacity=".1"/><path d="${logoStar(50,100,5.2,3.6)}" fill="#ecd28c"/></g>
-  <g fill="#efe8da"><circle cx="16" cy="130" r=".7"/><circle cx="54" cy="150" r=".8"/><circle cx="30" cy="180" r=".6"/><circle cx="44" cy="118" r=".6"/></g>
+  <g fill="#efe8da"><circle cx="48" cy="96" r=".8"/><circle cx="16" cy="130" r=".7"/><circle cx="54" cy="150" r=".8"/><circle cx="30" cy="180" r=".6"/><circle cx="44" cy="118" r=".6"/></g>
   <path d="M6 196Q22 182 36 188T64 176V214L6 244Z" fill="#1c2b57"/>
   <path d="M6 214Q24 202 40 206T64 196V214L6 244Z" fill="#c9d2e4" opacity=".85"/>
   <g fill="#141d3a" opacity=".9"><path d="M10 207L14 194L18 207Z"/><path d="M24 201L28 189L32 201Z"/><path d="M49 196L53 182L57 196Z"/><path d="M57 203L60 193L63 203Z"/><path d="M32 206V197.5L39 191.5L46 197.5V206Z"/><path d="M17 214V206.5L23 201.5L29 206.5V214Z"/></g>
@@ -1889,7 +1885,7 @@ function roomSVG(h){
   <path d="M358 40L292 62" stroke="#c8b07a" stroke-width="1.4"/>
   <path d="M354 44L296 66V214L354 244Z" fill="${fxWindowFill(fx)}"/>
   <g fill="#efe8da"><circle cx="312" cy="96" r=".8"/><circle cx="344" cy="124" r=".7"/><circle cx="306" cy="150" r=".8"/><circle cx="330" cy="176" r=".6"/><circle cx="338" cy="82" r=".9"/><circle cx="318" cy="120" r=".6"/></g>
-  <circle cx="338" cy="86" r="7" fill="#efe8da" opacity=".95"/><circle cx="338" cy="86" r="15" fill="#efe8da" opacity=".08"/>
+  <g clip-path="url(#winR)" aria-hidden="true"><g class="win-star"><circle cx="339.5" cy="86" r="14" fill="#ecd28c" opacity=".1"/><path d="${logoStar(339.5,86,15,10)}" fill="#ecd28c"/><path d="${logoStar(339.5,85.2,5.2,3.4)}" fill="#fff6dc" opacity=".5"/></g></g>
   <g fill="#efe8da"><circle cx="304" cy="110" r=".7"/><circle cx="348" cy="160" r=".6"/><circle cx="310" cy="186" r=".7"/><circle cx="326" cy="104" r=".5"/><circle cx="342" cy="190" r=".6"/></g>
   <path d="M352 228Q336 214 320 216T296 204V214L354 244Z" fill="#c9d2e4" opacity=".75"/>
   ${fx==='meteor'||fx==='santa'?fxSVG(fx):''}
