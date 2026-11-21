@@ -502,14 +502,26 @@ a.btn.buy{text-decoration:none;display:inline-block}
 .end-last h2{font-family:var(--font-serif-ko);font-weight:400;font-size:26px;color:var(--ivory);margin:10px 0 26px}
 .end-sign{font-family:var(--font-serif-ko);font-size:14px;line-height:2;color:var(--ivory);opacity:.8;margin:0 0 26px;animation:endIn 1.6s ease 1s both}
 .end-sign i{font-style:normal;color:var(--champagne)}
-.end-see{font-family:var(--font-display);font-style:italic;font-size:20px;color:var(--champagne);margin:0 0 28px;animation:endIn 1.6s ease 2s both}
-.end-btns{display:flex;flex-direction:column;align-items:center;gap:12px;animation:endIn 1.2s ease 2.8s both}
+.end-see{font-family:var(--font-display);font-style:italic;font-size:20px;color:var(--champagne);margin:0 0 28px;animation:endIn 1.6s ease 5.6s both}
+.end-btns{display:flex;flex-direction:column;align-items:center;gap:12px;animation:endIn 1.2s ease 6.2s both}
 .end-scene{position:fixed;left:0;right:0;bottom:0;width:100%;height:auto;max-height:34vh;pointer-events:none}
 .enwin{opacity:0;transition:opacity 1.8s ease}.enwin.on{opacity:.9}
 .end-star{opacity:0;transition:opacity 2.5s ease 1.5s;filter:drop-shadow(0 0 6px #ffe3a0)}.end-star.on{opacity:1}
 .on-end .amb-sound{display:none}.on-end .demo{opacity:.4}
 .end-last{max-width:380px;width:100%;cursor:default}
-.dev-letter{position:relative;text-align:left;font-size:13.5px;line-height:1.95;margin:0 0 26px;animation:endIn 1.6s ease .4s both}
+.dev-scroll{position:relative;margin:0 0 26px;padding:9px 0;animation:endIn .9s ease .2s both}
+.dev-letter{position:relative;text-align:left;font-size:13.5px;line-height:1.95;margin:0;clip-path:inset(0 0 100% 0);animation:unroll 4.4s cubic-bezier(.42,0,.58,1) 1.5s forwards}
+@keyframes unroll{to{clip-path:inset(0 0 0 0)}}
+.roller{position:absolute;left:-12px;right:-12px;height:18px;border-radius:9px;z-index:2;
+  background:linear-gradient(180deg,#a8915f 0%,#e9dcc0 22%,#f8f1e2 42%,#ddcca9 70%,#9c8455 100%);box-shadow:0 4px 10px rgba(0,0,0,.45)}
+.roller:before,.roller:after{content:'';position:absolute;top:-2px;width:12px;height:22px;border-radius:4px;background:linear-gradient(180deg,#6b3a22,#3a1d10 55%,#24110a);box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}
+.roller:before{left:-8px}.roller:after{right:-8px}
+.r-top{top:0}
+.r-bot{top:9px;animation:rollDown 4.4s cubic-bezier(.42,0,.58,1) 1.5s forwards}
+@keyframes rollDown{to{top:calc(100% - 18px)}}
+.dev-scroll .wax{position:absolute;left:50%;top:-14px;width:66px;height:66px;margin-left:-33px;z-index:3;filter:drop-shadow(0 3px 4px rgba(0,0,0,.5));animation:waxIn .7s cubic-bezier(.3,1.6,.5,1) .6s both}
+@keyframes waxIn{from{opacity:0;transform:scale(1.35)}to{opacity:1;transform:none}}
+.dev-letter{padding-top:52px}
 .dev-sign{text-align:right;margin:22px 0 0;white-space:normal;line-height:1.8;color:#5e1f29}
 .dev-ps{margin:18px 0 0;padding-top:14px;border-top:1px dashed rgba(94,31,41,.3);font-size:12.5px;white-space:normal;color:#5b4a3c}
 .locked .demo,.locked #swapBtn,.locked .amb-sound{display:none!important}
@@ -2500,13 +2512,45 @@ let EN=0,enTimer=null;
 function endPanels(){
   const hs=S.houses.length,mem=S.houses.reduce((a,h)=>a+h.sent.length+h.recv.length,0);
   return [
-   {t:'추억이 담긴 사진들,<br>비밀스러운 메시지들,<br>서로의 궁합, 별이 가득한 하늘,<br>그리고 마지막 편지까지.',s:'마을을 모두 둘러보셨나요?'},
+   {t:'추억이 담긴 사진들,<br>비밀스러운 메시지들,<br>비밀리에 준비한 별자리와 궁합,<br>별이 가득한 하늘,<br>그리고 마지막 편지까지.',s:'마을을 모두 둘러보셨나요?'},
    {t:`<b>${hs}</b>채의 집에서,<br><b>25</b>번의 밤 동안,<br><b>${mem}</b>개의 추억이 오갔어요.`,s:'그대의 12월을 잘 되돌아보셨나요?'},
    {t:'이제 마을은 잠시<br>열한 달의 휴식기에 들어갑니다.',s:''},
    {last:true}];
 }
+/* the wax seal on the developer's letter: the Star n Vill' logo pressed into burgundy wax */
+function waxSeal(){
+  // a melted blob: radii wander around the circle, joined with smooth curves
+  const R=[45,47.5,44,46,48,45,43.5,46.5,47,44.5,46,48.5,45,43.8],n=R.length,pt=i=>{const a=i/n*Math.PI*2-Math.PI/2,r=R[(i+n)%n];return [50+Math.cos(a)*r,50+Math.sin(a)*r];};
+  let blob='';for(let i=0;i<n;i++){const [x,y]=pt(i),[x2,y2]=pt(i+1),mx=(x+x2)/2,my=(y+y2)/2;blob+=(i?'':`M${((pt(n-1)[0]+x)/2).toFixed(1)} ${((pt(n-1)[1]+y)/2).toFixed(1)}`)+`Q${x.toFixed(1)} ${y.toFixed(1)} ${mx.toFixed(1)} ${my.toFixed(1)}`;}blob+='Z';
+  return `<svg class="wax" viewBox="0 0 100 100" aria-hidden="true">
+    <defs>
+      <filter id="waxEdge" x="-15%" y="-15%" width="130%" height="130%"><feTurbulence type="fractalNoise" baseFrequency=".07" numOctaves="2" seed="11"/><feDisplacementMap in="SourceGraphic" scale="4"/></filter>
+      <filter id="waxGrain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="4"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.1 .7"/></filter>
+      <filter id="waxSoft"><feGaussianBlur stdDeviation="1.6"/></filter>
+      <radialGradient id="waxBody" cx="38%" cy="32%" r="75%"><stop offset="0" stop-color="#a23a46"/><stop offset=".45" stop-color="#7a2632"/><stop offset="1" stop-color="#4a141c"/></radialGradient>
+      <radialGradient id="waxNavy" cx="45%" cy="40%" r="70%"><stop offset="0" stop-color="#1c2a5a"/><stop offset="1" stop-color="#0c1430"/></radialGradient>
+      <linearGradient id="waxGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff2c8"/><stop offset=".5" stop-color="#f1d58e"/><stop offset="1" stop-color="#b8924e"/></linearGradient>
+      <clipPath id="waxClip"><circle cx="50" cy="50" r="46"/></clipPath>
+    </defs>
+    <g filter="url(#waxEdge)"><path d="${blob}" fill="url(#waxBody)"/><path d="${blob}" fill="none" stroke="#3a0e15" stroke-opacity=".5" stroke-width="1.2"/></g>
+    <rect x="0" y="0" width="100" height="100" filter="url(#waxGrain)" clip-path="url(#waxClip)" opacity=".5" style="mix-blend-mode:multiply"/>
+    <circle cx="50" cy="50" r="36.5" fill="none" stroke="#3a0e15" stroke-width="2.2" opacity=".55"/>
+    <circle cx="50" cy="50" r="38.2" fill="none" stroke="#c45a66" stroke-width=".9" opacity=".45"/>
+    <circle cx="50" cy="50" r="35.2" fill="#2e4a35"/>
+    <circle cx="50" cy="50" r="34.6" fill="none" stroke="#d9bd7c" stroke-width=".7"/>
+    <circle cx="50" cy="50" r="30.4" fill="none" stroke="#d9bd7c" stroke-width=".7"/>
+    <circle cx="50" cy="50" r="29.9" fill="url(#waxNavy)"/>
+    <circle cx="50" cy="50" r="29.9" fill="none" stroke="#000" stroke-opacity=".45" stroke-width="2.4" filter="url(#waxSoft)" clip-path="url(#waxClip)"/>
+    <circle cx="50" cy="50" r="13" fill="#ffe3a0" opacity=".16" filter="url(#waxSoft)"/>
+    <path d="${star4(50.8,51.2,20)}" fill="#0a0f22" opacity=".55"/>
+    <path d="${star4(50,50,20)}" fill="url(#waxGold)"/>
+    <path d="${star4(50,50,8.5)}" transform="rotate(45 50 50)" fill="#fff3d2" opacity=".85"/>
+    <circle cx="50" cy="50" r="1.6" fill="#fffaf0"/>
+    <ellipse cx="34" cy="26" rx="14" ry="6" fill="#fff" opacity=".16" transform="rotate(-28 34 26)" filter="url(#waxSoft)"/>
+  </svg>`;
+}
 /* the developer's letter, in the developer's own voice */
-const DEV_LETTER=`추억이 담긴 사진들, 비밀스러운 메시지들, 서로의 궁합, 별이 가득한 하늘,
+const DEV_LETTER=`추억이 담긴 사진들, 비밀스러운 메시지들, 비밀리에 준비한 별자리와 궁합, 별이 가득한 하늘,
 마지막으로 받은 상대의 마음을 담은 메시지까지.
 서로의 마음을 다 확인하셨나요?
 그대의 12월을 다 되돌아보셨나요?
@@ -2569,7 +2613,7 @@ function renderEnding(){
   const lit=EN<2?houses:EN===2?Math.ceil(houses/2):0;
   let body;
   if(p.last)body=`<div class="end-text end-last"><p class="caps">A Letter from the Developer</p><h2>개발자의 편지</h2>
-     <div class="letter-paper dev-letter"><span class="seal">V</span>${esc(DEV_LETTER)}<p class="dev-sign">항상 이 세상 어딘가에서<br>그대를 응원하고 있을,<br>익명의 개발자가.</p><p class="dev-ps">P.S. 별과 마을이 당신의 크리스마스와 함께하게 되어서 정말 행복했습니다.<br>그대도 그랬길 염원합니다.<br>그대의 2026은 따뜻하고 반짝이는 한 해였길 바라며,<br>2027은 더욱 그러길 빌며,</p><p class="dev-final">Wish you a Merry Christmas</p></div>
+     <div class="dev-scroll"><div class="roller r-top" aria-hidden="true"></div>${waxSeal()}<div class="letter-paper dev-letter">${esc(DEV_LETTER)}<p class="dev-sign">항상 이 세상 어딘가에서<br>그대를 응원하고 있을,<br>익명의 개발자가.</p><p class="dev-ps">P.S. 별과 마을은 당신의 크리스마스와 함께하게 되어서 정말 행복했습니다.<br>그대도 그랬길 염원합니다.<br>그대의 2026은 따뜻하고 반짝이는 한 해였길 바라며,<br>2027은 더욱 그러길 빌며,</p><p class="dev-final">Wish you a Merry Christmas</p></div><div class="roller r-bot" aria-hidden="true"></div></div>
      <p class="end-see">See you next December</p>
      <div class="end-btns"><button class="primary" data-act="box-close">상자 닫기</button><button class="link-btn" data-act="end-close">마을 둘러보기</button></div></div>`;
   else body=`<div class="end-text" data-act="end-next"><p class="end-t">${p.t}</p>${p.s?`<p class="end-s">${p.s}</p>`:''}<p class="end-tap">화면을 누르면 다음으로</p></div>`;
