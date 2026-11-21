@@ -2661,6 +2661,8 @@ const TUNE_KEYS=TRACK_KEYS;
 function defaultPlaylist(other){return TRACK_KEYS.map((k,i)=>({t:`Track ${i+1}`,a:TRACKS[k].by,tune:k,by:i%2?'나':other}));}
 const AUD={ctx:null,bus:null,run:null,timer:null,playing:false,kind:'',pads:[]};
 function audioUnlock(){
+  /* iPhone Safari: treat the music as music, so the silent switch doesn't mute it (Safari 16.4+) */
+  try{if(navigator.audioSession&&navigator.audioSession.type!=='playback')navigator.audioSession.type='playback';}catch(e){}
   try{if(!AUD.ctx){const C=window.AudioContext||window.webkitAudioContext;if(!C)return;AUD.ctx=new C();
     const c=AUD.ctx,bus=c.createGain();bus.gain.value=.1;const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=3000;lp.Q.value=.4;const dl=c.createDelay();dl.delayTime.value=.23;const fb=c.createGain();fb.gain.value=.32;const wet=c.createGain();wet.gain.value=.28;
     bus.connect(lp);lp.connect(c.destination);lp.connect(dl);dl.connect(fb);fb.connect(dl);dl.connect(wet);wet.connect(c.destination);AUD.bus=bus;}
