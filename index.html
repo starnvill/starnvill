@@ -2048,16 +2048,16 @@ function renderVillage(){
     ${CLOUD?`<p class="v-foot"><button class="link-btn" data-act="account">${esc(S.myName||'나')} · 계정</button></p>`:`<p class="v-foot">지금은 예시로 채운 프로토타입이에요.<br>실제로 친구와 연결되는 건 다음 단계에서 만들어요.</p>`}`;
   santaNote();
 }
-/* a note from Santa: first visit of each day in November, until they say not to */
-function santaNote(){const k=kstParts(),today=`${k.m}-${k.d}`;let seen='';try{seen=localStorage.getItem('snv-santa-note')||'';}catch(e){}
-  if(seen==='never'||seen===today||k.m!==11)return;
-  setTimeout(()=>{if(S.screen!=='village'||!$('#modal').hidden)return;try{localStorage.setItem('snv-santa-note',today);}catch(e){}
+/* a note from Santa: shown once per device, in November (new key so people who saw the old one see this once too) */
+function santaNote(){let seen=false;try{seen=!!localStorage.getItem('snv-santa-once');}catch(e){}
+  if(seen||kstParts().m!==11)return;
+  setTimeout(()=>{if(S.screen!=='village'||!$('#modal').hidden)return;try{localStorage.setItem('snv-santa-once','1');}catch(e){}
     openModal(`<div class="santa-note"><p class="caps">A Note from Santa</p><h2>마을에 온 걸 환영해요</h2>
       <p>별과 마을은 익명의 개발자가 만든<br>작은 웹사이트예요.</p>
       <p><b>12월 1일</b>부터 본격적인 기능들을<br>쓸 수 있어요. 그 전에는 집을 짓고<br>소중한 사람을 초대해 두세요.</p>
       <p>미리 가입한 분들께는<br><b>특별한 선물</b>이 도착할 예정이에요.</p>
       <p class="sig">— 산타가</p>
-      <button class="primary" data-act="close">기다릴게요</button><button class="link-btn santa-never" data-act="santa-never">앞으로 안 볼래요</button></div>`);},900);}
+      <button class="primary" data-act="close">기다릴게요</button></div>`);},900);}
 function matCard(m,who){
   const dark=m.mat==='midnight'||m.mat==='olive';
   return `<div><button class="mat ${dark?'dark':''}" style="--mat:${MATS[m.mat]||MATS.ivory}" data-act="view" data-who="${who}" data-id="${m.id}" aria-label="${dayLabel(m.day)} 추억 크게 보기">
