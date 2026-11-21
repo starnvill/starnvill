@@ -52,7 +52,7 @@ h2,h3{font-family:var(--font-serif-ko)}
 .rule::before,.rule::after{content:"";flex:1;height:1px;background:var(--line)}
 
 /* village */
-.v-head{text-align:center;padding:14px 0 4px}
+.v-head{text-align:center;padding:14px 0 4px;position:relative;z-index:2}
 .v-head h1{font-family:var(--font-display);font-style:italic;font-weight:400;font-size:clamp(34px,11vw,52px);white-space:nowrap;line-height:1;letter-spacing:-.01em;margin:10px 0 0}
 .v-head h1 em{font-style:italic;color:var(--champagne)}
 .v-date{font-family:var(--font-serif-ko);font-size:13px;color:var(--muted);margin:10px 0 0}
@@ -246,8 +246,8 @@ h2,h3{font-family:var(--font-serif-ko)}
 @keyframes winglow{from{opacity:.55}to{opacity:1}}
 
 /* village scene */
-.scene{position:relative;margin:4px -20px 0;aspect-ratio:360/420}
-.scene>svg{position:absolute;inset:0;width:100%;height:100%;display:block;overflow:visible}
+.scene{position:relative;margin:calc(4px - (100% + 40px) / 6) -20px 0;aspect-ratio:360/480}
+.scene>svg{position:absolute;inset:0;width:100%;height:100%;display:block}
 .plot{position:absolute;background:none;border:0;padding:0;display:flex;align-items:flex-end;justify-content:center}
 .plot .pill{position:relative;background:rgba(8,14,32,.82);border:1px solid var(--line);padding:2px 10px 3px;display:flex;flex-direction:column;align-items:center;line-height:1.3;white-space:nowrap;transition:border-color .2s,transform .3s}
 .plot .pill .caps{font-size:8.5px;letter-spacing:.22em}
@@ -696,39 +696,59 @@ a.btn.buy{text-decoration:none;display:inline-block}
 @keyframes mallow2{0%,100%{transform:translate(0,0) rotate(0)}40%{transform:translate(-.7px,-.5px) rotate(-10deg)}75%{transform:translate(.4px,-.3px) rotate(6deg)}}
 .both .sglow{animation:sglow 4.8s ease-in-out infinite}
 @keyframes sglow{0%,100%{opacity:.12}50%{opacity:.3}}
-/* two stars together, one 30s loop: smile at each other, chat (me first, then them), be surprised */
-.both .seyes{animation:slook 30s ease-in-out infinite}
-@keyframes slook{0%,8%,25%,36%,59%,100%{transform:translate(0,0)}11%,22%,39%,56%{transform:translate(var(--dx),0)}}
-.both .sdots{animation:sdotsB 30s step-end infinite}
-@keyframes sdotsB{0%{opacity:1}13%{opacity:0}22%{opacity:1}72%{opacity:0}82%{opacity:1}}
-.both .shappy{animation:shappyB 30s step-end infinite}
-@keyframes shappyB{0%{opacity:0}13%{opacity:1}22%{opacity:0}}
-.both .sbig,.both .soh{animation:surpB 30s step-end infinite}
-@keyframes surpB{0%{opacity:0}72%{opacity:1}82%{opacity:0}}
-.both .me .stalk{animation:talkMe 30s step-end infinite}
-.both .sitter:not(.me) .stalk{animation:talkThem 30s step-end infinite}
-@keyframes talkMe{0%{opacity:0}40%{opacity:1}41%{opacity:0}42%{opacity:1}43%{opacity:0}44%{opacity:1}45.5%{opacity:0}46.5%{opacity:1}47.5%{opacity:0}}
-@keyframes talkThem{0%{opacity:0}48%{opacity:1}49%{opacity:0}50%{opacity:1}51.5%{opacity:0}52.5%{opacity:1}53.5%{opacity:0}54.5%{opacity:1}55.5%{opacity:0}}
-.both .sitter{transform-box:fill-box;transform-origin:50% 100%}
-.both .sitter.me{animation:bobMe 30s ease-in-out infinite}
-.both .sitter:not(.me){animation:bobThem 30s ease-in-out infinite}
-@keyframes bobMe{0%,14%,22%,39%,48%,71%,78%,100%{transform:translateY(0)}16%,20%{transform:translateY(-.7px)}18%{transform:translateY(0)}42%,46%{transform:translateY(-.4px)}44%{transform:translateY(0)}73.5%{transform:translateY(-2px)}76%{transform:translateY(0)}}
-@keyframes bobThem{0%,14%,22%,47%,56%,71%,78%,100%{transform:translateY(0)}16%,20%{transform:translateY(-.7px)}18%{transform:translateY(0)}50%,54%{transform:translateY(-.4px)}52%{transform:translateY(0)}73.5%{transform:translateY(-2px)}76%{transform:translateY(0)}}
-/* alone: now and then the star dozes off */
-.alone .sitter{transform-box:fill-box;transform-origin:50% 100%;animation:doze 18s ease-in-out 4s infinite}
-@keyframes doze{0%,33%,80%,100%{transform:rotate(0)}40%{transform:rotate(-5deg) translateY(.4px)}48%{transform:rotate(-2deg)}55%{transform:rotate(-6deg) translateY(.5px)}62%{transform:rotate(-3deg)}70%{transform:rotate(-6deg) translateY(.5px)}77%{transform:rotate(0)}}
-.alone .sdots{animation:sleepDots 18s step-end 4s infinite}
-@keyframes sleepDots{0%{opacity:1}36%{opacity:0}77%{opacity:1}}
-.alone .ssleep{animation:sleepEyes 18s step-end 4s infinite}
-@keyframes sleepEyes{0%{opacity:0}36%{opacity:1}77%{opacity:0}}
-.alone .szz .z1{animation:zz1 18s ease-out 4s infinite}
-.alone .szz .z2{animation:zz2 18s ease-out 4s infinite}
-@keyframes zz1{0%,40%{opacity:0;transform:translate(0,0)}47%{opacity:.85}62%,100%{opacity:0;transform:translate(2px,-5px)}}
-@keyframes zz2{0%,52%{opacity:0;transform:translate(0,0)}59%{opacity:.75}75%,100%{opacity:0;transform:translate(2px,-5px)}}
-@media (prefers-reduced-motion:reduce){.moon-halo,.moon-face,.moon-rabbit,.steam,.mallow,.both .sglow,.both .seyes,.both .sdots,.both .shappy,.both .sbig,.both .soh,.both .stalk,.both .sitter,.alone .sitter,.alone .sdots,.alone .ssleep,.alone .szz text,.lp-idle{animation:none}.moon-rabbit{opacity:.4}}
 .win-star{transform-box:fill-box;transform-origin:center;animation:winStar 3.4s ease-in-out infinite}
 @keyframes winStar{0%,100%{opacity:.8;transform:scale(1)}50%{opacity:1;transform:scale(1.12)}}
-@media (prefers-reduced-motion:reduce){.win-star{animation:none}}
+/* sofa stars: every ~3s one move, picked at random (JS sets .m-<move> on .sofa-people) */
+.sofa-people .sitter,.sofa-people .smug{transform-box:fill-box}
+.sofa-people .sitter{transform-origin:50% 100%}
+.sofa-people .smug{transform-origin:center}
+.sofa-people .snote,.sofa-people .ssp path{transform-box:fill-box;transform-origin:center}
+@keyframes mLook{0%,100%{transform:translate(0,0)}15%,85%{transform:translate(var(--dx),0)}}
+@keyframes mHide{0%{opacity:1}18%{opacity:0}82%{opacity:1}}
+@keyframes mShow{0%{opacity:0}18%{opacity:1}82%{opacity:0}}
+.m-smile .seyes,.m-talk .seyes,.m-wink .seyes,.m-lean .seyes{animation:mLook 2.6s ease-in-out}
+.m-smile .sdots,.m-surprise .sdots,.m-lean .sdots,.m-sip .sdots,.m-sway .sdots,.m-sparkle .sdots,.m-doze .sdots,.m-yawn .sdots{animation:mHide 2.6s step-end}
+.m-smile .shappy,.m-lean .shappy,.m-sway .shappy,.m-sparkle .shappy{animation:mShow 2.6s step-end}
+.m-sip .ssleep,.m-doze .ssleep,.m-yawn .ssleep{animation:mShow 2.6s step-end}
+.m-surprise .sbig,.m-surprise .soh{animation:mShow 2.6s step-end}
+.m-smile .sitter{animation:mGiggle 2.6s ease-in-out}
+@keyframes mGiggle{0%,18%,82%,100%{transform:translateY(0)}28%,48%,68%{transform:translateY(-.8px)}38%,58%{transform:translateY(0)}}
+.m-talk .me .stalk{animation:mTalkA 2.6s step-end}
+.m-talk .sitter:not(.me) .stalk{animation:mTalkB 2.6s step-end}
+@keyframes mTalkA{0%{opacity:0}6%{opacity:1}12%{opacity:0}18%{opacity:1}25%{opacity:0}31%{opacity:1}38%{opacity:0}}
+@keyframes mTalkB{0%{opacity:0}50%{opacity:1}56%{opacity:0}62%{opacity:1}69%{opacity:0}75%{opacity:1}82%{opacity:0}}
+.m-surprise .sitter{animation:mHop 2.6s ease-out}
+@keyframes mHop{0%,12%,45%,100%{transform:translateY(0)}24%{transform:translateY(-2.4px)}}
+.m-lean .sitter{animation:mLean 2.6s ease-in-out}
+@keyframes mLean{0%,100%{transform:rotate(0) translateX(0)}25%,75%{transform:rotate(calc(var(--dir)*7deg)) translateX(calc(var(--dir)*1.4px))}}
+.m-lean .sglow{animation:mGlow 2.6s ease-in-out}
+@keyframes mGlow{0%,100%{opacity:.12}50%{opacity:.4}}
+.m-wink .snear{animation:mWinkHide 2.6s step-end}
+.m-wink .swink{animation:mWinkShow 2.6s step-end}
+@keyframes mWinkHide{0%{opacity:1}30%{opacity:0}58%{opacity:1}}
+@keyframes mWinkShow{0%{opacity:0}30%{opacity:1}58%{opacity:0}}
+.m-sip .smug{animation:mSip 2.6s ease-in-out}
+@keyframes mSip{0%,100%{transform:translate(0,0) rotate(0)}30%,70%{transform:translate(calc(var(--dir)*-7px),-5.5px) rotate(calc(var(--dir)*-22deg))}}
+.m-sway .sitter{animation:mSway 2.6s ease-in-out}
+@keyframes mSway{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-5deg)}40%,80%{transform:rotate(5deg)}}
+.m-sway .snote{animation:mNote 2.6s ease-out}
+@keyframes mNote{0%{opacity:0;transform:translate(0,0)}20%{opacity:.95}100%{opacity:0;transform:translate(3px,-9px)}}
+.m-sparkle .ssp .p1{animation:mPop 1.4s ease-out}
+.m-sparkle .ssp .p2{animation:mPop 1.4s ease-out .5s}
+.m-sparkle .ssp .p3{animation:mPop 1.4s ease-out 1s}
+@keyframes mPop{0%{opacity:0;transform:scale(.2)}35%{opacity:1;transform:scale(1.15)}100%{opacity:0;transform:scale(.6)}}
+.m-doze .sitter{animation:mNod 2.6s ease-in-out}
+@keyframes mNod{0%,100%{transform:rotate(0)}25%{transform:rotate(-6deg) translateY(.4px)}45%{transform:rotate(-2deg)}65%{transform:rotate(-7deg) translateY(.5px)}88%{transform:rotate(-1deg)}}
+.m-doze .szz .z1{animation:mZ 2.2s ease-out .2s}
+.m-doze .szz .z2{animation:mZ 2s ease-out .8s}
+@keyframes mZ{0%{opacity:0;transform:translate(0,0)}25%{opacity:.9}100%{opacity:0;transform:translate(2px,-6px)}}
+.m-look .seyes{animation:mLookAround 2.6s ease-in-out}
+@keyframes mLookAround{0%,100%{transform:translate(0,0)}18%,40%{transform:translate(-1px,0)}58%,82%{transform:translate(1px,0)}}
+.m-yawn .soh{animation:mYawn 2.6s ease-in-out}
+@keyframes mYawn{0%,100%{opacity:0;transform:scale(.6)}25%,70%{opacity:1;transform:scale(1.6)}}
+.m-yawn .soh{transform-box:fill-box;transform-origin:center}
+.m-yawn .sitter{animation:mStretch 2.6s ease-in-out}
+@keyframes mStretch{0%,100%{transform:scale(1,1)}30%,65%{transform:scale(.97,1.05)}}
 </style>
 </head>
 <body>
@@ -1295,11 +1315,12 @@ function starD(cx,cy,R,r){let d='';for(let i=0;i<10;i++){const a=-Math.PI/2+i*Ma
 function lumOf(hex){const n=parseInt(hex.slice(1),16);return (.299*(n>>16)+.587*(n>>8&255)+.114*(n&255))/255;}
 function starFig(cx,idx,me,mug=true,cy=271){
   const col=starOf(idx)[1],dark=lumOf(col)<.45,eye=dark?'#f6efe2':'#2b2119',s=me?1:-1;
-  return `<g class="sitter${me?' me':''}" style="--dx:${me?.9:-.9}px"><circle class="sglow" cx="${cx}" cy="${cy}" r="19" fill="${col}" opacity=".12"/>
+  return `<g class="sitter${me?' me':''}" style="--dx:${me?.9:-.9}px;--dir:${s}"><circle class="sglow" cx="${cx}" cy="${cy}" r="19" fill="${col}" opacity=".12"/>
     <path d="${starD(cx,cy+1.4,15,7.8)}" fill="${shade(col,-.3)}" stroke="${shade(col,-.3)}" stroke-width="4.6" stroke-linejoin="round"/>
     <path d="${starD(cx,cy,15,7.8)}" fill="${col}" stroke="${col}" stroke-width="4.6" stroke-linejoin="round"/>
     <ellipse cx="${cx-4.6}" cy="${cy-6.4}" rx="2.6" ry="1.4" fill="#fff" opacity=".35" transform="rotate(-30 ${cx-4.6} ${cy-6.4})"/>
-    <g class="seyes"><g class="sdots"><circle cx="${cx-2.7}" cy="${cy+1}" r=".62" fill="${eye}"/><circle cx="${cx+2.7}" cy="${cy+1}" r=".62" fill="${eye}"/></g>
+    <g class="seyes"><g class="sdots"><circle class="${me?'':'snear'}" cx="${cx-2.7}" cy="${cy+1}" r=".62" fill="${eye}"/><circle class="${me?'snear':''}" cx="${cx+2.7}" cy="${cy+1}" r=".62" fill="${eye}"/></g>
+      <path class="swink" d="M${cx+s*2.7-.8} ${cy+1.1}q.8 .6 1.6 0" fill="none" stroke="${eye}" stroke-width=".55" stroke-linecap="round" opacity="0"/>
       <path class="shappy" d="M${cx-3.5} ${cy+1.4}q.8 -1.1 1.6 0M${cx+1.9} ${cy+1.4}q.8 -1.1 1.6 0" fill="none" stroke="${eye}" stroke-width=".55" stroke-linecap="round" opacity="0"/>
       <g class="sbig" opacity="0"><circle cx="${cx-2.7}" cy="${cy+.8}" r="1" fill="${eye}"/><circle cx="${cx+2.7}" cy="${cy+.8}" r="1" fill="${eye}"/></g>
       <path class="ssleep" d="M${cx-3.5} ${cy+1}q.8 .7 1.6 0M${cx+1.9} ${cy+1}q.8 .7 1.6 0" fill="none" stroke="${eye}" stroke-width=".55" stroke-linecap="round" opacity="0"/>
@@ -1307,10 +1328,18 @@ function starFig(cx,idx,me,mug=true,cy=271){
       <ellipse class="soh" cx="${cx}" cy="${cy+3.9}" rx=".55" ry=".8" fill="${eye}" opacity="0"/></g>
     <g class="szz" fill="#f4ecd8" font-family="Georgia,serif" font-style="italic" font-weight="700" aria-hidden="true"><text class="z1" x="${cx+8.5}" y="${cy-8.5}" font-size="5.4" opacity="0">z</text><text class="z2" x="${cx+12}" y="${cy-13}" font-size="4.2" opacity="0">z</text></g>
     <circle cx="${cx-5.2}" cy="${cy+3}" r="1.5" fill="#ff8f8f" opacity="${dark?.25:.32}"/><circle cx="${cx+5.2}" cy="${cy+3}" r="1.5" fill="#ff8f8f" opacity="${dark?.25:.32}"/>
-    ${mug?`<g transform="translate(${cx+s*11.5} ${cy+9})"><rect x="-2.8" y="-3.6" width="5.6" height="5.8" rx="1.3" fill="#efe6d4"/><path d="M-2.8 -2H2.8" stroke="#8c2f3a" stroke-width=".9"/><path d="M${s*2.8} -2.4q${s*2.2} .4 ${s*2} 2.2q-.2 1.6 ${-s*2} 1.4" fill="none" stroke="#efe6d4" stroke-width=".8"/></g>`:''}
+    <text class="snote" x="${cx+s*9}" y="${cy-10}" font-size="5" fill="#f4ecd8" opacity="0" aria-hidden="true">♪</text>
+    <g class="ssp" fill="#fde3a3" aria-hidden="true"><path class="p1" d="${star4(cx-12,cy-8,2.2)}" opacity="0"/><path class="p2" d="${star4(cx+12,cy-11,1.7)}" opacity="0"/><path class="p3" d="${star4(cx+2,cy-17,1.9)}" opacity="0"/></g>
+    ${mug?`<g class="smug"><g transform="translate(${cx+s*11.5} ${cy+9})"><rect x="-2.8" y="-3.6" width="5.6" height="5.8" rx="1.3" fill="#efe6d4"/><path d="M-2.8 -2H2.8" stroke="#8c2f3a" stroke-width=".9"/><path d="M${s*2.8} -2.4q${s*2.2} .4 ${s*2} 2.2q-.2 1.6 ${-s*2} 1.4" fill="none" stroke="#efe6d4" stroke-width=".8"/></g></g>`:''}
   </g>`;
 }
 function starBadge(idx,size=28){return `<svg class="star-badge" viewBox="0 0 40 40" width="${size}" height="${size}" aria-hidden="true">${starFig(20,idx,true,false,20)}</svg>`;}
+/* sofa stars: one move every ~3 seconds, at random, never the same twice in a row */
+const STAR_MOVES={both:['smile','talk','surprise','lean','wink','sip','sway','sparkle'],alone:['doze','sip','sway','look','yawn','sparkle']};
+let starLast='';
+setInterval(()=>{if(document.hidden)return;const g=document.querySelector('.room .sofa-people');if(!g)return;
+  const pool=STAR_MOVES[g.classList.contains('both')?'both':'alone'].filter(x=>x!==starLast);const m=pool[Math.floor(Math.random()*pool.length)];starLast=m;
+  [...g.classList].filter(c=>c.startsWith('m-')).forEach(c=>g.classList.remove(c));void g.getBoundingClientRect();g.classList.add('m-'+m);},3000);
 function sofaSVG(h){
   const them=hereThem(h);
   return `<g class="sofa-people${them?' both':' alone'}">${starFig(45,myStar(),true)}${them?starFig(89,theirStar(h),false):`<g transform="translate(46 0)">${PILLOW}</g>`}</g>`;
@@ -1800,7 +1829,7 @@ function sceneSVG(){
   items.push({y:527,s:snowman(86,527,.86,'#4c5238','#26355e',-1)});
   items.sort((a,b)=>a.y-b.y);
   let back='';for(let i=0;i<19;i++){const x=i*20+((i*7)%9),y=224+((i*37)%12),h=18+((i*13)%14);back+=sparkTree(x,y,h,1,i%3===0);}
-  return `<svg viewBox="0 120 360 420" aria-hidden="true">
+  return `<svg viewBox="0 60 360 480" aria-hidden="true">
   <defs>
     <linearGradient id="snowMid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7e8db4"/><stop offset="1" stop-color="#aebad3"/></linearGradient>
     <linearGradient id="snowFront" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c3cde1"/><stop offset="1" stop-color="#e6ebf3"/></linearGradient>
@@ -1814,7 +1843,7 @@ function sceneSVG(){
     <radialGradient id="treeGlow"><stop offset="0" stop-color="#8fb39a" stop-opacity=".14"/><stop offset=".6" stop-color="#8fb39a" stop-opacity=".04"/><stop offset="1" stop-color="#9fe0b0" stop-opacity="0"/></radialGradient>
     <radialGradient id="moonHalo"><stop offset="0" stop-color="#f6ecd4" stop-opacity=".35"/><stop offset="1" stop-color="#f6ecd4" stop-opacity="0"/></radialGradient>
   </defs>
-  <g transform="translate(0 -14)"><circle class="moon-halo" cx="62" cy="146" r="34" fill="url(#moonHalo)"/><circle class="moon-face" cx="62" cy="146" r="11" fill="#f4ecd8"/><circle cx="58" cy="143" r="2.2" fill="#e3d8bf" opacity=".6"/><circle cx="66" cy="150" r="1.5" fill="#e3d8bf" opacity=".5"/>
+  <g transform="translate(0 -32)"><circle class="moon-halo" cx="62" cy="146" r="34" fill="url(#moonHalo)"/><circle class="moon-face" cx="62" cy="146" r="11" fill="#f4ecd8"/><circle cx="58" cy="143" r="2.2" fill="#e3d8bf" opacity=".6"/><circle cx="66" cy="150" r="1.5" fill="#e3d8bf" opacity=".5"/>
   <g class="moon-rabbit" fill="#b8aa8c"><ellipse cx="63.4" cy="149.6" rx="3.6" ry="2.8"/><circle cx="59.9" cy="147" r="2"/><ellipse cx="59.2" cy="143.6" rx=".7" ry="2.3" transform="rotate(-14 59.2 143.6)"/><ellipse cx="60.8" cy="143.8" rx=".65" ry="2.1" transform="rotate(10 60.8 143.8)"/><circle cx="66.9" cy="149" r=".9"/><path d="M55.6 151.6h4.2v.8h-4.2z M57.3 148.4l.6 3.4" stroke="#b8aa8c" stroke-width=".5"/></g></g>
   <path d="M0 202L34 174L70 188L118 152L160 180L212 140L262 174L304 152L360 178V540H0Z" fill="#14204a"/>
   <path d="M106 162L118 152L131 164M200 150L212 140L225 152M292 162L304 152L316 163" fill="none" stroke="#9aaad0" stroke-opacity=".55" stroke-width="1.4" stroke-linejoin="round"/>
@@ -1915,7 +1944,7 @@ function roomSVG(h){
   <path d="M358 40L292 62" stroke="#c8b07a" stroke-width="1.4"/>
   <path d="M354 44L296 66V214L354 244Z" fill="${fxWindowFill(fx)}"/>
   <g fill="#efe8da"><circle cx="312" cy="96" r=".8"/><circle cx="344" cy="124" r=".7"/><circle cx="306" cy="150" r=".8"/><circle cx="330" cy="176" r=".6"/><circle cx="338" cy="82" r=".9"/><circle cx="318" cy="120" r=".6"/></g>
-  <g clip-path="url(#winR)" aria-hidden="true"><g class="win-star"><circle cx="339.5" cy="86" r="14" fill="#ecd28c" opacity=".1"/><path d="${logoStar(339.5,86,15,10)}" fill="#ecd28c"/><path d="${logoStar(339.5,85.2,5.2,3.4)}" fill="#fff6dc" opacity=".5"/></g></g>
+  <g clip-path="url(#winR)" aria-hidden="true"><g class="win-star"><circle cx="339.5" cy="88" r="13" fill="#fde3a3" opacity=".12"/><path d="${logoStar(339.5,88,12)}" fill="#fde3a3"/></g></g>
   <g fill="#efe8da"><circle cx="304" cy="110" r=".7"/><circle cx="348" cy="160" r=".6"/><circle cx="310" cy="186" r=".7"/><circle cx="326" cy="104" r=".5"/><circle cx="342" cy="190" r=".6"/></g>
   <path d="M352 228Q336 214 320 216T296 204V214L354 244Z" fill="#c9d2e4" opacity=".75"/>
   ${fx==='meteor'||fx==='santa'?fxSVG(fx):''}
@@ -2251,7 +2280,7 @@ function skyLayout(h){
   return {stars,lines,labels,need,n,rank,A,B,formed:!!(A||B)};
 }
 /* the Star n Vill' logo star: a four-point sparkle, taller than it is wide */
-const logoStar=(x,y,v,w)=>{const k=.17;return `M${x} ${y-v}Q${x+w*k} ${y-w*k} ${x+w} ${y}Q${x+w*k} ${y+w*k} ${x} ${y+v}Q${x-w*k} ${y+w*k} ${x-w} ${y}Q${x-w*k} ${y-w*k} ${x} ${y-v}Z`;};
+const logoStar=(x,y,r)=>{const k=r*.23;return `M${x} ${y-r}L${x+k} ${y-k}L${x+r} ${y}L${x+k} ${y+k}L${x} ${y+r}L${x-k} ${y+k}L${x-r} ${y}L${x-k} ${y-k}Z`;};
 const star4=(x,y,r)=>`M${x} ${y-r}L${x+r*.22} ${y-r*.22}L${x+r} ${y}L${x+r*.22} ${y+r*.22}L${x} ${y+r}L${x-r*.22} ${y+r*.22}L${x-r} ${y}L${x-r*.22} ${y-r*.22}Z`;
 /* Christmas compatibility: shown only on the 25th, only when both birthdays exist. Always kind. */
 const ELEM={'양자리':'F','사자자리':'F','궁수자리':'F','황소자리':'E','처녀자리':'E','염소자리':'E','쌍둥이자리':'A','천칭자리':'A','물병자리':'A','게자리':'W','전갈자리':'W','물고기자리':'W'};
@@ -2328,8 +2357,7 @@ function renderSky(){
     ${body}
     <g class="bigstar ${on?'on':''}" data-act="bigstar" role="button" tabindex="0" aria-label="${on?'가장 큰 별을 눌러 편지 열기':'가장 큰 별, 12월 25일에 열려요'}">
       <circle class="halo" cx="${big.x}" cy="${big.y}" r="30" fill="#f3dfae" opacity="${on?.25:.05}"/>
-      <path d="${star4(big.x,big.y,20)}" fill="${on?'#f3dfae':'#7d879f'}" opacity="${on?1:.6}"/>
-      <path d="${star4(big.x,big.y,9)}" transform="rotate(45 ${big.x} ${big.y})" fill="${on?'#f3dfae':'#7d879f'}" opacity="${on?.8:.4}"/>
+      <path d="${logoStar(big.x,big.y,21)}" fill="#fde3a3" opacity="${on?1:.55}"/>
     </g>
     <path d="M0 400V378Q90 362 180 372T360 366V400Z" fill="#0b1122"/>
     <path d="M0 378Q90 362 180 372T360 366" fill="none" stroke="#c8b07a" stroke-opacity=".4"/>
