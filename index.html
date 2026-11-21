@@ -2546,24 +2546,23 @@ function waxSeal(){
       <filter id="waxGrain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="4"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.1 .7"/></filter>
       <filter id="waxSoft"><feGaussianBlur stdDeviation="1.6"/></filter>
       <radialGradient id="waxBody" cx="38%" cy="32%" r="75%"><stop offset="0" stop-color="#a23a46"/><stop offset=".45" stop-color="#7a2632"/><stop offset="1" stop-color="#4a141c"/></radialGradient>
-      <radialGradient id="waxNavy" cx="45%" cy="40%" r="70%"><stop offset="0" stop-color="#1c2a5a"/><stop offset="1" stop-color="#0c1430"/></radialGradient>
-      <linearGradient id="waxGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff2c8"/><stop offset=".5" stop-color="#f1d58e"/><stop offset="1" stop-color="#b8924e"/></linearGradient>
+      <radialGradient id="waxIn" cx="45%" cy="40%" r="70%"><stop offset="0" stop-color="#5a1824"/><stop offset="1" stop-color="#3a0e16"/></radialGradient>
+      <linearGradient id="waxStar" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c4505e"/><stop offset=".5" stop-color="#9a3240"/><stop offset="1" stop-color="#6a1f2a"/></linearGradient>
       <clipPath id="waxClip"><circle cx="50" cy="50" r="46"/></clipPath>
     </defs>
     <g filter="url(#waxEdge)"><path d="${blob}" fill="url(#waxBody)"/><path d="${blob}" fill="none" stroke="#3a0e15" stroke-opacity=".5" stroke-width="1.2"/></g>
     <rect x="0" y="0" width="100" height="100" filter="url(#waxGrain)" clip-path="url(#waxClip)" opacity=".5" style="mix-blend-mode:multiply"/>
     <circle cx="50" cy="50" r="36.5" fill="none" stroke="#3a0e15" stroke-width="2.2" opacity=".55"/>
     <circle cx="50" cy="50" r="38.2" fill="none" stroke="#c45a66" stroke-width=".9" opacity=".45"/>
-    <circle cx="50" cy="50" r="35.2" fill="#2e4a35"/>
-    <circle cx="50" cy="50" r="34.6" fill="none" stroke="#d9bd7c" stroke-width=".7"/>
-    <circle cx="50" cy="50" r="30.4" fill="none" stroke="#d9bd7c" stroke-width=".7"/>
-    <circle cx="50" cy="50" r="29.9" fill="url(#waxNavy)"/>
-    <circle cx="50" cy="50" r="29.9" fill="none" stroke="#000" stroke-opacity=".45" stroke-width="2.4" filter="url(#waxSoft)" clip-path="url(#waxClip)"/>
-    <circle cx="50" cy="50" r="13" fill="#ffe3a0" opacity=".16" filter="url(#waxSoft)"/>
-    <path d="${star4(50.8,51.2,20)}" fill="#0a0f22" opacity=".55"/>
-    <path d="${star4(50,50,20)}" fill="url(#waxGold)"/>
-    <path d="${star4(50,50,8.5)}" transform="rotate(45 50 50)" fill="#fff3d2" opacity=".85"/>
-    <circle cx="50" cy="50" r="1.6" fill="#fffaf0"/>
+    <circle cx="50" cy="50" r="35.2" fill="#6e2230"/>
+    <circle cx="50" cy="50" r="34.6" fill="none" stroke="#a8404e" stroke-width=".7"/>
+    <circle cx="50" cy="50" r="30.4" fill="none" stroke="#a8404e" stroke-width=".7"/>
+    <circle cx="50" cy="50" r="29.9" fill="url(#waxIn)"/>
+    <circle cx="50" cy="50" r="29.9" fill="none" stroke="#1e060b" stroke-opacity=".6" stroke-width="2.4" filter="url(#waxSoft)" clip-path="url(#waxClip)"/>
+    <path d="${star4(50.9,51.3,20)}" fill="#24070d" opacity=".55"/>
+    <path d="${star4(50,50,20)}" fill="url(#waxStar)"/>
+    <path d="${star4(50,50,8.5)}" transform="rotate(45 50 50)" fill="#c9606d" opacity=".9"/>
+    <circle cx="50" cy="50" r="1.6" fill="#e48a95"/>
     <ellipse cx="34" cy="26" rx="14" ry="6" fill="#fff" opacity=".16" transform="rotate(-28 34 26)" filter="url(#waxSoft)"/>
   </svg>`;
 }
