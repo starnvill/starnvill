@@ -275,6 +275,7 @@ h2,h3{font-family:var(--font-serif-ko)}
 .door-open .door-spill{opacity:.6}
 .scene{will-change:transform}
 .veil{position:fixed;inset:0;z-index:50;pointer-events:none;background:radial-gradient(ellipse at 50% 56%,#e9bd7c 0,#b97a3c 48%,#4a2614 100%)}
+.veil.night{background:radial-gradient(ellipse at 70% 30%,#2b3b72 0,#0d1530 55%,#05080f 100%)}
 .fading{transition:opacity .25s;opacity:0}
 .sky-house{cursor:pointer}
 .sky-house:hover text{fill:#efe8da}
@@ -683,7 +684,7 @@ a.btn.buy{text-decoration:none;display:inline-block}
 .moon-face{animation:moonFace 3.8s ease-in-out infinite}
 @keyframes moonFace{0%,100%{opacity:1}50%{opacity:.9}}
 .moon-rabbit{opacity:0;animation:moonRabbit 4s ease-in-out infinite}
-@keyframes moonRabbit{0%,100%{opacity:0}35%,70%{opacity:.5}}
+@keyframes moonRabbit{0%,100%{opacity:0}35%,70%{opacity:.32}}
 .steam{animation:steamA 3.6s ease-in-out infinite}
 .steam.s2{animation:steamB 4.6s ease-in-out -1.7s infinite}
 .steam.s3{animation:steamC 5.8s ease-in-out -3.1s infinite}
@@ -1577,7 +1578,7 @@ function cloudOpened(h){const ids=h.recv.filter(m=>m.hung).map(m=>m.id);if(ids.l
 
 const KEY=CLOUD?'snv-cloud-v1':'xvill-proto-v5';
 const PER_DAY=2;
-const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reduce=false;   // motion is shown for everyone
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const dayLabel=d=>d===0?'11월 30일':`12월 ${d}일`;
@@ -2620,6 +2621,17 @@ function openAndZoom(i,id,scene){
       veil.animate([{opacity:1},{opacity:1,offset:.2},{opacity:0}],{duration:650,easing:'ease-out',fill:'forwards'}).onfinish=()=>{veil.remove();busy=false;};};
   },620);
 }
+function goSky(){
+  if(busy)return;const room=$('.room');
+  const veil=document.createElement('div');veil.className='veil night';document.body.appendChild(veil);
+  const open=()=>{S.screen='sky';save();render();window.scrollTo(0,0);
+    const w=$('.sky-wrap');if(w&&w.animate)w.animate([{transform:'scale(1.14) translateY(-14px)',opacity:.4},{transform:'none',opacity:1}],{duration:1400,easing:'cubic-bezier(.3,.2,.4,1)'});
+    veil.animate([{opacity:1},{opacity:1,offset:.15},{opacity:0}],{duration:1000,easing:'ease-out',fill:'forwards'}).onfinish=()=>{veil.remove();busy=false;};};
+  if(!room||!room.animate){veil.remove();S.screen='sky';save();render();window.scrollTo(0,0);return;}
+  busy=true;room.style.transformOrigin='88% 26%';
+  room.animate([{transform:'none'},{transform:'scale(1.4)'}],{duration:750,easing:'ease-in',fill:'forwards'});
+  veil.animate([{opacity:0},{opacity:0,offset:.35},{opacity:1}],{duration:750,easing:'ease-in',fill:'forwards'}).onfinish=open;
+}
 function leaveHouse(){
   musicStop();
   const id=S.houseId,i=S.houses.findIndex(h=>h.id===id);
@@ -3076,7 +3088,7 @@ function act(a,t,h,e){
     case 'exp':toast('프로토타입에서는 파일을 만들 수 없어요. 실제 서비스에서 열려요');break;
     case 'end-close':{const st=$('.boxstage');if(st)st.remove();}clearTimeout(enTimer);S.screen='village';save();render();window.scrollTo(0,0);break;
     case 'swap-view':{const hh=H();if(!hh)break;closeModal();swapSides(hh);save();render();window.scrollTo(0,0);toast(S.as==='them'?`지금은 ${S.myName}${batchim(S.myName)?'이에요':'예요'}. ${hh.name}에게 추억을 보내고, 소원을 들어줘 봐요`:'다시 내 시점이에요');break;}
-    case 'go-sky':if(t.classList.contains('win-btn'))S.winTips=3;musicStop();if(!S.seenSky){S.seenSky=true;if(t.classList.contains('act-sky')){S.winHint=true;setTimeout(()=>toast('다음부터는 오른쪽 창문을 누르면 밤하늘로 나올 수 있어요'),400);}}S.screen='sky';save();render();window.scrollTo(0,0);break;
+    case 'go-sky':if(t.classList.contains('win-btn'))S.winTips=3;musicStop();if(!S.seenSky){S.seenSky=true;if(t.classList.contains('act-sky')){S.winHint=true;setTimeout(()=>toast('다음부터는 오른쪽 창문을 누르면 밤하늘로 나올 수 있어요'),400);}}goSky();break;
     case 'back-house':{S.screen='house';save();render();window.scrollTo(0,0);audioUnlock();if(S.sound!==false)houseMusic();
       if(!reduce){const v=document.createElement('div');v.className='veil';document.body.appendChild(v);v.animate([{opacity:1},{opacity:0}],{duration:700,easing:'ease-out',fill:'forwards'}).onfinish=()=>v.remove();}break;}
     case 'scroll':{const el=document.getElementById(t.dataset.v);if(el)el.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});break;}
