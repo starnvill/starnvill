@@ -711,6 +711,10 @@ const themeNow=h=>REL_THEMES[h.rel].includes(h.theme)?h.theme:(REL_THEMES[h.rel]
 const HCOL={love:{red:['레드','#8e1c2e'],pink:['핑크','#d0849c']},
   friend:{green:['그린','#3d4a32'],yellow:['옐로','#a8842f'],beige:['베이지','#a8916f'],brown:['브라운','#56382a'],ivory:['아이보리','#cfc4a8']}};
 const bodyOf=h=>{const m=HCOL[h.rel];if(!m)return REL[h.rel].body;return (m[h.color]||Object.values(m)[0])[1];};
+/* these accounts may change a house colour any time (the database checks this too) */
+const COLOR_ADMINS=['hxrnag@gmail.com','harang14@gmail.com'];
+const colorAdmin=()=>typeof ME!=='undefined'&&!!ME&&COLOR_ADMINS.includes(String(ME.email||'').toLowerCase());
+const canRecolor=h=>!!HCOL[h.rel]&&(!h.color||colorAdmin());
 const colOf=h=>{const m=HCOL[h.rel];return m&&m[h.color]?h.color:(m?Object.keys(m)[0]:null);};
 const MATS={ivory:'#efe8da',champagne:'#d9c79c',olive:'#8a8f6c',midnight:'#1f2b52'};
 const PENS=['#efe8da','#c8b07a','#8c2f3a','#7b8457','#2c3f72','#1b1712'];
@@ -1412,7 +1416,7 @@ async function cloudAct(a,t,h,e){
       if(error){toast(errKo(error));return true;}
       if(hereCh&&hereCh.send)try{hereCh.send({type:'broadcast',event:'deco',payload:{k:a,v}});}catch(e){}return false;}
     case 'hcol':{/* chosen once: at build, or later for houses built before colours existed */
-      const v=t.dataset.v;if(h.color||!(HCOL[h.rel]||{})[v])return true;
+      const v=t.dataset.v;if(!canRecolor(h)||!(HCOL[h.rel]||{})[v])return true;
       const {error}=await sb.rpc('set_look',{hid:h.id,k:'color',v});if(error){toast(errKo(error));return true;}
       h.color=v;save();renderHouseKeepModal();toast('집 색을 정했어요');return true;}
       {const v=t.dataset.v;if(!(HCOL[h.rel]||{})[v])return true;const {error}=await sb.from('houses').update({color:v}).eq('id',h.id);if(error){toast(errKo(error));return true;}h.color=v;save();renderHouseKeepModal();}return true;
@@ -2784,7 +2788,7 @@ function lpAct(a,t,h){
 function colOpts(rel){const m=HCOL[rel];return m?Object.entries(m).map(([k,v])=>`<option value="${k}">${v[0]}</option>`).join(''):'';}
 document.addEventListener('change',e=>{if(e.target&&e.target.id==='nhRel'){const c=$('#nhCol'),f=$('#nhColF');if(c)c.innerHTML=colOpts(e.target.value);if(f)f.hidden=!HCOL[e.target.value];}});
 function decoSheet(h){return `${sheetHead('Decorate','집 꾸미기')}<div class="deco-sheet">
-      ${HCOL[h.rel]&&!h.color?`<p class="caps" style="text-align:center;margin:4px 0 4px">House colour</p><p class="hint-text" style="text-align:center;margin:0 0 10px">한 번만 고를 수 있어요</p>${optRow('집 색','hcol',HCOL[h.rel],colOf(h),v=>v[0],v=>v[1])}`:''}<p class="caps" style="text-align:center;margin:4px 0 4px">Interior</p><p class="hint-text" style="text-align:center;margin:0 0 10px">${wa(h.name)} 같은 집 안을 봐요. 둘 중 누구나 바꿀 수 있어요</p>
+      ${canRecolor(h)?`<p class="caps" style="text-align:center;margin:4px 0 4px">House colour</p><p class="hint-text" style="text-align:center;margin:0 0 10px">${h.color?'관리자만 바꿀 수 있어요':'한 번만 고를 수 있어요'}</p>${optRow('집 색','hcol',HCOL[h.rel],colOf(h),v=>v[0],v=>v[1])}`:''}<p class="caps" style="text-align:center;margin:4px 0 4px">Interior</p><p class="hint-text" style="text-align:center;margin:0 0 10px">${wa(h.name)} 같은 집 안을 봐요. 둘 중 누구나 바꿀 수 있어요</p>
       ${optRow('벽 색','theme',Object.fromEntries(REL_THEMES[h.rel].map(k=>[k,THEMES[k]])),themeNow(h),v=>v[0],v=>v[1])}
       ${optRow('벽지','paper',PAPER,decoOf(h).paper||'damask')}
       ${optRow('바닥','floor',FLOOR,decoOf(h).floor||'plank')}
