@@ -167,7 +167,7 @@ h2,h3{font-family:var(--font-serif-ko)}
 .bigstar.on .halo{animation:pulse 3s ease-in-out infinite}
 .halo{transform-box:fill-box;transform-origin:center}
 @keyframes pulse{0%,100%{opacity:.18;transform:scale(1)}50%{opacity:.42;transform:scale(1.12)}}
-.letter-box textarea{width:100%;min-height:170px;border:0;border-radius:0;background:#f1ebdf;color:var(--ink);padding:18px 18px;font-family:var(--font-serif-ko);font-size:15px;line-height:1.9;resize:vertical;box-shadow:inset 0 0 0 1px rgba(200,176,122,.55),inset 0 0 0 6px #f1ebdf,inset 0 0 0 7px rgba(200,176,122,.35)}
+.letter-soon .sect-head{margin-bottom:0}.letter-box textarea{width:100%;min-height:170px;border:0;border-radius:0;background:#f1ebdf;color:var(--ink);padding:18px 18px;font-family:var(--font-serif-ko);font-size:15px;line-height:1.9;resize:vertical;box-shadow:inset 0 0 0 1px rgba(200,176,122,.55),inset 0 0 0 6px #f1ebdf,inset 0 0 0 7px rgba(200,176,122,.35)}
 
 /* sheets */
 .modal{position:fixed;inset:0;z-index:20;background:rgba(4,7,16,.72);display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
@@ -2435,7 +2435,7 @@ function renderSky(){
   ${(()=>{if(!on)return '';const A=signOf(S.myBirthday),B=signOf(h.theirBirthday);return A&&B?matchCard(h,A,B):'';})()}
   ${on?`<section class="sect end-cta"><p class="caps">The Last Page</p><p class="ob-p">마을을 모두 둘러보셨다면,</p><button class="primary" data-act="ending">마을의 마지막 페이지 열기</button></section>`:''}
   ${d===0?'':birthdaySection(h)}
-  ${on||d===0?'':`<section class="sect letter-box"><div class="sect-head"><p class="caps">The Last Letter</p><h3>${esc(h.name)}에게 쓰는 마지막 편지</h3><p>25일 0시, ${esc(h.name)}의 하늘에서 가장 큰 별로 열려요</p></div>
+  ${on||d===0?'':d<24?`<section class="sect letter-box letter-soon"><div class="sect-head"><p class="caps">Your Most Special Letter</p><h3>${esc(h.name)}에게 쓰는 가장 특별한 편지</h3><p>크리스마스 이브, 12월 24일에만 쓸 수 있어요.<br>${24-d}일 뒤에 이 자리에서 만나요 ✦</p></div></section>`:`<section class="sect letter-box"><div class="sect-head"><p class="caps">Your Most Special Letter</p><h3>${esc(h.name)}에게 쓰는 가장 특별한 편지</h3><p>오늘, 크리스마스 이브에만 쓸 수 있어요.<br>25일 0시, ${esc(h.name)}의 하늘에서 가장 큰 별로 열려요</p></div>
     <label for="letterIn" class="caps" style="display:block;text-align:center;margin-bottom:8px">Your words</label>
     <textarea id="letterIn" maxlength="800" placeholder="한 달 동안 하고 싶었던 말을 적어 보세요">${esc(h.letter)}</textarea>
     <button class="primary" data-act="save-letter">별에 맡기기</button></section>`}`;
@@ -2472,7 +2472,7 @@ function skyLife(h){
 }
 /* ---------- first visit: welcome, sign-in, name, three short cards ---------- */
 let OB=0,installEvt=null;
-addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;if(!S.onboarded&&OB===6)renderOnboard();});
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;if(!S.onboarded&&(OB===6||OB===1))renderOnboard();});
 const OB_CARDS=[
  {cap:'Your Village',t:'소중한 사람마다,<br>집 한 채',p:'연인, 친구, 가족. 최대 다섯 채까지 지을 수 있어요.<br>초대 링크를 보내면 상대가 그 집에 들어와요.',art:'house'},
  {cap:'Every Day in December',t:'하루 한두 장,<br>추억을 양말에',p:'12월 1일부터 매일 추억을 1~2개씩 넣어요.<br>사진 한 장과 한 줄이면 충분해요.<br>상대 양말이 부풀지만, 열어보는 건 크리스마스예요.',art:'stocking'},
@@ -2495,6 +2495,20 @@ function obLoginCard(){
     <div class="ob-login">${CFG.kakao&&KAKAO_OPEN?`<button class="ob-kakao" data-act="ob-login">${kakao}카카오로 시작하기</button>`:''}
     <button class="ob-alt" data-act="ob-mail">이메일로 시작하기</button>${CFG.kakao?'':'<button class="ob-alt" data-act="ob-login">로그인 없이 둘러보기</button>'}</div><button class="link-btn ob-skip" data-act="ob-back">← 처음으로</button></div>`;
 }
+// the add-to-home-screen card: shown right after the welcome, before signing in (pre), or at the end for anyone who never saw it
+function a2hsSeen(){try{return matchMedia('(display-mode: standalone)').matches||navigator.standalone||localStorage.getItem('snv-a2hs')==='1';}catch(e){return false;}}
+function homeCard(pre){let body;
+    const ua=navigator.userAgent||'',ios=/iPhone|iPad|iPod/.test(ua),android=/Android/.test(ua),standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+    const steps=ios?[['공유','하단의 공유 버튼 <span class="ob-ico"><svg viewBox="0 0 12 14" width="10" height="12"><path d="M6 1V9M3 4L6 1L9 4M2.5 6.5H1.5V13H10.5V6.5H9.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>을 눌러요'],['홈 화면에 추가','목록에서 <b>홈 화면에 추가</b>를 골라요'],['추가','오른쪽 위 <b>추가</b>를 누르면 끝']]
+      :android?[['메뉴','오른쪽 위 <span class="ob-ico">⋮</span> 메뉴를 열어요'],['홈 화면에 추가','<b>홈 화면에 추가</b> 또는 <b>앱 설치</b>를 눌러요'],['설치','<b>설치</b>를 누르면 끝']]
+      :[['iPhone','Safari 공유 버튼 → <b>홈 화면에 추가</b>'],['Android','Chrome 메뉴 ⋮ → <b>홈 화면에 추가</b>'],['컴퓨터','주소창 오른쪽 설치 아이콘을 눌러요']];
+    body=`<div class="ob-card"><div class="ob-artwrap"><div class="ob-phone"><img src="icons/icon-192.png" alt=""><span>별과 마을</span></div></div><p class="caps">Keep it close</p><h2>홈 화면에 마을을 두세요</h2>
+      <p class="ob-p">앱처럼 한 번에 열리고, 전체 화면으로 볼 수 있어요.<br>매일 추억을 넣기도 훨씬 쉬워져요.</p>
+      ${standalone?'<p class="ob-done-note">이미 홈 화면에서 열었어요 ✦</p>':`<ol class="ob-steps">${steps.map(([a,b],i)=>`<li><i>${i+1}</i><div><b>${a}</b><span>${b}</span></div></li>`).join('')}</ol>`}
+      ${installEvt?`<button class="primary" data-act="${pre?'a2hs-install':'ob-install'}">앱으로 설치하기</button>`:`<button class="primary" data-act="${pre?'a2hs-ok':'ob-done'}">추가했어요</button>`}
+      <button class="link-btn ob-skip" data-act="${pre?'a2hs-ok':'ob-done'}">나중에 할게요</button><button class="link-btn ob-skip" data-act="ob-back">← 이전</button></div>`;
+  
+  return body;}
 function renderOnboard(){
   const dots=n=>`<div class="ob-dots">${[0,1,2].map(i=>`<i class="${i===n?'on':''}"></i>`).join('')}</div>`;
   let body='';
@@ -2503,28 +2517,19 @@ function renderOnboard(){
     <p class="ob-tag">그 자체로 선물이 되어주는 소중한 곳.<br>연인, 가족, 친구, 누구든지<br>함께 추억을 기록해요.</p>
     <p class="ob-q">당신의 <i>loved 5</i>는 누구인가요?</p>
     <button class="primary" data-act="ob-next">시작하기</button><p class="ob-fine">이미 마을이 있나요? <button class="link-btn" data-act="ob-next">로그인</button></p></div>`;
+  else if(OB===1&&!a2hsSeen())body=homeCard(true);
   else if(OB===1&&CLOUD)body=obLoginCard();
   else if(OB===1)body=`<div class="ob-card"><p class="caps">Sign in</p><h2>마을에 들어가기</h2><p class="ob-p">로그인하면 어느 기기에서든<br>내 마을과 추억이 그대로 있어요.</p>
     <div class="ob-login"><button class="ob-kakao" data-act="ob-login"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3C5.6 3 2 5.8 2 9.2c0 2.2 1.5 4.1 3.7 5.2l-.8 3 3.3-2.2c.6.1 1.2.1 1.8.1 4.4 0 8-2.8 8-6.1S14.4 3 10 3Z" fill="#191600"/></svg>카카오로 시작하기</button>
       <button class="ob-alt" data-act="ob-login">Google로 계속하기</button><button class="ob-alt" data-act="ob-login">Apple로 계속하기</button></div>
     <p class="ob-fine">프로토타입이라 실제 로그인은 되지 않아요. 아무 버튼이나 눌러 보세요.</p></div>`;
   else if(OB===2&&(S.myStar!=null||(S.myStar=Math.floor(Math.random()*30))>=0))body=`<div class="ob-card"><p class="caps">Your name</p><h2>마을에서 어떻게 불러 드릴까요?</h2><p class="ob-p">집 이름표와 편지에 이 이름이 쓰여요.</p>
-    <div class="field" style="max-width:260px;margin:22px auto 6px"><input id="obName" maxlength="10" placeholder="예: 하랑" value="${esc(S.myName||'')}" style="text-align:center"></div><p class="err" id="obErr"></p>
+    <div class="field" style="max-width:260px;margin:22px auto 6px"><input id="obName" maxlength="10" placeholder="예: 지우" value="${esc(S.myName||'')}" style="text-align:center"></div><p class="err" id="obErr"></p>
     <p class="caps" style="margin:14px 0 0">Your star</p><p class="ob-p" style="margin:4px 0 0">마을에서 나를 나타낼 별의 색을 골라요.</p>${starGrid('ob-star')}
     <button class="primary" data-act="ob-name">다음</button><button class="link-btn ob-skip" data-act="ob-back">← ${CLOUD?'다른 방법으로 로그인':'이전'}</button></div>`;
-  else if(OB===6){
-    const ua=navigator.userAgent||'',ios=/iPhone|iPad|iPod/.test(ua),android=/Android/.test(ua),standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
-    const steps=ios?[['공유','하단의 공유 버튼 <span class="ob-ico"><svg viewBox="0 0 12 14" width="10" height="12"><path d="M6 1V9M3 4L6 1L9 4M2.5 6.5H1.5V13H10.5V6.5H9.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>을 눌러요'],['홈 화면에 추가','목록에서 <b>홈 화면에 추가</b>를 골라요'],['추가','오른쪽 위 <b>추가</b>를 누르면 끝']]
-      :android?[['메뉴','오른쪽 위 <span class="ob-ico">⋮</span> 메뉴를 열어요'],['홈 화면에 추가','<b>홈 화면에 추가</b> 또는 <b>앱 설치</b>를 눌러요'],['설치','<b>설치</b>를 누르면 끝']]
-      :[['iPhone','Safari 공유 버튼 → <b>홈 화면에 추가</b>'],['Android','Chrome 메뉴 ⋮ → <b>홈 화면에 추가</b>'],['컴퓨터','주소창 오른쪽 설치 아이콘을 눌러요']];
-    body=`<div class="ob-card"><div class="ob-artwrap"><div class="ob-phone"><img src="icons/icon-192.png" alt=""><span>별과 마을</span></div></div><p class="caps">Keep it close</p><h2>홈 화면에 마을을 두세요</h2>
-      <p class="ob-p">앱처럼 한 번에 열리고, 전체 화면으로 볼 수 있어요.<br>매일 추억을 넣기도 훨씬 쉬워져요.</p>
-      ${standalone?'<p class="ob-done-note">이미 홈 화면에서 열었어요 ✦</p>':`<ol class="ob-steps">${steps.map(([a,b],i)=>`<li><i>${i+1}</i><div><b>${a}</b><span>${b}</span></div></li>`).join('')}</ol>`}
-      ${installEvt?'<button class="primary" data-act="ob-install">앱으로 설치하기</button>':'<button class="primary" data-act="ob-done">추가했어요</button>'}
-      <button class="link-btn ob-skip" data-act="ob-done">나중에 할게요</button><button class="link-btn ob-skip" data-act="ob-back">← 이전</button></div>`;
-  }
+  else if(OB===6)body=homeCard(false);
   else{const c=OB_CARDS[OB-3];body=`<div class="ob-card ob-intro"><div class="ob-artwrap">${obArt(c.art)}</div><p class="caps">${c.cap}</p><h2>${c.t}</h2><p class="ob-p">${c.p}</p>${dots(OB-3)}
-    <button class="primary" data-act="ob-next">${OB<5?'다음':'좋아요'}</button>${OB<5?'<button class="link-btn ob-skip" data-act="ob-home">건너뛰기</button>':''}<button class="link-btn ob-skip" data-act="ob-back">← 이전</button></div>`;}
+    <button class="primary" data-act="${OB>=5&&a2hsSeen()?'ob-done':'ob-next'}">${OB<5?'다음':'좋아요'}</button>${OB<5?`<button class="link-btn ob-skip" data-act="${a2hsSeen()?'ob-done':'ob-home'}">건너뛰기</button>`:''}<button class="link-btn ob-skip" data-act="ob-back">← 이전</button></div>`;}
   $('#app').innerHTML=`<div class="onboard step-${OB}">${body}</div>`;
   const inp=$('#obName');if(inp)setTimeout(()=>inp.focus(),300);
 }
@@ -2533,7 +2538,7 @@ let EN=0,enTimer=null;
 function endPanels(){
   const hs=S.houses.length,mem=S.houses.reduce((a,h)=>a+h.sent.length+h.recv.length,0);
   return [
-   {t:'추억이 담긴 사진들,<br>비밀스러운 메시지들,<br>별이 가득한 하늘,<br>그리고 마지막 편지까지.',s:'마을을 모두 둘러보셨나요?'},
+   {t:'추억이 담긴 사진들,<br>비밀스러운 메시지들,<br>별이 가득한 하늘,<br>그리고 가장 특별한 편지까지.',s:'마을을 모두 둘러보셨나요?'},
    {t:`<b>${hs}</b>채의 집에서,<br><b>25</b>번의 밤 동안,<br><b>${mem}</b>개의 추억이 오갔어요.`,s:'그대의 12월을 잘 되돌아보셨나요?'},
    {t:'이제 마을은 잠시<br>열한 달의 휴식기에 들어갑니다.',s:''},
    {last:true}];
@@ -2571,7 +2576,7 @@ function waxSeal(){
 }
 /* the developer's letter, in the developer's own voice */
 const DEV_LETTER=`추억이 담긴 사진들, 비밀스러운 메시지들, 별이 가득한 하늘,
-마지막으로 받은 상대의 마음을 담은 메시지까지.
+상대의 마음을 담은 가장 특별한 편지까지.
 서로의 마음을 다 확인하셨나요?
 그대의 12월을 다 되돌아보셨나요?
 
@@ -2871,13 +2876,17 @@ const TRACK_KEYS=Object.keys(TRACKS).filter(k=>k!=='bg');
 const TUNE_KEYS=TRACK_KEYS;
 function defaultPlaylist(other){return TRACK_KEYS.map((k,i)=>({t:`Track ${i+1}`,a:TRACKS[k].by,tune:k,by:i%2?'나':other}));}
 const AUD={ctx:null,bus:null,run:null,timer:null,playing:false,kind:'',pads:[]};
+let SILENT_EL=null;
 function audioUnlock(){
   /* iPhone Safari: treat the music as music, so the silent switch doesn't mute it (Safari 16.4+) */
   try{if(navigator.audioSession&&navigator.audioSession.type!=='playback')navigator.audioSession.type='playback';}catch(e){}
+  /* older iPhones: a silent looping <audio> started on a tap puts the phone in media-playback mode, so web audio is heard even on silent/vibrate */
+  try{if(!SILENT_EL){SILENT_EL=new Audio('data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//NwwAAAAAAAAAAAAEluZm8AAAAPAAAAKQAAEXIAEBAWFhwcHCIiKCgoLi40NDQ6OkBARkZGTExSUlJYWF5eXmRkampqcHB2dnx8fIKCiIiIjo6UlJSamqCgpqamrKyysrK4uL6+vsTEysrK0NDW1tzc3OLi6Ojo7u709PT6+v//AAAAAExhdmM2MC4zMQAAAAAAAAAAAAAAACQD3gAAAAAAABFya3IoowAAAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NCxKMAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NAxKQAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/80LEowAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/80DEpAAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsSjAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NCxKMAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NAxKQAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/80LEowAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/80DEpAAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsSjAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NCxKMAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NAxKQAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/80LEowAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/80DEpAAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsSjAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NCxKMAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NAxKQAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/80LEowAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/80DEpAAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsSjAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NCxKMAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NAxKQAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/80LEowAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/80DEpAAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsSjAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NCxKMAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NAxKQAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/80LEowAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/80DEpAAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsSjAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NCxKMAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NAxKQAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU=');SILENT_EL.loop=true;SILENT_EL.setAttribute('playsinline','');SILENT_EL.preload='auto';}
+    if(S.sound!==false&&SILENT_EL.paused)SILENT_EL.play().catch(()=>{});}catch(e){}
   try{if(!AUD.ctx){const C=window.AudioContext||window.webkitAudioContext;if(!C)return;AUD.ctx=new C();
     const c=AUD.ctx,bus=c.createGain();bus.gain.value=.1;const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=3000;lp.Q.value=.4;const dl=c.createDelay();dl.delayTime.value=.23;const fb=c.createGain();fb.gain.value=.32;const wet=c.createGain();wet.gain.value=.28;
     bus.connect(lp);lp.connect(c.destination);lp.connect(dl);dl.connect(fb);fb.connect(dl);dl.connect(wet);wet.connect(c.destination);AUD.bus=bus;}
-    if(AUD.ctx.state==='suspended')AUD.ctx.resume();}catch(e){}
+    if(AUD.ctx.state!=='running')AUD.ctx.resume().catch(()=>{});}catch(e){}
 }
 function hz(n){const m=n.match(/^([A-G])(#?)(\d)$/);const st={C:0,D:2,E:4,F:5,G:7,A:9,B:11}[m[1]]+(m[2]?1:0);return 440*Math.pow(2,((+m[3]+1)*12+st-69)/12);}
 function musicStop(){clearTimeout(AUD.timer);if(EL){try{EL.pause();}catch(e){}EL=null;}
@@ -3165,6 +3174,8 @@ function act(a,t,h,e){
     case 'hcol':if(!h.color&&(HCOL[h.rel]||{})[t.dataset.v]){h.color=t.dataset.v;save();renderHouseKeepModal();}break;
     case 'tex':h.tex=t.dataset.v;save();renderHouseKeepModal();toast(`외벽을 ${TEX[h.tex]}${batchim(TEX[h.tex])?'으로':'로'} 바꿨어요`);break;
     case 'ob-next':OB++;render();window.scrollTo(0,0);break;
+    case 'a2hs-ok':try{localStorage.setItem('snv-a2hs','1');}catch(err){}render();window.scrollTo(0,0);break;
+    case 'a2hs-install':if(installEvt){installEvt.prompt();installEvt.userChoice.finally(()=>{installEvt=null;});}try{localStorage.setItem('snv-a2hs','1');}catch(err){}render();break;
     case 'ob-back':OBM=null;OB=Math.max(0,OB-1);render();window.scrollTo(0,0);break;
     case 'house-set':{if(!h)break;
       openModal(`${sheetHead('House settings',`${esc(h.name)}${batchim(h.name)?'이':''}의 집`)}
@@ -3190,7 +3201,7 @@ function act(a,t,h,e){
     case 'end-replay':EN=0;renderEnding();break;
     case 'box-close':closeBox();break;
     case 'box-reopen':{const st=$('.boxstage');if(st)st.remove();EN=endPanels().length-1;renderEnding();break;}
-    case 'box-export':openModal(`${sheetHead('Export','추억 내보내기')}<p class="hint-text" style="margin-top:-4px">상자 안의 추억을 내 기기에 간직해요.</p><div class="exp-list"><button class="exp" data-act="exp"><b>사진첩 PDF</b><span>25일 동안의 사진과 메시지를 한 권으로</span></button><button class="exp" data-act="exp"><b>사진 원본 묶음</b><span>주고받은 사진을 고화질 그대로 (.zip)</span></button><button class="exp" data-act="exp"><b>별자리 카드</b><span>두 사람의 밤하늘과 궁합을 이미지로</span></button><button class="exp" data-act="exp"><b>편지 모음</b><span>마지막 편지들을 모아서</span></button></div>`);break;
+    case 'box-export':openModal(`${sheetHead('Export','추억 내보내기')}<p class="hint-text" style="margin-top:-4px">상자 안의 추억을 내 기기에 간직해요.</p><div class="exp-list"><button class="exp" data-act="exp"><b>사진첩 PDF</b><span>25일 동안의 사진과 메시지를 한 권으로</span></button><button class="exp" data-act="exp"><b>사진 원본 묶음</b><span>주고받은 사진을 고화질 그대로 (.zip)</span></button><button class="exp" data-act="exp"><b>별자리 카드</b><span>두 사람의 밤하늘과 궁합을 이미지로</span></button><button class="exp" data-act="exp"><b>편지 모음</b><span>가장 특별한 편지들을 모아서</span></button></div>`);break;
     case 'exp':toast('프로토타입에서는 파일을 만들 수 없어요. 실제 서비스에서 열려요');break;
     case 'end-close':{const st=$('.boxstage');if(st)st.remove();}clearTimeout(enTimer);S.screen='village';save();render();window.scrollTo(0,0);break;
     case 'swap-view':{const hh=H();if(!hh)break;closeModal();swapSides(hh);save();render();window.scrollTo(0,0);toast(S.as==='them'?`지금은 ${S.myName}${batchim(S.myName)?'이에요':'예요'}. ${hh.name}에게 추억을 보내고, 소원을 들어줘 봐요`:'다시 내 시점이에요');break;}
@@ -3242,7 +3253,7 @@ function act(a,t,h,e){
     case 'save-letter':h.letter=$('#letterIn').value;save();toast(`편지를 별에 맡겼어요. 25일에 ${h.name}에게 열려요`);break;
     case 'bigstar':
       if(S.day!==25){toast(CLOUD?'12월 25일 0시에 열려요':'12월 25일 0시에 열려요. 데모 날짜를 25일로 바꿔 보세요');break;}
-      openModal(`${sheetHead('The Last Letter',`${esc(h.name)}의 마지막 편지`)}<div class="letter-paper"><span class="seal">V</span>${esc(h.theirLetter)}</div>`);break;
+      openModal(`${sheetHead('Most Special Letter',`${esc(h.name)}의 가장 특별한 편지`)}<div class="letter-paper"><span class="seal">V</span>${esc(h.theirLetter)}</div>`);break;
     case 'view':{
       const list=t.dataset.who==='recv'?h.recv:h.sent;const m=list.find(x=>x.id===t.dataset.id);if(!m)break;
       const dark=m.mat==='midnight'||m.mat==='olive';
