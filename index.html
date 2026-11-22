@@ -74,6 +74,8 @@ h2,h3{font-family:var(--font-serif-ko)}
 .lot svg{width:100%;height:auto;display:block;opacity:.75;transition:opacity .3s}
 .lot:hover svg{opacity:1}
 .lot .name{font-family:var(--font-serif-ko);font-size:15px;color:var(--muted)}
+.v-a2hs{text-align:center;margin:20px 0 0}.a2hs-btn{padding:10px 18px;border-radius:22px;border:1px solid rgba(200,176,122,.55);background:rgba(200,176,122,.08);color:var(--champagne);font-size:13.5px}
+.a2hs-sheet .ob-card{margin:0 auto;padding:6px 0 4px;background:none;border:0}
 .v-foot{font-size:12px;color:var(--muted);text-align:center;margin:22px 12px 0;line-height:1.7}
 
 /* top bar */
@@ -2236,6 +2238,7 @@ function renderVillage(){
       <p class="v-date">${dayLine()}</p>${count}${S.sound===false?'':'<p class="tap-hint">♪ 화면을 한 번 누르면 음악이 시작돼요</p>'}</header>
     <div class="scene">${sceneSVG()}${sceneFx(d)}${pills}</div>
     <section class="residents" aria-label="마을 주민"><div class="sect-head"><p class="caps">Residents</p><h3>내 마을의 집들</h3><p>집 한 채에 한 사람, 최대 다섯 채</p></div>${rows}</section>
+    ${isStandalone()?'':`<p class="v-a2hs"><button class="a2hs-btn" data-act="a2hs-btn">${installEvt?'＋ 앱으로 설치하기':'＋ 홈 화면에 추가하기'}</button></p>`}
     ${CLOUD?`<p class="v-foot"><button class="link-btn" data-act="account">${esc(S.myName||'나')} · 계정</button></p>`:`<p class="v-foot">지금은 예시로 채운 프로토타입이에요.<br>실제로 친구와 연결되는 건 다음 단계에서 만들어요.</p>`}`;
   santaNote();
 }
@@ -2519,7 +2522,7 @@ function skyLife(h){
 }
 /* ---------- first visit: welcome, sign-in, name, three short cards ---------- */
 let OB=0,installEvt=null;
-addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;if(!S.onboarded&&(OB===6||OB===1))renderOnboard();});
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;if(!S.onboarded&&(OB===6||OB===1))renderOnboard();else if(S.onboarded&&S.screen==='village')render();});
 const OB_CARDS=[
  {cap:'Your Village',t:'소중한 사람마다,<br>집 한 채',p:'연인, 친구, 가족. 최대 다섯 채까지 지을 수 있어요.<br>초대 링크를 보내면 상대가 그 집에 들어와요.',art:'house'},
  {cap:'Every Day in December',t:'하루 한두 장,<br>추억을 양말에',p:'12월 1일부터 매일 추억을 1~2개씩 넣어요.<br>사진 한 장과 한 줄이면 충분해요.<br>상대 양말이 부풀지만, 열어보는 건 크리스마스예요.',art:'stocking'},
@@ -2543,6 +2546,7 @@ function obLoginCard(){
     <button class="ob-alt" data-act="ob-mail">처음이에요 · 이메일로 시작하기</button><button class="ob-alt" data-act="ob-mail-back-in">전에 가입했어요 · 다시 들어가기</button>${CFG.kakao?'':'<button class="ob-alt" data-act="ob-login">로그인 없이 둘러보기</button>'}</div><button class="link-btn ob-skip" data-act="ob-back">← 처음으로</button></div>`;
 }
 // the add-to-home-screen card: shown right after the welcome, before signing in (pre), or at the end for anyone who never saw it
+function isStandalone(){try{return matchMedia('(display-mode: standalone)').matches||!!navigator.standalone;}catch(e){return false;}}
 function a2hsSeen(){try{return matchMedia('(display-mode: standalone)').matches||navigator.standalone||localStorage.getItem('snv-a2hs')==='1';}catch(e){return false;}}
 function homeCard(pre){let body;
     const ua=navigator.userAgent||'',ios=/iPhone|iPad|iPod/.test(ua),android=/Android/.test(ua),standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
@@ -3225,6 +3229,8 @@ function act(a,t,h,e){
     case 'hcol':if(!h.color&&(HCOL[h.rel]||{})[t.dataset.v]){h.color=t.dataset.v;save();renderHouseKeepModal();}break;
     case 'tex':h.tex=t.dataset.v;save();renderHouseKeepModal();toast(`외벽을 ${TEX[h.tex]}${batchim(TEX[h.tex])?'으로':'로'} 바꿨어요`);break;
     case 'ob-next':OB++;render();window.scrollTo(0,0);break;
+    case 'a2hs-btn':{if(installEvt){const ev=installEvt;ev.prompt();ev.userChoice.then(r=>{if(r&&r.outcome==='accepted')toast('홈 화면에 마을이 생겼어요 ✦');}).finally(()=>{installEvt=null;render();});break;}
+      openModal(`<div class="a2hs-sheet">${homeCard(true).replace(/data-act="a2hs-ok"/g,'data-act="close"').replace('<button class="link-btn ob-skip" data-act="ob-back">← 이전</button>','').replace('추가했어요','알겠어요').replace('<button class="link-btn ob-skip" data-act="close">나중에 할게요</button>','')}</div>`);break;}
     case 'hints-ok':{try{localStorage.setItem('snv-room-hints','1');}catch(err){}const l=$('.hint-layer');if(l){l.classList.add('bye');setTimeout(()=>l.remove(),400);}break;}
     case 'a2hs-ok':try{localStorage.setItem('snv-a2hs','1');}catch(err){}render();window.scrollTo(0,0);break;
     case 'a2hs-install':if(installEvt){installEvt.prompt();installEvt.userChoice.finally(()=>{installEvt=null;});}try{localStorage.setItem('snv-a2hs','1');}catch(err){}render();break;
