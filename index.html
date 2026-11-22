@@ -134,7 +134,28 @@ h2,h3{font-family:var(--font-serif-ko)}
 
 .sect{margin-top:34px}
 .sect-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;margin-bottom:16px}
-.sect-head h3{font-size:18px}
+.sect-head h3{font-size:19px}
+.sect-head .caps{font-size:9.5px;opacity:.55;letter-spacing:.28em}
+.today-card{max-width:440px;margin:4px auto 14px;padding:14px 14px 8px;border:1px solid rgba(200,176,122,.35);border-radius:10px;background:rgba(255,246,220,.04)}
+.tc-head{display:flex;justify-content:space-between;align-items:baseline;margin:0 4px 8px}.tc-head b{font-size:16px;color:var(--ivory);font-family:var(--font-serif)}.tc-head span{font-size:12px;color:var(--champagne)}
+.tc-item{display:flex;align-items:center;gap:12px;width:100%;padding:11px 6px;border:0;border-top:1px solid rgba(255,255,255,.06);background:transparent;color:var(--ivory);text-align:left;cursor:pointer}
+.tc-item:first-of-type{border-top:0}
+.tc-item i{flex:none;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--champagne);display:flex;align-items:center;justify-content:center;font-style:normal;font-size:12px;color:#14182e}
+.tc-item.done i{background:var(--champagne)}
+.tc-item span{flex:1;display:flex;flex-direction:column;gap:2px}.tc-item b{font-size:15px;font-weight:500}.tc-item small{font-size:12px;color:var(--muted)}
+.tc-item em{font-style:normal;color:var(--champagne);font-size:20px}
+.tc-item.done b{color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(255,255,255,.25)}
+.hint-layer{position:absolute;inset:0;z-index:20;pointer-events:none;background:rgba(5,8,20,.35);animation:hintIn .5s ease both}
+.hint-layer.bye{animation:hintOut .35s ease forwards}
+@keyframes hintIn{from{opacity:0}to{opacity:1}}@keyframes hintOut{to{opacity:0}}
+.hint-dot{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:radial-gradient(circle,rgba(255,226,160,.55),rgba(255,226,160,0) 70%);animation:hintPulse 1.8s ease-in-out infinite}
+@keyframes hintPulse{0%,100%{transform:scale(.8);opacity:.6}50%{transform:scale(1.15);opacity:1}}
+.hint-tag{position:absolute;transform:translate(-50%,-150%);white-space:nowrap;font-size:11px;padding:4px 8px;border-radius:12px;background:rgba(10,14,32,.88);border:1px solid rgba(200,176,122,.5);color:var(--ivory);opacity:0;animation:hintIn .5s ease forwards}
+.hint-tag.below{transform:translate(-50%,60%)}.hint-tag b{color:#f1d58e;font-weight:500}
+.hint-ok{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);pointer-events:auto;padding:8px 20px;border-radius:20px;border:0;background:var(--champagne);color:#14182e;font-size:13px;font-weight:600}
+.ob-how{list-style:none;padding:0;margin:20px 0 22px;text-align:left;display:flex;flex-direction:column;gap:14px}
+.ob-how li{display:flex;gap:12px;align-items:flex-start}.ob-how i{flex:none;width:24px;height:24px;border-radius:50%;background:rgba(200,176,122,.18);color:var(--champagne);font-style:normal;font-size:12px;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.ob-how b{display:block;font-size:16px;font-family:var(--font-serif);color:var(--ivory);margin-bottom:3px}.ob-how span{font-size:13px;color:var(--muted);line-height:1.6}
 .sect-head p{font-size:12.5px;color:var(--muted);margin:0}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 12px}
 .mat{background:var(--mat,#efe8da);padding:7px 7px 0;border:0;color:var(--ink);text-align:center;position:relative;box-shadow:0 10px 24px rgba(0,0,0,.4);display:block;width:100%}
@@ -1412,7 +1433,7 @@ let PRE=false;   // true while an early starter uses the app before December
 let DEMO_OK=false,demoKey='';
 async function checkDemo(){if(!sb||!ME){DEMO_OK=false;demoKey='';return;}const key=ME.id+':'+S.houses.map(h=>h.id).join(',');if(key===demoKey)return;
   try{const r=await sb.rpc('demo_ok');DEMO_OK=!r.error&&r.data===true;demoKey=key;}catch(e){DEMO_OK=false;}
-  MEM_LOCKED=GLOBE_LOCKED=!DEMO_OK;document.body.classList.toggle('demo-ok',DEMO_OK);if(DEMO_OK)try{fillDemo();}catch(e){}}
+  {const k=kstParts(),dec=k.y>2026||k.m===12;MEM_LOCKED=GLOBE_LOCKED=!(DEMO_OK||dec);}document.body.classList.toggle('demo-ok',DEMO_OK);if(DEMO_OK)try{fillDemo();}catch(e){}}
 function realDay(){const k=kstParts();PRE=false;if(k.y>2026||(k.m===12&&k.d>=25))return 25;if(k.m===12)return k.d;if(!DEMO_OK)return 0;const t=testerDay();if(t)return t;if(earlyOn()){PRE=true;return 1;}return 0;}
 // ?early lets one person start for real before December (memories, birthdays, wishes, letters); ?noearly turns it off
 function earlyOn(){try{if(/[?&]noearly\b/.test(location.search))localStorage.removeItem('snv-early');else if(/[?&]early\b/.test(location.search))localStorage.setItem('snv-early','1');return localStorage.getItem('snv-early')==='1';}catch(e){return false;}}
@@ -2209,7 +2230,7 @@ function renderVillage(){
     return `<button class="plot" style="${st}" data-act="open" data-id="${h.id}" aria-label="${esc(h.name)}의 집으로 들어가기"><span class="pill">${today?'<i class="dot"></i>':''}<span class="tag">${REL[h.rel].en}</span><span class="nm">${withN(h.name)}</span></span></button>`;}).join('');
   const rows=S.houses.map((h,i)=>{const today=h.recv.some(m=>m.day===d)&&d>0&&d<25;
     return `<button class="res-row" data-act="open" data-id="${h.id}"><span class="nm"><span class="tag">${REL[h.rel].en}</span>${withN(h.name)}</span><span class="st">보낸 ${h.sent.length} · 받은 ${h.recv.length}</span>${today?`<span class="notice">오늘 ${ga(h.name)} 추억을 넣었어요</span>`:''}</button>`;}).join('');
-  $('#app').innerHTML=`${S.screen==='house'?'':`<button class="amb-sound" data-act="sound" aria-label="배경음악 ${S.sound===false?'켜기':'끄기'}">${S.sound===false?'♪ Off':'♪ On'}</button>`}
+  $('#app').innerHTML=`${S.screen==='house'?'':`<button class="amb-sound" data-act="sound" aria-label="배경음악 ${S.sound===false?'켜기':'끄기'}">${S.sound===false?'♪ 음악 꺼짐':'♪ 음악'}</button>`}
     <header class="v-head"><p class="caps">The Winter Village · MMXXVI</p>
       <h1>Star n Vill<em>'</em></h1><p class="ko-name">별과 마을</p>
       <p class="v-date">${dayLine()}</p>${count}${S.sound===false?'':'<p class="tap-hint">♪ 화면을 한 번 누르면 음악이 시작돼요</p>'}</header>
@@ -2245,9 +2266,21 @@ function liftLive(){const sv=document.querySelector('.room>svg');if(!sv)return;
   const fl=sv.querySelector('.flame');const pick=[sv.querySelector('.glow'),fl&&fl.parentNode,sv.querySelector('rect[x="166"][y="236"]'),...sv.querySelectorAll('.chalo'),...sv.querySelectorAll('.wreath .wl')];
   pick.forEach(n=>{if(n&&n!==sv)live.appendChild(n);});sv.after(live);}
 function optRow(label,act,map,cur,name=v=>v,sw=()=>''){return `<div class="opt-row"><span class="opt-l">${label}</span><div class="themes">${Object.entries(map).map(([k,v])=>{const c=sw(v);return `<button data-act="${act}" data-v="${k}" aria-pressed="${cur===k}">${c?`<i style="background:${c}"></i>`:''}${name(v)}</button>`;}).join('')}</div></div>`;}
+// what's left to do today in this house: a short checklist that disappears once it's all done
+function todayCard(h){
+  const d=S.day;if(d<1||d>24)return '';
+  const items=[];
+  if(!MEM_LOCKED)items.push({t:'오늘의 추억 넣기',s:'사진 한 장과 한 줄',done:sentToday(h)>=1,act:'add'});
+  items.push({t:'코코아볼 열기',s:'머그를 눌러요',done:!!cocoaOpened(h,rDay()).me,act:'cocoa'});
+  if(d===24)items.push({t:'가장 특별한 편지 쓰기',s:'오늘만 쓸 수 있어요',done:!!(h.letter||'').trim(),act:'go-sky'});
+  if(items.every(x=>x.done))return '';
+  const left=items.filter(x=>!x.done).length;
+  return `<div class="today-card"><p class="tc-head"><b>오늘 할 일</b><span>${left}개 남았어요</span></p>
+    ${items.map(x=>`<button class="tc-item${x.done?' done':''}" ${x.done?'disabled':`data-act="${x.act}"`}><i>${x.done?'✓':''}</i><span><b>${x.t}</b><small>${x.done?'완료':x.s}</small></span>${x.done?'':'<em>›</em>'}</button>`).join('')}</div>`;
+}
 function renderHouse(){
   {const hh=H();if(hh){cocoaDemoFill(hh);if(!CLOUD&&hh._demoHere==null)Object.defineProperty(hh,'_demoHere',{value:!hh.pending,writable:true,enumerable:false});}}
-  const tips=(S.winTips||0)<3;
+  const tips=false;
   setTimeout(()=>{if(S.winHint&&S.screen==='house'){S.winHint=false;save();}},50);
   const h=H();const d=S.day;const i=S.houses.indexOf(h);const unhung=h.recv.filter(m=>!m.hung).length,unopened=h.sent.filter(m=>!m.opened&&!m._pending).length;
   const nToday=sentToday(h);
@@ -2260,23 +2293,24 @@ function renderHouse(){
   else btn=`<button class="primary" data-act="add">${SPECIAL.has(d)?'✦ ':''}${nToday?'하나 더 넣기':'오늘의 추억 넣기'} <span style="opacity:.7;font-weight:400">${nToday}/${PER_DAY}</span></button>${skyBtn}`;
   const un=d===25;
   const canAdd=!MEM_LOCKED&&d>0&&d<25&&nToday<PER_DAY;
-  const addCard=canAdd?`<div><button class="mat add-mat" data-act="add" aria-label="오늘의 추억 넣기"><div class="pic"><span class="plus">+</span></div><div class="cap">${nToday?'하나 더 넣기':'오늘의 moment'}</div></button><span class="mat-date">TODAY · ${nToday}/${PER_DAY}</span></div>`:'';
+  const addCard=canAdd?`<div><button class="mat add-mat" data-act="add" aria-label="오늘의 추억 넣기"><div class="pic"><span class="plus">+</span></div><div class="cap">${nToday?'하나 더 넣기':'오늘의 추억'}</div></button><span class="mat-date">오늘 · ${nToday}/${PER_DAY}</span></div>`:'';
   const sent=[...h.sent].sort((a,b)=>a.day-b.day),recv=[...h.recv].sort((a,b)=>a.day-b.day);
-  $('#app').innerHTML=`${S.screen==='house'?'':`<button class="amb-sound" data-act="sound" aria-label="배경음악 ${S.sound===false?'켜기':'끄기'}">${S.sound===false?'♪ Off':'♪ On'}</button>`}
+  $('#app').innerHTML=`${S.screen==='house'?'':`<button class="amb-sound" data-act="sound" aria-label="배경음악 ${S.sound===false?'켜기':'끄기'}">${S.sound===false?'♪ 음악 꺼짐':'♪ 음악'}</button>`}
   <div class="house-screen theme-${themeNow(h)}" style="${sofaStyle(h)}">
-    <div class="topbar"><button class="link-btn" data-act="home">← Village</button>
+    <div class="topbar"><button class="link-btn" data-act="home">← 마을</button>
       <div class="title"><p class="tag">${REL[h.rel].en}</p><h2>${withN(h.name)}</h2></div>
       <span style="min-width:64px"></span></div>
     <p class="sub-date">${dayLine()}</p>
     ${(()=>{const fx=cocoaFx(h,d);return fx?`<p class="fx-line">✦ ${fxNote(fx)}</p>`:'';})()}
+    ${todayCard(h)}
     ${CLOUD&&h.pending?`<div class="pending-note"><span>${esc(h.name)}${batchim(h.name)?'이':''}는 아직 마을에 오지 않았어요</span><button class="btn gold" data-act="invite">초대장 보내기</button></div>`:''}
     <div class="room">${roomSVG(h)}${(()=>{const fx=cocoaFx(h,d);return winSnowHTML('l',fx==='snow')+winSnowHTML('r',fx==='snow');})()}
       <button class="wall-btn" data-act="wall" aria-label="벽에 걸린 추억 보기"></button>
       <button class="stocking s-to" id="stk-to" data-act="scroll" data-v="sent-list" aria-label="${esc(h.name)}에게 보낸 추억 ${h.sent.length}개">${stockingSVG(REL[h.rel].stock,'to',false,unopened)}<span class="tag">${esc(h.name)}에게</span></button>
       <button class="stocking s-me" id="stk-me" data-act="open-stocking" aria-label="나에게 온 추억${unhung?`, 새 추억 ${unhung}개가 양말 속에 있어요`:''}">${stockingSVG('','me',true,unhung)}${unhung?`<span class="badge new">+${unhung}</span>`:''}<span class="tag me">나에게</span></button>
-      <button class="win-btn l${tips?' tip':''}" data-act="home" aria-label="왼쪽 창문, 마을로 돌아가기"><span class="win-lbl"><i>←</i>Village</span>${tips?'<span class="win-tip"><small>TAP</small><b>마을로</b></span>':''}</button><button class="win-btn r${S.winHint?' hint':''}${tips?' tip':''}" data-act="go-sky" aria-label="오른쪽 창문, 밤하늘 보러 가기"><span class="win-lbl">Night Sky<i>→</i></span>${tips?'<span class="win-tip"><small>TAP</small><b>밤하늘로</b></span>':''}</button>
+      <button class="win-btn l${tips?' tip':''}" data-act="home" aria-label="왼쪽 창문, 마을로 돌아가기"><span class="win-lbl"><i>←</i>마을</span>${tips?'<span class="win-tip"><small>TAP</small><b>마을로</b></span>':''}</button><button class="win-btn r${S.winHint?' hint':''}${tips?' tip':''}" data-act="go-sky" aria-label="오른쪽 창문, 밤하늘 보러 가기"><span class="win-lbl">Night Sky<i>→</i></span>${tips?'<span class="win-tip"><small>TAP</small><b>밤하늘로</b></span>':''}</button>
       <button class="lp-btn" data-act="playlist" aria-label="레코드 플레이어, 함께 듣는 플레이리스트 열기"></button>
-      <button class="sound-btn" data-act="sound" aria-label="배경음악 ${S.sound===false?'켜기':'끄기'}">${S.sound===false?'♪ Off':'♪ On'}</button>
+      <button class="sound-btn" data-act="sound" aria-label="배경음악 ${S.sound===false?'켜기':'끄기'}">${S.sound===false?'♪ 음악 꺼짐':'♪ 음악'}</button>
       <button class="tree-btn" data-act="tree" aria-label="트리, 모은 쪽지 다시 보기"></button>
       ${seatTags(h)}<button class="mug-btn${rDay()>=1&&rDay()<=24&&!cocoaOpened(h,rDay()).me?' ready':''}" data-act="cocoa" aria-label="머그잔, 오늘의 코코아볼 열기"></button>
       <button class="globe-btn${GLOBE_LOCKED?' locked':''}" data-act="globe" aria-label="스노우볼, ${GLOBE_LOCKED?'잠김':'서로의 위시리스트 열기'}">${globeSVG('rg',bodyOf(h))}</button>
@@ -2292,7 +2326,19 @@ function renderHouse(){
     <section class="sect deco-entry"><button class="deco-open" data-act="deco-open">✦ 집 꾸미기</button><p>집 안과 바깥을 바꿀 수 있어요</p></section>
     <p class="house-set"><button class="link-btn" data-act="house-set">⚙ 집 설정</button></p>
   </div>`;
-  liftLive();hereWatch(h);
+  liftLive();hereWatch(h);roomHints();
+}
+// shown once per device: a soft glow and a one-line label on each thing you can tap in the room
+const HINTS=[['.s-me','내 양말','받은 추억',8,1],['.s-to','상대 양말','보낸 추억',-13,0],['.mug-btn','머그','오늘의 코코아볼'],['.tree-btn','트리','모은 쪽지'],['.lp-btn','레코드','함께 듣는 노래'],['.globe-btn','스노우볼','위시리스트'],['.win-btn.r','창문','밤하늘'],['.win-btn.l','창문','마을로']];
+function roomHints(){
+  let seen=false;try{seen=localStorage.getItem('snv-room-hints')==='1';}catch(e){}
+  const room=$('.room');if(seen||!room||room.querySelector('.hint-layer'))return;
+  const layer=document.createElement('div');layer.className='hint-layer';const rb=room.getBoundingClientRect();
+  HINTS.forEach(([sel,a,b,dx=0,below=0],i)=>{const el=room.querySelector(sel);if(!el)return;const r=el.getBoundingClientRect();if(!r.width)return;
+    const x=(r.left+r.width/2-rb.left)/rb.width*100,y=(r.top+r.height/2-rb.top)/rb.height*100;
+    layer.insertAdjacentHTML('beforeend',`<span class="hint-dot" style="left:${x}%;top:${y}%;animation-delay:${i*.12}s"></span><span class="hint-tag${y<22||below?' below':''}" style="left:${Math.max(13,Math.min(87,x+dx))}%;top:${y}%;animation-delay:${i*.12}s"><b>${a}</b> · ${b}</span>`);});
+  layer.insertAdjacentHTML('beforeend','<button class="hint-ok" data-act="hints-ok">알겠어요</button>');
+  room.appendChild(layer);
 }
 /* ---------- birthday constellations ---------- */
 const ZODIAC=[
@@ -2417,7 +2463,7 @@ function renderSky(){
       ?`<b>추억이 별자리로 이어졌어요.</b><br>${names}${L.A&&L.B&&L.n>L.need?', 그리고 남은 별들이 만든 축복의 별자리까지.':'.'}${short2?`<br><span style="font-size:12px">아직 ${short2}개의 별이 비어 있어요. 내년엔 더 채워 봐요.</span>`:''}<br>가장 큰 별을 눌러 ${esc(h.name)}의 편지를 열어 보세요.`
       :`${ga(h.name)} 보낸 추억 <b>${L.n}개</b>가 별이 되어 반짝이고 있어요.<br>가장 큰 별을 눌러 ${esc(h.name)}의 편지를 열어 보세요.`;
   }
-  $('#app').innerHTML=`${S.screen==='house'?'':`<button class="amb-sound" data-act="sound" aria-label="배경음악 ${S.sound===false?'켜기':'끄기'}">${S.sound===false?'♪ Off':'♪ On'}</button>`}
+  $('#app').innerHTML=`${S.screen==='house'?'':`<button class="amb-sound" data-act="sound" aria-label="배경음악 ${S.sound===false?'켜기':'끄기'}">${S.sound===false?'♪ 음악 꺼짐':'♪ 음악'}</button>`}
   <div class="topbar"><button class="link-btn" data-act="back-house">← House</button>
     <div class="title"><p class="caps">The Night Sky</p><h2>${wa(h.name)}의 밤하늘</h2></div><span style="min-width:64px"></span></div>
   <p class="sub-date">${dayLine()}</p>
@@ -2529,6 +2575,10 @@ function renderOnboard(){
     <p class="caps" style="margin:14px 0 0">Your star</p><p class="ob-p" style="margin:4px 0 0">마을에서 나를 나타낼 별의 색을 골라요.</p>${starGrid('ob-star')}
     <button class="primary" data-act="ob-name">다음</button><button class="link-btn ob-skip" data-act="ob-back">← ${CLOUD?'다른 방법으로 로그인':'이전'}</button></div>`;
   else if(OB===6)body=homeCard(false);
+  else if(OB>=3&&OB<=5){const fin=a2hsSeen();
+    body=`<div class="ob-card ob-intro ob-one"><p class="caps">How it works</p><h2>이렇게 놀아요</h2>
+      <ol class="ob-how">${OB_CARDS.map((c,i)=>`<li><i>${i+1}</i><div><b>${c.t.replace(/<br>/g,' ')}</b><span>${c.p.split('<br>')[0]}</span></div></li>`).join('')}</ol>
+      <button class="primary" data-act="${fin?'ob-done':'ob-home'}">마을로 들어가기</button><button class="link-btn ob-skip" data-act="ob-back">← 이전</button></div>`;}
   else{const c=OB_CARDS[OB-3];body=`<div class="ob-card ob-intro"><div class="ob-artwrap">${obArt(c.art)}</div><p class="caps">${c.cap}</p><h2>${c.t}</h2><p class="ob-p">${c.p}</p>${dots(OB-3)}
     <button class="primary" data-act="${OB>=5&&a2hsSeen()?'ob-done':'ob-next'}">${OB<5?'다음':'좋아요'}</button>${OB<5?`<button class="link-btn ob-skip" data-act="${a2hsSeen()?'ob-done':'ob-home'}">건너뛰기</button>`:''}<button class="link-btn ob-skip" data-act="ob-back">← 이전</button></div>`;}
   $('#app').innerHTML=`<div class="onboard step-${OB}">${body}</div>`;
@@ -3175,6 +3225,7 @@ function act(a,t,h,e){
     case 'hcol':if(!h.color&&(HCOL[h.rel]||{})[t.dataset.v]){h.color=t.dataset.v;save();renderHouseKeepModal();}break;
     case 'tex':h.tex=t.dataset.v;save();renderHouseKeepModal();toast(`외벽을 ${TEX[h.tex]}${batchim(TEX[h.tex])?'으로':'로'} 바꿨어요`);break;
     case 'ob-next':OB++;render();window.scrollTo(0,0);break;
+    case 'hints-ok':{try{localStorage.setItem('snv-room-hints','1');}catch(err){}const l=$('.hint-layer');if(l){l.classList.add('bye');setTimeout(()=>l.remove(),400);}break;}
     case 'a2hs-ok':try{localStorage.setItem('snv-a2hs','1');}catch(err){}render();window.scrollTo(0,0);break;
     case 'a2hs-install':if(installEvt){installEvt.prompt();installEvt.userChoice.finally(()=>{installEvt=null;});}try{localStorage.setItem('snv-a2hs','1');}catch(err){}render();break;
     case 'ob-back':OBM=null;OB=Math.max(0,OB-1);render();window.scrollTo(0,0);break;
