@@ -136,8 +136,7 @@ h2,h3{font-family:var(--font-serif-ko)}
 
 .sect{margin-top:34px}
 .sect-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;margin-bottom:16px}
-.sect-head h3{font-size:19px}
-.sect-head .caps{font-size:10px;opacity:.55;letter-spacing:.28em}
+.sect-head h3{font-size:18px}
 .today-card{max-width:440px;margin:4px auto 14px;padding:14px 14px 8px;border:1px solid rgba(200,176,122,.35);border-radius:10px;background:rgba(255,246,220,.04)}
 .tc-head{display:flex;justify-content:space-between;align-items:baseline;margin:0 4px 8px}.tc-head b{font-size:16px;color:var(--ivory);font-family:var(--font-serif)}.tc-head span{font-size:12.5px;color:var(--champagne)}
 .tc-item{display:flex;align-items:center;gap:12px;width:100%;padding:11px 6px;border:0;border-top:1px solid rgba(255,255,255,.06);background:transparent;color:var(--ivory);text-align:left;cursor:pointer}
@@ -2237,7 +2236,7 @@ function renderVillage(){
     return `<button class="plot" style="${st}" data-act="open" data-id="${h.id}" aria-label="${esc(h.name)}의 집으로 들어가기"><span class="pill">${today?'<i class="dot"></i>':''}<span class="tag">${REL[h.rel].en}</span><span class="nm">${withN(h.name)}</span></span></button>`;}).join('');
   const rows=S.houses.map((h,i)=>{const today=h.recv.some(m=>m.day===d)&&d>0&&d<25;
     return `<button class="res-row" data-act="open" data-id="${h.id}"><span class="nm"><span class="tag">${REL[h.rel].en}</span>${withN(h.name)}</span><span class="st">보낸 ${h.sent.length} · 받은 ${h.recv.length}</span>${today?`<span class="notice">오늘 ${ga(h.name)} 추억을 넣었어요</span>`:''}</button>`;}).join('');
-  $('#app').innerHTML=`${S.screen==='house'?'':`<button class="amb-sound" data-act="sound" aria-label="배경음악 ${S.sound===false?'켜기':'끄기'}">${S.sound===false?'♪ 음악 꺼짐':'♪ 음악'}</button>`}
+  $('#app').innerHTML=`${S.screen==='house'?'':`<button class="amb-sound" data-act="sound" aria-label="배경음악 ${S.sound===false?'켜기':'끄기'}">${S.sound===false?'♪ Off':'♪ On'}</button>`}
     <header class="v-head"><p class="caps">The Winter Village · MMXXVI</p>
       <h1>Star n Vill<em>'</em></h1><p class="ko-name">별과 마을</p>
       <p class="v-date">${dayLine()}</p>${count}${S.sound===false?'':'<p class="tap-hint">♪ 화면을 한 번 누르면 음악이 시작돼요</p>'}</header>
@@ -2301,11 +2300,11 @@ function renderHouse(){
   else btn=`<button class="primary" data-act="add">${SPECIAL.has(d)?'✦ ':''}${nToday?'하나 더 넣기':'오늘의 추억 넣기'} <span style="opacity:.7;font-weight:400">${nToday}/${PER_DAY}</span></button>${skyBtn}`;
   const un=d===25;
   const canAdd=!MEM_LOCKED&&d>0&&d<25&&nToday<PER_DAY;
-  const addCard=canAdd?`<div><button class="mat add-mat" data-act="add" aria-label="오늘의 추억 넣기"><div class="pic"><span class="plus">+</span></div><div class="cap">${nToday?'하나 더 넣기':'오늘의 추억'}</div></button><span class="mat-date">오늘 · ${nToday}/${PER_DAY}</span></div>`:'';
+  const addCard=canAdd?`<div><button class="mat add-mat" data-act="add" aria-label="오늘의 추억 넣기"><div class="pic"><span class="plus">+</span></div><div class="cap">${nToday?'하나 더 넣기':'오늘의 추억'}</div></button><span class="mat-date">TODAY · ${nToday}/${PER_DAY}</span></div>`:'';
   const sent=[...h.sent].sort((a,b)=>a.day-b.day),recv=[...h.recv].sort((a,b)=>a.day-b.day);
-  $('#app').innerHTML=`${S.screen==='house'?'':`<button class="amb-sound" data-act="sound" aria-label="배경음악 ${S.sound===false?'켜기':'끄기'}">${S.sound===false?'♪ 음악 꺼짐':'♪ 음악'}</button>`}
+  $('#app').innerHTML=`${S.screen==='house'?'':`<button class="amb-sound" data-act="sound" aria-label="배경음악 ${S.sound===false?'켜기':'끄기'}">${S.sound===false?'♪ Off':'♪ On'}</button>`}
   <div class="house-screen theme-${themeNow(h)}" style="${sofaStyle(h)}">
-    <div class="topbar"><button class="link-btn" data-act="home">← 마을</button>
+    <div class="topbar"><button class="link-btn" data-act="home">← Village</button>
       <div class="title"><p class="tag">${REL[h.rel].en}</p><h2>${withN(h.name)}</h2></div>
       <span style="min-width:64px"></span></div>
     <p class="sub-date">${dayLine()}</p>
@@ -2316,9 +2315,9 @@ function renderHouse(){
       <button class="wall-btn" data-act="wall" aria-label="벽에 걸린 추억 보기"></button>
       <button class="stocking s-to" id="stk-to" data-act="scroll" data-v="sent-list" aria-label="${esc(h.name)}에게 보낸 추억 ${h.sent.length}개">${stockingSVG(REL[h.rel].stock,'to',false,unopened)}<span class="tag">${esc(h.name)}에게</span></button>
       <button class="stocking s-me" id="stk-me" data-act="open-stocking" aria-label="나에게 온 추억${unhung?`, 새 추억 ${unhung}개가 양말 속에 있어요`:''}">${stockingSVG('','me',true,unhung)}${unhung?`<span class="badge new">+${unhung}</span>`:''}<span class="tag me">나에게</span></button>
-      <button class="win-btn l${tips?' tip':''}" data-act="home" aria-label="왼쪽 창문, 마을로 돌아가기"><span class="win-lbl"><i>←</i>마을</span>${tips?'<span class="win-tip"><small>TAP</small><b>마을로</b></span>':''}</button><button class="win-btn r${S.winHint?' hint':''}${tips?' tip':''}" data-act="go-sky" aria-label="오른쪽 창문, 밤하늘 보러 가기"><span class="win-lbl">Night Sky<i>→</i></span>${tips?'<span class="win-tip"><small>TAP</small><b>밤하늘로</b></span>':''}</button>
+      <button class="win-btn l${tips?' tip':''}" data-act="home" aria-label="왼쪽 창문, 마을로 돌아가기"><span class="win-lbl"><i>←</i>Village</span>${tips?'<span class="win-tip"><small>TAP</small><b>마을로</b></span>':''}</button><button class="win-btn r${S.winHint?' hint':''}${tips?' tip':''}" data-act="go-sky" aria-label="오른쪽 창문, 밤하늘 보러 가기"><span class="win-lbl">Night Sky<i>→</i></span>${tips?'<span class="win-tip"><small>TAP</small><b>밤하늘로</b></span>':''}</button>
       <button class="lp-btn" data-act="playlist" aria-label="레코드 플레이어, 함께 듣는 플레이리스트 열기"></button>
-      <button class="sound-btn" data-act="sound" aria-label="배경음악 ${S.sound===false?'켜기':'끄기'}">${S.sound===false?'♪ 음악 꺼짐':'♪ 음악'}</button>
+      <button class="sound-btn" data-act="sound" aria-label="배경음악 ${S.sound===false?'켜기':'끄기'}">${S.sound===false?'♪ Off':'♪ On'}</button>
       <button class="tree-btn" data-act="tree" aria-label="트리, 모은 쪽지 다시 보기"></button>
       ${seatTags(h)}<button class="mug-btn${rDay()>=1&&rDay()<=24&&!cocoaOpened(h,rDay()).me?' ready':''}" data-act="cocoa" aria-label="머그잔, 오늘의 코코아볼 열기"></button>
       <button class="globe-btn${GLOBE_LOCKED?' locked':''}" data-act="globe" aria-label="스노우볼, ${GLOBE_LOCKED?'잠김':'서로의 위시리스트 열기'}">${globeSVG('rg',bodyOf(h))}</button>
@@ -2471,7 +2470,7 @@ function renderSky(){
       ?`<b>추억이 별자리로 이어졌어요.</b><br>${names}${L.A&&L.B&&L.n>L.need?', 그리고 남은 별들이 만든 축복의 별자리까지.':'.'}${short2?`<br><span style="font-size:12px">아직 ${short2}개의 별이 비어 있어요. 내년엔 더 채워 봐요.</span>`:''}<br>가장 큰 별을 눌러 ${esc(h.name)}의 편지를 열어 보세요.`
       :`${ga(h.name)} 보낸 추억 <b>${L.n}개</b>가 별이 되어 반짝이고 있어요.<br>가장 큰 별을 눌러 ${esc(h.name)}의 편지를 열어 보세요.`;
   }
-  $('#app').innerHTML=`${S.screen==='house'?'':`<button class="amb-sound" data-act="sound" aria-label="배경음악 ${S.sound===false?'켜기':'끄기'}">${S.sound===false?'♪ 음악 꺼짐':'♪ 음악'}</button>`}
+  $('#app').innerHTML=`${S.screen==='house'?'':`<button class="amb-sound" data-act="sound" aria-label="배경음악 ${S.sound===false?'켜기':'끄기'}">${S.sound===false?'♪ Off':'♪ On'}</button>`}
   <div class="topbar"><button class="link-btn" data-act="back-house">← House</button>
     <div class="title"><p class="caps">The Night Sky</p><h2>${wa(h.name)}의 밤하늘</h2></div><span style="min-width:64px"></span></div>
   <p class="sub-date">${dayLine()}</p>
