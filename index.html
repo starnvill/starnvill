@@ -2503,7 +2503,7 @@ function homeCard(pre){let body;
     const steps=ios?[['공유','하단의 공유 버튼 <span class="ob-ico"><svg viewBox="0 0 12 14" width="10" height="12"><path d="M6 1V9M3 4L6 1L9 4M2.5 6.5H1.5V13H10.5V6.5H9.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>을 눌러요'],['홈 화면에 추가','목록에서 <b>홈 화면에 추가</b>를 골라요'],['추가','오른쪽 위 <b>추가</b>를 누르면 끝']]
       :android?[['메뉴','오른쪽 위 <span class="ob-ico">⋮</span> 메뉴를 열어요'],['홈 화면에 추가','<b>홈 화면에 추가</b> 또는 <b>앱 설치</b>를 눌러요'],['설치','<b>설치</b>를 누르면 끝']]
       :[['iPhone','Safari 공유 버튼 → <b>홈 화면에 추가</b>'],['Android','Chrome 메뉴 ⋮ → <b>홈 화면에 추가</b>'],['컴퓨터','주소창 오른쪽 설치 아이콘을 눌러요']];
-    body=`<div class="ob-card"><div class="ob-artwrap"><div class="ob-phone"><img src="icons/icon-192.png" alt=""><span>별과 마을</span></div></div><p class="caps">Keep it close</p><h2>홈 화면에 마을을 두세요</h2>
+    body=`<div class="ob-card"><div class="ob-artwrap"><div class="ob-phone"><img src="icon-192.png" alt=""><span>별과 마을</span></div></div><p class="caps">Keep it close</p><h2>홈 화면에 마을을 두세요</h2>
       <p class="ob-p">앱처럼 한 번에 열리고, 전체 화면으로 볼 수 있어요.<br>매일 추억을 넣기도 훨씬 쉬워져요.</p>
       ${standalone?'<p class="ob-done-note">이미 홈 화면에서 열었어요 ✦</p>':`<ol class="ob-steps">${steps.map(([a,b],i)=>`<li><i>${i+1}</i><div><b>${a}</b><span>${b}</span></div></li>`).join('')}</ol>`}
       ${installEvt?`<button class="primary" data-act="${pre?'a2hs-install':'ob-install'}">앱으로 설치하기</button>`:`<button class="primary" data-act="${pre?'a2hs-ok':'ob-done'}">추가했어요</button>`}
@@ -2870,9 +2870,9 @@ const TUNES={
 };
 /* the record player's real songs (royalty-free, served as the artifact's own files) */
 const TRACKS={
- t1:{src:'audio/track-1.mp3',by:'zephiramusic'},t2:{src:'audio/track-2.mp3',by:'SigmaMusicArt'},t3:{src:'audio/track-3.mp3',by:'Pulsebox'},
- t4:{src:'audio/track-4.mp3',by:'Tunetank'},t5:{src:'audio/track-5.mp3',by:'Clavier Music'},t6:{src:'audio/track-6.mp3',by:'Aventure'},
- bg:{src:'audio/village.mp3',by:'alba_mac'}};   // bg: heard only outside — the village and the night sky
+ t1:{src:'track-1.mp3',by:'zephiramusic'},t2:{src:'track-2.mp3',by:'SigmaMusicArt'},t3:{src:'track-3.mp3',by:'Pulsebox'},
+ t4:{src:'track-4.mp3',by:'Tunetank'},t5:{src:'track-5.mp3',by:'Clavier Music'},t6:{src:'track-6.mp3',by:'Aventure'},
+ bg:{src:'village.mp3',by:'alba_mac'}};   // bg: heard only outside — the village and the night sky
 const TRACK_KEYS=Object.keys(TRACKS).filter(k=>k!=='bg');
 const TUNE_KEYS=TRACK_KEYS;
 function defaultPlaylist(other){return TRACK_KEYS.map((k,i)=>({t:`Track ${i+1}`,a:TRACKS[k].by,tune:k,by:i%2?'나':other}));}
