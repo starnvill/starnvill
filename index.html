@@ -3252,7 +3252,7 @@ function act(a,t,h,e){
     case 'newhouse':
       openModal(`${sheetHead('A New House','새 집 짓기')}
         <p class="hint-text" style="margin:0">집 한 채에 한 사람. 링크를 보내면 그 사람도 내 집을 꾸밀 수 있어요.</p>
-        <div class="field"><label for="nhName">누구의 집인가요?</label><input id="nhName" maxlength="10" placeholder="예: 서윤"></div>
+        <div class="field"><label for="nhName">누구와 함께 살 건가요?</label><input id="nhName" maxlength="10" placeholder="예: 서윤"><p class="hint-text" style="margin-top:6px">내 이름 말고, 함께할 사람의 이름을 적어 주세요</p></div>
         <div class="field"><label for="nhRel">관계</label><select id="nhRel">${Object.entries(REL).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}</select></div>
         <div class="field" id="nhColF"><label for="nhCol">집 색<span>처음 지을 때만 고를 수 있어요</span></label><select id="nhCol">${colOpts(Object.keys(REL)[0])}</select></div>
         <div class="field"><label for="nhTex">외벽</label><select id="nhTex">${Object.entries(TEX).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
