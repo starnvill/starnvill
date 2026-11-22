@@ -2309,7 +2309,6 @@ function renderHouse(){
       <span style="min-width:64px"></span></div>
     <p class="sub-date">${dayLine()}</p>
     ${(()=>{const fx=cocoaFx(h,d);return fx?`<p class="fx-line">✦ ${fxNote(fx)}</p>`:'';})()}
-    ${todayCard(h)}
     ${CLOUD&&h.pending?`<div class="pending-note"><span>${esc(h.name)}${batchim(h.name)?'이':''}는 아직 마을에 오지 않았어요</span><button class="btn gold" data-act="invite">초대장 보내기</button></div>`:''}
     <div class="room">${roomSVG(h)}${(()=>{const fx=cocoaFx(h,d);return winSnowHTML('l',fx==='snow')+winSnowHTML('r',fx==='snow');})()}
       <button class="wall-btn" data-act="wall" aria-label="벽에 걸린 추억 보기"></button>
@@ -2979,6 +2978,8 @@ function trackPlay(key){
 }
 function musicPlay(key){
   if(TRACKS[key])return trackPlay(key);
+  // an old saved playlist may still name a built-in tune: play a real song instead of the synth bells
+  {let n=0;for(const ch of String(key||''))n=(n*31+ch.charCodeAt(0))>>>0;return trackPlay(TRACK_KEYS[n%TRACK_KEYS.length]);}
   musicStop();if(!AUD.ctx||S.sound===false)return;const T=TUNES[key]||TUNES.silent,c=AUD.ctx;
   const run=c.createGain();run.gain.value=1;run.connect(AUD.bus);AUD.run=run;AUD.playing=true;
   let t=c.currentTime+.15,u=0;const bellAmp=key==='silent'?.022:key==='jingle'?.045:.034,beat=key==='silent'?6:4;
@@ -3209,7 +3210,7 @@ $('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();}
 const AUDIO_EVENTS=['pointerup','touchend','click','keydown'];
 function audioKick(){audioUnlock();if(S.sound===false)return;
   /* keep listening: iPhone pauses sound when the screen locks or the app is switched, and the next tap should bring it back */
-  const go=()=>{if(S.screen!=='house')sceneMusic();};
+  const go=()=>{if(S.screen!=='house')sceneMusic();else if(!AUD.playing)houseMusic();};
   if(AUD.ctx&&AUD.ctx.state!=='running'&&AUD.ctx.resume)AUD.ctx.resume().then(go).catch(()=>{});else setTimeout(go,30);}
 AUDIO_EVENTS.forEach(ev=>document.addEventListener(ev,audioKick,true));
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState!=='visible'||!AUD.ctx||S.sound===false)return;
