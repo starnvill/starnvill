@@ -582,6 +582,7 @@ a.btn.buy{text-decoration:none;display:inline-block}
 }
 @media (min-width:1100px) and (min-height:820px){#app{max-width:660px}}
 .cloud .demo,.cloud #swapBtn{display:none!important}
+.cloud.demo-ok .demo{display:flex!important}.cloud .demo [data-act="reset"],.cloud .demo [data-act="ob-again"]{display:none!important}
 .pending-note{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 4px;padding:10px 12px;border:1px solid var(--line);background:rgba(8,14,32,.6);font-size:12.5px;color:var(--muted);font-family:var(--font-serif-ko)}
 .pending-note .btn{white-space:nowrap}
 .del-acct{display:block;margin:18px auto 0;color:var(--muted);font-size:12px;text-decoration:underline}
@@ -1266,7 +1267,7 @@ const PAPER={damask:'다마스크',stripe:'스트라이프',star:'작은 별',pl
 const FLOOR={plank:'나무 마루',check:'체커 타일',carpet:'카펫'};
 const SOFA={auto:['기본'],bordeaux:['보르도','#4c1a22','#5b2029'],forest:['포레스트','#2f3a2b','#3b4935'],navy:['네이비','#1b2444','#263159'],camel:['카멜','#755233','#86603e'],cream:['크림','#a39a85','#b8ae98']};
 /* things you can see but not touch yet — set to false to open them */
-const MEM_LOCKED=true,GLOBE_LOCKED=true;
+let MEM_LOCKED=true,GLOBE_LOCKED=true;  // unlocked in the account version for harang14@gmail.com's walk-through (DEMO_OK)
 function decoOf(h){if(!h.deco||typeof h.deco!=='object')h.deco={};return h.deco;}
 function sofaStyle(h){const s=SOFA[decoOf(h).sofa];return s&&s[1]?`--chair:${s[1]};--chair-2:${s[2]}`:'';}
 
@@ -1410,14 +1411,15 @@ let PRE=false;   // true while an early starter uses the app before December
 // early-start and walk-through powers (?early, ?tester) work only for harang14@gmail.com and the people sharing a house with that account; the server decides (demo_ok)
 let DEMO_OK=false,demoKey='';
 async function checkDemo(){if(!sb||!ME){DEMO_OK=false;demoKey='';return;}const key=ME.id+':'+S.houses.map(h=>h.id).join(',');if(key===demoKey)return;
-  try{const r=await sb.rpc('demo_ok');DEMO_OK=!r.error&&r.data===true;demoKey=key;}catch(e){DEMO_OK=false;}}
+  try{const r=await sb.rpc('demo_ok');DEMO_OK=!r.error&&r.data===true;demoKey=key;}catch(e){DEMO_OK=false;}
+  MEM_LOCKED=GLOBE_LOCKED=!DEMO_OK;document.body.classList.toggle('demo-ok',DEMO_OK);if(DEMO_OK)try{fillDemo();}catch(e){}}
 function realDay(){const k=kstParts();PRE=false;if(k.y>2026||(k.m===12&&k.d>=25))return 25;if(k.m===12)return k.d;if(!DEMO_OK)return 0;const t=testerDay();if(t)return t;if(earlyOn()){PRE=true;return 1;}return 0;}
 // ?early lets one person start for real before December (memories, birthdays, wishes, letters); ?noearly turns it off
 function earlyOn(){try{if(/[?&]noearly\b/.test(location.search))localStorage.removeItem('snv-early');else if(/[?&]early\b/.test(location.search))localStorage.setItem('snv-early','1');return localStorage.getItem('snv-early')==='1';}catch(e){return false;}}
 // cocoa and telepathy are played together, so they wait for December
 function rDay(){return PRE?0:S.day;}
 function todayISO(){const k=kstParts();return `${k.y}-${String(k.m).padStart(2,'0')}-${String(k.d).padStart(2,'0')}`;}
-function sentToday(h){return h.sent.filter(m=>m.date?m.date===todayISO():m.day===S.day).length;}
+function sentToday(h){return h.sent.filter(m=>m.date&&!(CLOUD&&DEMO_OK)?m.date===todayISO():m.day===S.day).length;}
 // ?tester (or ?tester=7) lets Harang walk through December early; ?notester turns it off
 function testerDay(){try{const q=location.search.match(/[?&]tester(?:=(\d+))?/);if(/[?&]notester\b/.test(location.search))localStorage.removeItem('snv-tester');
   else if(q)localStorage.setItem('snv-tester',String(Math.min(25,Math.max(1,Number(q[1])||1))));return Number(localStorage.getItem('snv-tester'))||0;}catch(e){return 0;}}
@@ -1631,7 +1633,8 @@ async function cloudSend(m,canvas){
   const blob=await new Promise(r=>canvas.toBlob(r,'image/jpeg',.88));if(!blob)throw new Error('photo');
   const id=(crypto.randomUUID?crypto.randomUUID():'10000000-1000-4000-8000-100000000000'.replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16)));
   const h=H();
-  let r=await sb.from('memories').insert({id,house_id:h.id,hint:m.hint.slice(0,20),mat:m.mat,mosaic:m.mos});if(r.error)throw r.error;
+  const row={id,house_id:h.id,hint:m.hint.slice(0,20),mat:m.mat,mosaic:m.mos};if(DEMO_OK&&S.day>=1&&S.day<=24)row.day=`2026-12-${String(S.day).padStart(2,'0')}`;
+  let r=await sb.from('memories').insert(row);if(r.error)throw r.error;
   r=await sb.storage.from('originals').upload(`${h.id}/${id}.jpg`,blob,{contentType:'image/jpeg',upsert:false});
   if(r.error){await sb.from('memories').delete().eq('id',id);throw r.error;}
   r=await sb.from('memory_secrets').insert({memory_id:id,caption:m.msg.slice(0,300)});if(r.error)throw r.error;
@@ -3131,7 +3134,9 @@ function loop(t){if(skyActive){if(t-blockT>400){blockT=t;snowBlocks();}
 
 /* ---------- events ---------- */
 function fillDemo(){$('#demoDay').innerHTML=[0,...Array.from({length:25},(_,i)=>i+1)].map(d=>`<option value="${d}"${d===S.day?' selected':''}>${dayLabel(d)}${SPECIAL.has(d)?' ✦':''}</option>`).join('');}
-$('#demoDay').addEventListener('change',e=>{S.day=Number(e.target.value);save();render();toast(`데모 날짜를 ${dayLabel(S.day)}로 바꿨어요`);});
+$('#demoDay').addEventListener('change',e=>{const v=Number(e.target.value);
+  if(CLOUD){if(!DEMO_OK)return;try{if(v>0)localStorage.setItem('snv-tester',String(v));else{localStorage.removeItem('snv-tester');localStorage.removeItem('snv-early');}}catch(err){}S.day=realDay();render();toast(`날짜를 ${dayLabel(S.day)}로 바꿨어요`);return;}
+  S.day=v;save();render();toast(`데모 날짜를 ${dayLabel(S.day)}로 바꿨어요`);});
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&!$('#modal').hidden)closeModal();
   if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('g[data-act]')){e.preventDefault();e.target.dispatchEvent(new MouseEvent('click',{bubbles:true}));}
