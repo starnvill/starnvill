@@ -2583,10 +2583,6 @@ function renderOnboard(){
     <p class="caps" style="margin:14px 0 0">Your star</p><p class="ob-p" style="margin:4px 0 0">마을에서 나를 나타낼 별의 색을 골라요.</p>${starGrid('ob-star')}
     <button class="primary" data-act="ob-name">다음</button><button class="link-btn ob-skip" data-act="ob-back">← ${CLOUD?'다른 방법으로 로그인':'이전'}</button></div>`;
   else if(OB===6)body=homeCard(false);
-  else if(OB>=3&&OB<=5){const fin=a2hsSeen();
-    body=`<div class="ob-card ob-intro ob-one"><p class="caps">How it works</p><h2>이렇게 놀아요</h2>
-      <ol class="ob-how">${OB_CARDS.map((c,i)=>`<li><i>${i+1}</i><div><b>${c.t.replace(/<br>/g,' ')}</b><span>${c.p.split('<br>')[0]}</span></div></li>`).join('')}</ol>
-      <button class="primary" data-act="${fin?'ob-done':'ob-home'}">마을로 들어가기</button><button class="link-btn ob-skip" data-act="ob-back">← 이전</button></div>`;}
   else{const c=OB_CARDS[OB-3];body=`<div class="ob-card ob-intro"><div class="ob-artwrap">${obArt(c.art)}</div><p class="caps">${c.cap}</p><h2>${c.t}</h2><p class="ob-p">${c.p}</p>${dots(OB-3)}
     <button class="primary" data-act="${OB>=5&&a2hsSeen()?'ob-done':'ob-next'}">${OB<5?'다음':'좋아요'}</button>${OB<5?`<button class="link-btn ob-skip" data-act="${a2hsSeen()?'ob-done':'ob-home'}">건너뛰기</button>`:''}<button class="link-btn ob-skip" data-act="ob-back">← 이전</button></div>`;}
   $('#app').innerHTML=`<div class="onboard step-${OB}">${body}</div>`;
