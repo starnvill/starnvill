@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://starnvill.vercel.app/sitemap.xml
